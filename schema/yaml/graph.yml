@@ -1,0 +1,728 @@
+title: 'Graph protocol'
+description: 'This protocol is utilized for communicating about graph changes in both directions.'
+
+output:
+  error:
+    description: 'Graph error'
+
+  addnode:
+    description: 'Add node to a graph.'
+    properties:
+      id:
+        type: string
+        description: 'identifier for the node'
+        required: true
+      component:
+        type: string
+        description: 'component name used for the node'
+        required: true
+      metadata:
+        type: object
+        description: '(optional): structure of key-value pairs for node metadata'
+      graph:
+        type: string
+        description: 'graph the action targets'
+        required: true
+
+  removenode:
+    description: 'Remove a node from a graph.'
+    properties:
+      id:
+        type: string
+        description: 'identifier for the node'
+        required: true
+      graph:
+        type: string
+        description: 'graph the action targets'
+        required: true
+
+  renamenode:
+    description: 'Change the ID of a node in the graph'
+    properties:
+      from:
+        type: string
+        description: 'original identifier for the node'
+        required: true
+      to:
+        type: string
+        description: 'new identifier for the node'
+        required: true
+      graph:
+        type: string
+        description: 'graph the action targets'
+        required: true
+
+  changenode:
+    description: 'Change the metadata associated to a node in the graph'
+    properties:
+      id:
+        type: string
+        description: 'identifier for the node'
+        required: true
+      metadata:
+        type: object
+        description: 'structure of key-value pairs for node metadata'
+        required: true
+      graph:
+        type: string
+        description: 'graph the action targets'
+        required: true
+
+  addedge:
+    description: 'Add an edge to the graph'
+    properties:
+      src:
+        type: object
+        description: 'source node for the edge'
+        required: true
+        properties:
+          node:
+            type: string
+            description: 'node identifier'
+            required: true
+          port:
+            type: string
+            description: 'port name'
+            required: true
+          index:
+            type: ["string", "number"]
+            description: 'connection index (optional, for addressable ports)'
+      tgt:
+        type: object
+        description: 'target node for the edge'
+        required: true
+        properties:
+          node:
+            type: string
+            description: 'node identifier'
+            required: true
+          port:
+            type: string
+            description: 'port name'
+            required: true
+          index:
+            type: string
+            description: 'connection index (optional, for addressable ports)'
+      metadata:
+        type: object
+        description: '(optional): structure of key-value pairs for edge metadata'
+      graph:
+        description: 'graph the action targets'
+        required: true
+
+  removeedge:
+    description: 'Remove an edge from the graph'
+    properties:
+      graph:
+        type: string
+        description: 'graph the action targets'
+        required: true
+      src:
+        description: 'source node for the edge'
+        required: true
+        properties:
+          node:
+            type: string
+            description: 'node identifier'
+          port:
+            type: string
+            description: 'port name'
+      tgt:
+        description: 'target node for the edge'
+        required: true
+        properties:
+          node:
+            type: string
+            description: 'node identifier'
+          port:
+            type: string
+            description: 'port name'
+
+  changeedge:
+    description: 'Change an edge''s metadata'
+    properties:
+      graph:
+        type: string
+        description: 'graph the action targets'
+        required: true
+      metadata:
+        type: object
+        description: 'struct of key-value pairs for edge metadata'
+      src:
+        type: object
+        description: 'source node for the edge'
+        properties:
+          node:
+            type: string
+            description: 'node identifier'
+          port:
+            type: string
+            description: 'port name'
+      tgt:
+        type: object
+        description: 'target node for the edge'
+        properties:
+          node:
+            type: string
+            description: 'node identifier'
+          port:
+            type: string
+            description: 'port name'
+
+  addinitial:
+    description: 'Add an IIP to the graph'
+    properties:
+      graph:
+        type: string
+        description: 'graph the action targets'
+      metadata:
+        type: object
+        description: '(optional): structure of key-value pairs for edge metadata'
+      src:
+        type: object
+        properties:
+          data:
+            type: any
+            description: 'IIP value in its actual data type'
+      tgt:
+        type: object
+        description: 'target node for the edge'
+        properties:
+          node:
+            type: string
+            description: 'node identifier'
+          port:
+            type: string
+            description: 'port name'
+          index:
+            type: ["string", "number"]
+            description: 'connection index (optional, for addressable ports)'
+
+  removeinitial:
+    description: 'Remove an IIP from the graph'
+    properties:
+      tgt:
+        type: object
+        properties:
+          node:
+            type: string
+            description: 'node identifier'
+          port:
+            type: string
+            description: 'port name'
+        description: 'target node for the edge'
+      graph:
+        type: string
+        description: 'graph the action targets'
+
+  addinport:
+    description: 'Add an exported inport to the graph.'
+    properties:
+      public:
+        type: string
+        description: 'the exported name of the port'
+      node:
+        type: string
+        description: 'node identifier'
+      port:
+        type: string
+        description: 'internal port name'
+      metadata:
+        type: object
+        description: '(optional): structure of key-value pairs for node metadata'
+      graph:
+        type: string
+        description: 'graph the action targets'
+
+  removeinport:
+    description: 'Remove an exported port from the graph'
+    properties:
+      public:
+        type: string
+        description: 'the exported name of the port to remove'
+      graph:
+        type: string
+        description: 'graph the action targets'
+
+  renameinport:
+    description: 'Rename an exported port in the graph'
+    properties:
+      from:
+        type: string
+        description: 'original exported port name'
+      to:
+        type: string
+        description: 'new exported port name'
+      graph:
+        type: string
+        description: 'graph the action targets'
+
+  addoutport:
+    description: 'Add an exported outport to the graph.'
+    properties:
+      public:
+        type: string
+        description: 'the exported name of the port'
+      node:
+        type: string
+        description: 'node identifier'
+      port:
+        type: string
+        description: 'internal port name'
+      metadata:
+        type: object
+        description: '(optional): structure of key-value pairs for port metadata'
+      graph:
+        type: string
+        description: 'graph the action targets'
+
+  removeoutport:
+    description: 'Remove an exported port from the graph'
+    properties:
+      public:
+        type: string
+        description: 'the exported name of the port to remove'
+      graph:
+        type: string
+        description: 'graph the action targets'
+
+  renameoutport:
+    description: 'Rename an exported port in the graph'
+    properties:
+      from:
+        type: string
+        description: 'original exported port name'
+      to:
+        type: string
+        description: 'new exported port name'
+      graph:
+        type: string
+        description: 'graph the action targets'
+
+  addgroup:
+    description: 'Add a group to the graph'
+    properties:
+      name:
+        type: string
+        description: 'the group name'
+      nodes:
+        type: array
+        description: 'an array of node ids part of the group'
+      metadata:
+        type: object
+        description: '(optional): structure of key-value pairs for group metadata'
+      graph:
+        type: string
+        description: 'graph the action targets'
+
+  removegroup:
+    description: 'Remove a group from the graph'
+    properties:
+      name:
+        type: string
+        description: 'the group name'
+      graph:
+        type: string
+        description: 'graph the action targets'
+
+  renamegroup:
+    description: 'Rename a group in the graph.'
+    properties:
+      from:
+        type: string
+        description: 'original group name'
+      to:
+        type: string
+        description: 'new group name'
+      graph:
+        type: string
+        description: 'graph the action targets'
+
+  changegroup:
+    description: 'Change a group''s metadata'
+    properties:
+      name:
+        type: string
+        description: 'the group name'
+        required: true
+      metadata:
+        type: object
+        description: 'structure of key-value pairs for group metadata'
+      graph:
+        type: string
+        description: 'graph the action targets'
+        required: true
+
+input:
+  error:
+    description: 'Graph error'
+
+  clear:
+    description: 'Initialize an empty graph.'
+    properties:
+      id:
+        type: string
+        description: 'identifier for the graph being created. Used for all subsequent messages related to the graph instance'
+        required: true
+      name:
+        type: string
+        description: '(optional) Human-readable label for the graph'
+      library:
+        type: string
+        description: '(optional) Component library identifier'
+      main:
+        type: boolean
+        description: "(optional) Identifies the graph as a main graph of a project that should not be registered as a component\nGraphs registered in this way should also be available for use as subgraphs in other graphs. Therefore a graph registration and later changes to it may cause component messages of the Component protocol to be sent back to the client informing of possible changes in the ports of the subgraph component."
+
+  subscribe:
+    description: 'Subscribe to a graph.'
+    properties:
+      graph:
+        type: string
+        description: 'graph to subscribe to'
+        required: true
+
+  unsubscribe:
+    description: 'Unsubscribe to a graph.'
+    properties:
+      graph:
+        type: string
+        description: 'graph to unsubscribe from'
+        required: true
+
+  addnode:
+    description: 'Add node to a graph.'
+    properties:
+      id:
+        type: string
+        description: 'identifier for the node'
+        required: true
+      component:
+        type: string
+        description: 'component name used for the node'
+        required: true
+      metadata:
+        type: object
+        description: '(optional): structure of key-value pairs for node metadata'
+      graph:
+        type: string
+        description: 'graph the action targets'
+        required: true
+
+  removenode:
+    description: 'Remove a node from a graph.'
+    properties:
+      id:
+        type: string
+        description: 'identifier for the node'
+        required: true
+      graph:
+        type: string
+        description: 'graph the action targets'
+        required: true
+
+  renamenode:
+    description: 'Change the ID of a node in the graph'
+    properties:
+      from:
+        type: string
+        description: 'original identifier for the node'
+        required: true
+      to:
+        type: string
+        description: 'new identifier for the node'
+        required: true
+      graph:
+        type: string
+        description: 'graph the action targets'
+        required: true
+
+  changenode:
+    description: 'Change the metadata associated to a node in the graph'
+    properties:
+      id:
+        type: string
+        description: 'identifier for the node'
+        required: true
+      metadata:
+        type: object
+        description: 'structure of key-value pairs for node metadata'
+        required: true
+      graph:
+        type: string
+        description: 'graph the action targets'
+        required: true
+
+  addedge:
+    description: 'Add an edge to the graph'
+    properties:
+      src:
+        type: object
+        description: 'source node for the edge'
+        properties:
+          node:
+            type: string
+            description: 'node identifier'
+          port:
+            type: string
+            description: 'port name'
+          index:
+            type: ["string", "number"]
+            description: 'connection index (optional, for addressable ports)'
+      tgt:
+        type: object
+        description: 'target node for the edge'
+        properties:
+          node:
+            type: string
+            description: 'node identifier'
+          port:
+            type: string
+            description: 'port name'
+          index:
+            type: ["string", "number"]
+            description: 'connection index (optional, for addressable ports)'
+      metadata:
+        type: object
+        description: '(optional): structure of key-value pairs for edge metadata'
+      graph:
+        description: 'graph the action targets'
+
+  removeedge:
+    description: 'Remove an edge from the graph'
+    properties:
+      graph:
+        type: string
+        description: 'graph the action targets'
+      src:
+        type: object
+        description: 'source node for the edge'
+        properties:
+          node:
+            type: string
+            description: 'node identifier'
+          port:
+            type: string
+            description: 'port name'
+      tgt:
+        type: object
+        description: 'target node for the edge'
+        properties:
+          node:
+            type: string
+            description: 'node identifier'
+          port:
+            type: string
+            description: 'port name'
+
+  changeedge:
+    description: 'Change an edge''s metadata'
+    properties:
+      graph:
+        type: string
+        description: 'graph the action targets'
+      metadata:
+        type: object
+        description: 'struct of key-value pairs for edge metadata'
+      src:
+        type: object
+        description: 'source node for the edge'
+        properties:
+          node:
+            type: string
+            description: 'node identifier'
+          port:
+            type: string
+            description: 'port name'
+      tgt:
+        type: object
+        description: 'target node for the edge'
+        properties:
+          node:
+            type: string
+            description: 'node identifier'
+          port:
+            type: string
+            description: 'port name'
+
+  addinitial:
+    description: 'Add an IIP to the graph'
+    properties:
+      graph:
+        type: string
+        description: 'graph the action targets'
+      metadata:
+        type: object
+        description: '(optional): structure of key-value pairs for edge metadata'
+      src:
+        type: object
+        properties:
+          data:
+            type: any
+            description: 'IIP value in its actual data type'
+      tgt:
+        type: object
+        description: 'target node for the edge'
+        properties:
+          node:
+            type: string
+            description: 'node identifier'
+          port:
+            type: string
+            description: 'port name'
+          index:
+            type: ["string", "number"]
+            description: 'connection index (optional, for addressable ports)'
+
+  removeinitial:
+    description: 'Remove an IIP from the graph'
+    properties:
+      tgt:
+        type: object
+        properties:
+          node:
+            type: string
+            description: 'node identifier'
+          port:
+            type: string
+            description: 'port name'
+        description: 'target node for the edge'
+      graph:
+        type: string
+        description: 'graph the action targets'
+
+  addinport:
+    description: 'Add an exported inport to the graph.'
+    properties:
+      public:
+        type: string
+        description: 'the exported name of the port'
+      node:
+        type: string
+        description: 'node identifier'
+      port:
+        type: string
+        description: 'internal port name'
+      metadata:
+        type: object
+        description: '(optional): structure of key-value pairs for node metadata'
+      graph:
+        type: string
+        description: 'graph the action targets'
+
+  removeinport:
+    description: 'Remove an exported port from the graph'
+    properties:
+      public:
+        type: string
+        description: 'the exported name of the port to remove'
+      graph:
+        type: string
+        description: 'graph the action targets'
+
+  renameinport:
+    description: 'Rename an exported port in the graph'
+    properties:
+      from:
+        type: string
+        description: 'original exported port name'
+      to:
+        type: string
+        description: 'new exported port name'
+      graph:
+        type: string
+        description: 'graph the action targets'
+
+  addoutport:
+    description: 'Add an exported outport to the graph.'
+    properties:
+      public:
+        type: string
+        description: 'the exported name of the port'
+      node:
+        type: string
+        description: 'node identifier'
+      port:
+        type: string
+        description: 'internal port name'
+      metadata:
+        type: object
+        description: '(optional): structure of key-value pairs for port metadata'
+      graph:
+        type: string
+        description: 'graph the action targets'
+
+  removeoutport:
+    description: 'Remove an exported port from the graph'
+    properties:
+      public:
+        type: string
+        description: 'the exported name of the port to remove'
+      graph:
+        type: string
+        description: 'graph the action targets'
+
+  renameoutport:
+    description: 'Rename an exported port in the graph'
+    properties:
+      from:
+        type: string
+        description: 'original exported port name'
+      to:
+        type: string
+        description: 'new exported port name'
+      graph:
+        type: string
+        description: 'graph the action targets'
+
+  addgroup:
+    description: 'Add a group to the graph'
+    properties:
+      name:
+        type: string
+        description: 'the group name'
+      nodes:
+        type: array
+        description: 'an array of node ids part of the group'
+      metadata:
+        type: object
+        description: '(optional): structure of key-value pairs for group metadata'
+      graph:
+        type: string
+        description: 'graph the action targets'
+
+  removegroup:
+    description: 'Remove a group from the graph'
+    properties:
+      name:
+        type: string
+        description: 'the group name'
+      graph:
+        type: string
+        description: 'graph the action targets'
+
+  renamegroup:
+    description: 'Rename a group in the graph.'
+    properties:
+      from:
+        type: string
+        description: 'original group name'
+      to:
+        type: string
+        description: 'new group name'
+      graph:
+        type: string
+        description: 'graph the action targets'
+
+  changegroup:
+    description: 'Change a group''s metadata'
+    properties:
+      name:
+        type: string
+        description: 'the group name'
+      metadata:
+        type: object
+        description: 'structure of key-value pairs for group metadata'
+      graph:
+        type: string
+        description: 'graph the action targets'

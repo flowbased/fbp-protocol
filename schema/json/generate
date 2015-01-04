@@ -1,0 +1,5 @@
+#!/bin/sh
+js-yaml ../yaml/network.yml > network.json
+js-yaml ../yaml/graph.yml  > graph.json
+js-yaml ../yaml/runtime.yml > runtime.json
+js-yaml ../yaml/component.yml > component.json
