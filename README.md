@@ -3,8 +3,10 @@ FBP Network Protocol
 
 Tests, schemas, and specifications for the Flow Based Programming Network Protocol.
 
-Installing
-----------
+The purpose of this project is to provide an easy way for runtimes to test their compatibility with the [FBP Network Protocol](http://noflojs.org/documentation/protocol/) and to serve as a repository for files useful to all runtime developers, such as message schemas.  It currently supports testing runtimes based on the websocket transport.
+
+Installing the test suite
+-------------------------
 
 1. Install Node.js using their [intaller](http://nodejs.org/download/) or a [package manager](https://github.com/joyent/node/wiki/installing-node.js-via-package-manager)
 
