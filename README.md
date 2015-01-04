@@ -3,14 +3,16 @@ FBP Network Protocol
 
 Tests, schemas, and specifications for the Flow Based Programming Network Protocol.
 
-The purpose of this project is to provide an easy way for runtimes to test their compatibility with the [FBP Network Protocol](http://noflojs.org/documentation/protocol/) and to serve as a repository for files useful to all runtime developers, such as message schemas.  It currently supports testing runtimes based on the websocket transport.
+The primary purpose of this project is to provide an easy way for developers to test their runtimes for compatibility with the [FBP Network Protocol](http://noflojs.org/documentation/protocol/). It also contains files useful to runtime developers, such as message schemas. 
+
+The test suite currently works for runtimes based on the websocket transport.
 
 Installing the test suite
 -------------------------
 
-1. Install Node.js using their [intaller](http://nodejs.org/download/) or a [package manager](https://github.com/joyent/node/wiki/installing-node.js-via-package-manager)
+1. Install Node.js using their [installer](http://nodejs.org/download/) or a [package manager](https://github.com/joyent/node/wiki/installing-node.js-via-package-manager)
 
-2. Use Node's package manager to install `fbp-protocol`.
+2. Install this package.
 
    You can install it within your project, which will place the executables in `./node_modules/.bin`:
 
@@ -29,9 +31,9 @@ Installing the test suite
 Testing a runtime
 -----------------
 
-1. Before getting started, your runtime needs to provide a few basic components for testing.  These are currently Repeat, Drop, and Output.
+1. Before you can run the tests (successfully), your runtime needs to provide a few basic components.  These are currently Repeat, Drop, and Output.
 
-   By default, the tests will look for these in the "core" colection, however this is configurable.  For example, if you want to implement these components as a one-off just for the tests, you can place them in a "tests" collection and pass `--collection tests` to `fbp-init`.
+   By default, the tests will look for these in the "core" collection, however this is configurable.  For example, if you want to implement these components as a one-off just for the tests, you can place them in a "tests" collection and pass `--collection tests` to `fbp-init`.
 
 2. Use `fbp-init` to save a configuration file for your runtime into the current directory (keep in mind that if you used the local install method, you'll need to run `./node_modules/.bin/fbp-init`).  Use `fbp-init -h` to see the available options and their defaults. 
 
@@ -49,6 +51,12 @@ Testing a runtime
    fbp-test
    ```
 
+Examples
+--------
+
+A Node.js package using grunt: https://github.com/chadrik/noflo-runtime-websocket/tree/fbp-protocol
+
+
 TODO
 ----
 - capture server output to a log
@@ -56,13 +64,14 @@ TODO
 - don't test capabilities that the runtime does not claim to support (as returned by `getruntime`)
 - add more tests:
   - `getsource` / `source`
-  - toplogy restrictions
+  - topology restrictions
+  - capturing output
 - add separate, optional tests for "classical" or "noflo" behaviors
 - use library for more flexible json comparison?
   - [joi](https://github.com/hapijs/joi)
   - [chai-json-schema](http://chaijs.com/plugins/chai-json-schema)
 - dynamically build tests based on separate json command / response files?
 - validate options read from `fbp-config.json`
-- make `fbp-init` prompt-based
+- make `fbp-init` prompt-based?
 - allow passing a path to `fbp-config.json` to `fbp-test`
 - make `init` and `test` subcommands of a `fbp` command?
