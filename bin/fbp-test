@@ -1,0 +1,33 @@
+#!/usr/bin/env node
+// vim: set filetype=javascript:
+
+// this is a simple wrapper around the mocha executable, with the test
+// files location (and coffeescript support) automatically provided.
+
+var spawn = require('child_process').spawn,
+     path = require('path');
+
+// TODO: handle -h/--help
+var args = [path.resolve(__dirname, '../test/*.coffee'),
+            '--reporter', 'spec',
+            '--compilers', 'coffee:coffee-script/register'];
+args = args.concat(process.argv.slice(2));
+
+// code below is taken from the mocha executable:
+var proc = spawn('_mocha', args, { stdio: 'inherit' });
+proc.on('exit', function (code, signal) {
+  process.on('exit', function(){
+    if (signal) {
+      process.kill(process.pid, signal);
+    } else {
+      process.exit(code);
+    }
+  });
+});
+
+// terminate children.
+process.on('SIGINT', function () {
+  proc.kill('SIGINT'); // calls runner.abort()
+  proc.kill('SIGTERM'); // if that didn't work, we're probably in an infinite loop, so make it die.
+  process.kill(process.pid, 'SIGINT');
+});

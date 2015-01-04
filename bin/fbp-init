@@ -1,0 +1,39 @@
+#!/usr/bin/env node
+// vim: set filetype=javascript:
+var program = require('commander');
+var fs = require('fs');
+var lib = require('../src/Config');
+
+program
+  .option('--name <name>', 'name of the runtime as returned by getruntime.')
+  .option('--command <command>', 'executable command to start the runtime server process.')
+  .option('--host <hostname>', 'hostname of server to connect to. [localhost]', String, 'localhost')
+  .option('--port <port>', 'port of server to connect to. [8080]', Number, 8080)
+  .option('--collection <collection>', 'name of the collection in which to find the components required for testing. [core]', String, 'core')
+  .parse(process.argv);
+
+if (!program.name) {
+  console.log('You must specify a name');
+}
+
+if (!program.command) {
+  console.log('You must specify a command');
+}
+
+var values = {
+  name: program.name,
+  command: program.command,
+  host: program.host,
+  port: program.port,
+  collection: program.collection
+};
+
+lib.saveStored(values);
+
+console.log('Stored the following configuration to ' + lib.getStoredPath());
+console.log();
+for (var name in values) {
+  console.log(name + ': ' + values[name]);
+}
+console.log();
+console.log('To test, run `fbp-test` from this directory');
