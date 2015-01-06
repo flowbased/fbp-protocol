@@ -14,7 +14,8 @@ var args = [path.resolve(__dirname, '../test/*.coffee'),
 args = args.concat(process.argv.slice(2));
 
 // code below is taken from the mocha executable:
-var proc = spawn('_mocha', args, { stdio: 'inherit' });
+var mocha = path.resolve(__dirname, '../node_modules/.bin/_mocha');
+var proc = spawn(mocha, args, { stdio: 'inherit' });
 proc.on('exit', function (code, signal) {
   process.on('exit', function(){
     if (signal) {

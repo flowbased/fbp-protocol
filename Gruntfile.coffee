@@ -17,19 +17,16 @@ module.exports = ->
       files: ['test/*.coffee', 'src/*.coffee']
       tasks: ['test']
 
-    # BDD tests on Node.js
-    cafemocha:
-      nodejs:
-        src: ['test/*.coffee']
-        options:
-          reporter: 'spec'
+    # FBP Network Protocol tests
+    exec:
+      fbp_test: 'fbp-test --colors'
 
   # Grunt plugins used for testing
   @loadNpmTasks 'grunt-contrib-coffee'
   @loadNpmTasks 'grunt-contrib-watch'
-  @loadNpmTasks 'grunt-cafe-mocha'
+  @loadNpmTasks 'grunt-exec'
 
   # Our local tasks
   @registerTask 'build', ['coffee']
-  @registerTask 'test', ['cafemocha']
+  @registerTask 'test', ['exec']
   @registerTask 'default', ['test']
