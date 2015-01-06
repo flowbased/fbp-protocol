@@ -495,26 +495,6 @@
         }
       }
     },
-    "subscribe": {
-      "description": "Subscribe to a graph.",
-      "properties": {
-        "graph": {
-          "type": "string",
-          "description": "graph to subscribe to",
-          "required": true
-        }
-      }
-    },
-    "unsubscribe": {
-      "description": "Unsubscribe to a graph.",
-      "properties": {
-        "graph": {
-          "type": "string",
-          "description": "graph to unsubscribe from",
-          "required": true
-        }
-      }
-    },
     "addnode": {
       "description": "Add node to a graph.",
       "properties": {
