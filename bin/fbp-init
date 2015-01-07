@@ -4,6 +4,9 @@ var program = require('commander');
 var fs = require('fs');
 var lib = require('../src/Config');
 
+// commander.command is a function that we don't need. keep it from conflicting
+program.command = null;
+
 program
   .option('--name <name>', 'name of the runtime as returned by getruntime.')
   .option('--command <command>', 'executable command to start the runtime server process.')
@@ -13,11 +16,13 @@ program
   .parse(process.argv);
 
 if (!program.name) {
-  console.log('You must specify a name');
+  console.error('Error: You must specify a name');
+  process.exit(1);
 }
 
 if (!program.command) {
-  console.log('You must specify a command');
+  console.error('Error: You must specify a command');
+  process.exit(1);
 }
 
 var values = {
