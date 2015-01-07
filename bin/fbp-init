@@ -9,7 +9,7 @@ program.command = null;
 
 program
   .option('--name <name>', 'name of the runtime as returned by getruntime.')
-  .option('--command <command>', 'executable command to start the runtime server process.')
+  .option('--command <command>', 'executable command to start the runtime server process. [none]')
   .option('--host <hostname>', 'hostname of server to connect to. [localhost]', String, 'localhost')
   .option('--port <port>', 'port of server to connect to. [8080]', Number, 8080)
   .option('--collection <collection>', 'name of the collection in which to find the components required for testing. [core]', String, 'core')
@@ -21,8 +21,7 @@ if (!program.name) {
 }
 
 if (!program.command) {
-  console.error('Error: You must specify a command');
-  process.exit(1);
+  console.warn('You did not specify a command: you must start your runtime before running the tests');
 }
 
 var values = {

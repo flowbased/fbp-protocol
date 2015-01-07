@@ -543,14 +543,19 @@ exports.testRuntime = (runtimeType, startServer, stopServer, host='localhost', p
       # TODO:
       # getsource => source
 
-exports.testRuntimeCommand = (runtimeType, command, host='localhost', port=8080, collection='core') ->
+exports.testRuntimeCommand = (runtimeType, command=null, host='localhost', port=8080, collection='core') ->
   child = null
   exports.testRuntime( runtimeType,
-    (connectClient) ->
-      child = shelljs.exec command, {async: true}
-      connectClient()
+    (done) ->
+      if command
+        console.log "running '#{command}'"
+        child = shelljs.exec command, {async: true}
+      else
+        console.log "not running a command. runtime is assumed to be started"
+      done()
     ->
-      child.kill "SIGKILL"
+      if child
+        child.kill "SIGKILL"
     host
     port
     collection
