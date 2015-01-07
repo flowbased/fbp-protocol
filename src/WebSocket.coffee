@@ -17,21 +17,22 @@ exports.testRuntime = (runtimeType, startServer, stopServer, host='localhost', p
     connection = null
     send = null
     before (done) ->
-      tries = 5
+      tries = 10
       startServer ->
         client = new WebSocketClient
         client.on 'connect', (conn) ->
+          console.log "connected!"
           connection = conn
           done()
         client.on 'connectFailed', (err) ->
           tries--
           if tries == 0
-            console.log "failed to connect to runtime after 5 tries"
+            console.log "failed to connect to runtime after 10 tries"
             done(err)
           setTimeout(
             ->
               client.connect address, 'noflo'
-            100
+            200
           )
         console.log "connecting to", address
         client.connect address, 'noflo'
