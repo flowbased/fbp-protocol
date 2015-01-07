@@ -44,25 +44,29 @@ exports.testRuntime = (runtimeType, startServer, stopServer, host='localhost', p
         command: command
         payload: payload
 
-    receive = (expects, done) ->
+    receive = (expects, done, ignore=null) ->
       listener = (message) ->
         check done, ->
           chai.expect(message.utf8Data).to.be.a 'string'
           msg = JSON.parse message.utf8Data
-          expected = expects.shift()
-          if expected.payload
-            for key, value of expected.payload
-              if value is String
-                chai.expect(msg.payload).to.exist
-                chai.expect(msg.payload[key]).to.be.a 'string'
-                delete expected.payload[key]
-                delete msg.payload[key]
-              if value is Number
-                chai.expect(msg.payload).to.exist
-                chai.expect(msg.payload[key]).to.be.a 'number'
-                delete expected.payload[key]
-                delete msg.payload[key]
-          chai.expect(msg).to.eql expected
+          if not ignore or not ignore(msg)
+            expected = expects.shift()
+            if expected.payload
+              for key, value of expected.payload
+                type = null
+                if value is String
+                  type = 'string'
+                else if value is Number
+                  type = 'number'
+                else if value is Array
+                  type = 'array'
+                if type
+                  chai.expect(msg.payload, "payload.#{key}").to.exist
+                  chai.expect(msg.payload[key], "payload.#{key}").to.be.a type
+                  delete expected.payload[key]
+                  delete msg.payload[key]
+
+            chai.expect(msg).to.eql expected
           if expects.length
             connection.once 'message', listener
           else
@@ -72,15 +76,15 @@ exports.testRuntime = (runtimeType, startServer, stopServer, host='localhost', p
     describe 'Runtime Protocol', ->
       describe 'requesting runtime metadata', ->
         it 'should provide it back', (done) ->
-          connection.once 'message', (message) ->
-            check done, ->
-              msg = JSON.parse message.utf8Data
-              chai.expect(msg.protocol).to.equal 'runtime'
-              chai.expect(msg.command).to.equal 'runtime'
-              chai.expect(msg.payload).to.be.an 'object'
-              chai.expect(msg.payload.type).to.equal runtimeType
-              chai.expect(msg.payload.capabilities).to.be.an 'array'
-              done()
+          expects = [
+            protocol: 'runtime'
+            command: 'runtime'
+            payload:
+              type: runtimeType
+              version: String
+              capabilities: Array
+          ]
+          receive expects, done
           send 'runtime', 'getruntime', ''
 
     describe 'Graph Protocol', ->
@@ -98,7 +102,7 @@ exports.testRuntime = (runtimeType, startServer, stopServer, host='localhost', p
               protocol: 'graph'
               command: 'addnode'
               payload:
-                id: 'Foo'
+                id: 'Repeat1'
                 component: "#{collection}/Repeat"
                 metadata:
                   hello: 'World'
@@ -107,7 +111,7 @@ exports.testRuntime = (runtimeType, startServer, stopServer, host='localhost', p
               protocol: 'graph'
               command: 'addnode'
               payload:
-                id: 'Bar'
+                id: 'Drop1'
                 component: "#{collection}/Drop"
                 metadata: {}
                 graph: 'foo'
@@ -126,10 +130,10 @@ exports.testRuntime = (runtimeType, startServer, stopServer, host='localhost', p
             command: 'addedge'
             payload:
               src:
-                node: 'Foo'
+                node: 'Repeat1'
                 port: 'out'
               tgt:
-                node: 'Bar'
+                node: 'Drop1'
                 port: 'in'
               metadata:
                 route: 5
@@ -137,6 +141,46 @@ exports.testRuntime = (runtimeType, startServer, stopServer, host='localhost', p
           ]
           receive expects, done
           send 'graph', 'addedge', expects[0].payload
+      # describe 'adding an edge to a non-existent node', ->
+      #   it 'should return an error', (done) ->
+      #     expects = [
+      #       protocol: 'graph'
+      #       command: 'error'
+      #       payload:
+      #         msg: 'Requested port not found'
+      #     ]
+      #     receive expects, done
+      #     send 'graph', 'addedge',
+      #       protocol: 'graph'
+      #       command: 'addedge'
+      #       payload:
+      #         src:
+      #           node: 'non-existent'
+      #           port: 'out'
+      #         tgt:
+      #           node: 'Drop1'
+      #           port: 'in'
+      #         graph: 'foo'
+      # describe 'adding an edge to a non-existent port', ->
+      #   it 'should return an error', (done) ->
+      #     expects = [
+      #       protocol: 'graph'
+      #       command: 'error'
+      #       payload:
+      #         msg: 'Requested port not found'
+      #     ]
+      #     receive expects, done
+      #     send 'graph', 'addedge',
+      #       protocol: 'graph'
+      #       command: 'addedge'
+      #       payload:
+      #         src:
+      #           node: 'Repeat1'
+      #           port: 'non-existent'
+      #         tgt:
+      #           node: 'Drop1'
+      #           port: 'in'
+      #         graph: 'foo'
       describe 'adding metadata', ->
         describe 'to a node with no metadata', ->
           it 'should add the metadata', (done) ->
@@ -144,7 +188,7 @@ exports.testRuntime = (runtimeType, startServer, stopServer, host='localhost', p
               protocol: 'graph'
               command: 'changenode'
               payload:
-                id: 'Bar'
+                id: 'Drop1'
                 metadata:
                   sort: 1
                 graph: 'foo'
@@ -157,7 +201,7 @@ exports.testRuntime = (runtimeType, startServer, stopServer, host='localhost', p
               protocol: 'graph'
               command: 'changenode'
               payload:
-                id: 'Bar'
+                id: 'Drop1'
                 metadata:
                   sort: 1
                   tag: 'awesome'
@@ -165,7 +209,7 @@ exports.testRuntime = (runtimeType, startServer, stopServer, host='localhost', p
             ]
             receive expects, done
             send 'graph', 'changenode',
-              id: 'Bar'
+              id: 'Drop1'
               metadata:
                 tag: 'awesome'
               graph: 'foo'
@@ -175,7 +219,7 @@ exports.testRuntime = (runtimeType, startServer, stopServer, host='localhost', p
               protocol: 'graph'
               command: 'changenode'
               payload:
-                id: 'Bar'
+                id: 'Drop1'
                 metadata:
                   sort: 1
                   tag: 'awesome'
@@ -183,22 +227,22 @@ exports.testRuntime = (runtimeType, startServer, stopServer, host='localhost', p
             ]
             receive expects, done
             send 'graph', 'changenode',
-              id: 'Bar'
+              id: 'Drop1'
               metadata: {}
               graph: 'foo'
-        describe 'will a null value removes it from the node', ->
+        describe 'with a null value removes it from the node', ->
           it 'should merge the metadata', (done) ->
             expects = [
               protocol: 'graph'
               command: 'changenode'
               payload:
-                id: 'Bar'
+                id: 'Drop1'
                 metadata: {}
                 graph: 'foo'
             ]
             receive expects, done
             send 'graph', 'changenode',
-              id: 'Bar'
+              id: 'Drop1'
               metadata:
                 sort: null
                 tag: null
@@ -212,7 +256,7 @@ exports.testRuntime = (runtimeType, startServer, stopServer, host='localhost', p
               src:
                 data: 'Hello, world!'
               tgt:
-                node: 'Foo'
+                node: 'Repeat1'
                 port: 'in'
               metadata: {}
               graph: 'foo'
@@ -226,10 +270,10 @@ exports.testRuntime = (runtimeType, startServer, stopServer, host='localhost', p
             command: 'changeedge'
             payload:
               src:
-                node: 'Foo'
+                node: 'Repeat1'
                 port: 'out'
               tgt:
-                node: 'Bar'
+                node: 'Drop1'
                 port: 'in'
               metadata:
                 route: 5
@@ -239,10 +283,10 @@ exports.testRuntime = (runtimeType, startServer, stopServer, host='localhost', p
             command: 'removeedge'
             payload:
               src:
-                node: 'Foo'
+                node: 'Repeat1'
                 port: 'out'
               tgt:
-                node: 'Bar'
+                node: 'Drop1'
                 port: 'in'
               metadata:
                 route: 5
@@ -251,21 +295,21 @@ exports.testRuntime = (runtimeType, startServer, stopServer, host='localhost', p
             protocol: 'graph'
             command: 'changenode'
             payload:
-              id: 'Bar'
+              id: 'Drop1'
               metadata: {}
               graph: 'foo'
           ,
             protocol: 'graph'
             command: 'removenode'
             payload:
-              id: 'Bar'
+              id: 'Drop1'
               component: "#{collection}/Drop"
               metadata: {}
               graph: 'foo'
           ]
           receive expects, done
           send 'graph', 'removenode',
-            id: 'Bar'
+            id: 'Drop1'
             graph: 'foo'
       describe 'removing an IIP', ->
         it 'should provide the IIP back', (done) ->
@@ -276,7 +320,7 @@ exports.testRuntime = (runtimeType, startServer, stopServer, host='localhost', p
               src:
                 data: 'Hello, world!'
               tgt:
-                node: 'Foo'
+                node: 'Repeat1'
                 port: 'in'
               metadata: {}
               graph: 'foo'
@@ -284,7 +328,7 @@ exports.testRuntime = (runtimeType, startServer, stopServer, host='localhost', p
           receive expects, done
           send 'graph', 'removeinitial',
             tgt:
-              node: 'Foo'
+              node: 'Repeat1'
               port: 'in'
             graph: 'foo'
       describe 'renaming a node', ->
@@ -293,8 +337,8 @@ exports.testRuntime = (runtimeType, startServer, stopServer, host='localhost', p
             protocol: 'graph'
             command: 'renamenode'
             payload:
-              from: 'Foo'
-              to: 'Baz'
+              from: 'Repeat1'
+              to: 'RepeatRenamed'
               graph: 'foo'
           ]
           receive expects, done
@@ -309,7 +353,7 @@ exports.testRuntime = (runtimeType, startServer, stopServer, host='localhost', p
           ]
           receive expects, done
           send 'graph', 'addnode',
-            id: 'Foo'
+            id: 'Repeat1'
             component: "#{collection}/Repeat"
             graph: 'another-graph'
       describe 'adding a node without specifying a graph', ->
@@ -322,12 +366,123 @@ exports.testRuntime = (runtimeType, startServer, stopServer, host='localhost', p
           ]
           receive expects, done
           send 'graph', 'addnode',
-            id: 'Foo'
+            id: 'Repeat1'
             component: "#{collection}/Repeat"
+      describe 'adding an in-port to a graph', ->
+        it "should provide the graph's ports back", (done) ->
+          expects = [
+            protocol: 'runtime',
+            command: 'ports',
+            payload:
+              graph: 'foo'
+              inPorts:
+                [
+                  addressable: false
+                  id: "in"
+                  required: false
+                  type: "any"
+                ]
+              outPorts: []
+          ]
+          receive expects, done
+          send 'graph', 'addinport',
+            public: 'in'
+            node: 'RepeatRenamed'
+            port: 'in'
+            graph: 'foo'
+      # describe 'adding an in-port to a non-existent port', ->
+      #   it "should return an error", (done) ->
+      #     expects = [
+      #       protocol: 'graph',
+      #       command: 'error',
+      #       payload:
+      #         msg: 'Requested port not found'
+      #     ]
+      #     receive expects, done
+      #     send 'graph', 'addinport',
+      #       public: 'in'
+      #       node: 'non-existent'
+      #       port: 'in'
+      #       graph: 'foo'
+      describe 'adding an out-port to a graph', ->
+        it "should provide the graph's ports back", (done) ->
+          expects = [
+            protocol: 'runtime',
+            command: 'ports',
+            payload:
+              graph: 'foo'
+              inPorts:
+                [
+                  addressable: false
+                  id: "in"
+                  required: false
+                  type: "any"
+                ]
+              outPorts:
+                [
+                  addressable: false
+                  id: "out"
+                  required: false
+                  type: "any"
+                ]
+          ]
+          receive expects, done
+          send 'graph', 'addoutport',
+            public: 'out'
+            node: 'RepeatRenamed'
+            port: 'out'
+            graph: 'foo'
+      # describe 'renaming an in-port of a graph', ->
+      #   it "should provide the graph's ports back", (done) ->
+      #     expects = [
+      #       protocol: 'runtime',
+      #       command: 'ports',
+      #       payload:
+      #         graph: 'foo'
+      #         inPorts:
+      #           [
+      #             addressable: false
+      #             id: "input"
+      #             required: false
+      #             type: "any"
+      #           ]
+      #         outPorts:
+      #           [
+      #             addressable: false
+      #             id: "out"
+      #             required: false
+      #             type: "any"
+      #           ]
+      #     ]
+      #     receive expects, done
+      #     send 'graph', 'renameinport',
+      #       from: 'in'
+      #       to: 'input'
+      #       graph: 'foo'
+      describe 'removing an out-port of a graph', ->
+        it "should provide the graph's ports back", (done) ->
+          expects = [
+            protocol: 'runtime',
+            command: 'ports',
+            payload:
+              graph: 'foo'
+              inPorts:
+                [
+                  addressable: false
+                  id: "in"
+                  required: false
+                  type: "any"
+                ]
+              outPorts: []
+          ]
+          receive expects, done
+          send 'graph', 'removeoutport',
+            public: 'out'
+            graph: 'foo'
       # TODO:
       # ports:
-      #   addinport / removeinport / renameinport
-      #   addoutport / removeoutport / renameoutport
+      #   removeinport
+      #   renameoutport
       # groups:
       #   addgroup / removegroup / renamegroup / changegroup
 
@@ -507,16 +662,16 @@ exports.testRuntime = (runtimeType, startServer, stopServer, host='localhost', p
     describe 'Component protocol', ->
       describe 'on requesting a component list', ->
         it 'should receive some known components', (done) ->
-          listener = (message) ->
-            check done, ->
-              chai.expect(message.utf8Data).to.be.a 'string'
-              msg = JSON.parse message.utf8Data
-              chai.expect(msg.protocol).to.equal 'component'
-              chai.expect(msg.payload).to.be.an 'object'
-              unless msg.payload.name is "#{collection}/Output"
-                connection.once 'message', listener
-              else
-                expectedInPorts = [
+          expects = [
+            protocol: 'component'
+            command: 'component'
+            payload:
+              name: "#{collection}/Output"
+              description: "This component receives input on a single inport, and sends the data items directly to console.log"
+              icon: String
+              subgraph: false
+              inPorts:
+                [
                   id: 'in'
                   type: 'all'
                   required: false
@@ -529,16 +684,17 @@ exports.testRuntime = (runtimeType, startServer, stopServer, host='localhost', p
                   addressable: false
                   description: 'Options to be passed to console.log'
                 ]
-                # order matters
-                chai.expect(msg.payload.inPorts).to.eql expectedInPorts
-                chai.expect(msg.payload.outPorts).to.eql [
+              outPorts:
+                [
                   id: 'out'
                   type: 'all'
                   required: false
                   addressable: false
                 ]
-                done()
-          connection.once 'message', listener
+          ]
+          receive expects, done, (msg) ->
+            return msg.payload.name isnt "#{collection}/Output"
+
           send 'component', 'list', process.cwd()
 
       # TODO:
