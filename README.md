@@ -59,6 +59,7 @@ A Node.js package using grunt: https://github.com/chadrik/noflo-runtime-websocke
 
 TODO
 ----
+- handle `fbp-test -h`
 - capture server output to a log
 - isolate tests, so that one failure does not cause subsequent tests to fail
 - don't test capabilities that the runtime does not claim to support (as returned by `getruntime`)
@@ -66,12 +67,19 @@ TODO
   - `getsource` / `source`
   - topology restrictions
   - capturing output
+  - existing tests from other projects:
+    - https://github.com/jonnor/imgflo/blob/master/spec/websocket.coffee
+    - https://github.com/jonnor/sndflo/blob/master/spec/runtime.coffee
+    - https://github.com/jonnor/javafbp-runtime/blob/master/spec/protocol.coffee
+    - https://github.com/microflo/microflo/blob/master/test/websocketapi.js
+- add examples (https://github.com/flowbased/protocol-examples)
+- add tests for `fpb-test`
 - add separate, optional tests for "classical" or "noflo" behaviors
 - use library for more flexible json comparison?
   - [joi](https://github.com/hapijs/joi)
   - [chai-json-schema](http://chaijs.com/plugins/chai-json-schema)
-- dynamically build tests based on separate json command / response files?
+- dynamically build tests based on sidecar json command / response files?
 - validate options read from `fbp-config.json`
 - make `fbp-init` prompt-based?
-- allow passing a path to `fbp-config.json` to `fbp-test`
+- allow `fbp-test /path/to/fbp-config.json`
 - make `init` and `test` subcommands of a `fbp` command?
