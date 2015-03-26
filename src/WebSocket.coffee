@@ -58,6 +58,8 @@ exports.testRuntime = (runtimeType, startServer, stopServer, host='localhost', p
 
           if not ignore or not ignore(msg)
             expected = expects.shift()
+            chai.expect(msg.protocol, 'protocol').to.equal expected.protocol
+            chai.expect(msg.command, 'command').to.equal expected.command
             if expected.payload
               for key, value of expected.payload
                 type = null
