@@ -502,7 +502,7 @@ exports.testRuntime = (runtimeType, startServer, stopServer, host='localhost', p
 
     describe 'Network protocol', ->
       # Set up a clean graph
-      beforeEach (done) ->
+      before (done) ->
         waitFor = 5  # set this to the number of commands below
         listener = (message) ->
           waitFor--
