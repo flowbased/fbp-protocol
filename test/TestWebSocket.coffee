@@ -24,5 +24,6 @@ tests.testRuntimeCommand(
   opts.command,
   opts.host,
   opts.port,
-  opts.collection
+  opts.collection,
+  opts.version
 )

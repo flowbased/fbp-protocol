@@ -13,6 +13,7 @@ program
   .option('--host <hostname>', 'hostname of server to connect to. [localhost]', String, 'localhost')
   .option('--port <port>', 'port of server to connect to. [8080]', Number, 8080)
   .option('--collection <collection>', 'name of the collection in which to find the components required for testing. [core]', String, 'core')
+  .option('--version <version>', 'protocol version to test against', String, '0.5')
   .parse(process.argv);
 
 if (!program.name) {
@@ -29,7 +30,8 @@ var values = {
   command: program.command,
   host: program.host,
   port: program.port,
-  collection: program.collection
+  collection: program.collection,
+  version: program.version
 };
 
 lib.saveStored(values);

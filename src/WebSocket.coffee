@@ -3,6 +3,7 @@ path = require 'path'
 # spawn = require('child_process').spawn
 shelljs = require 'shelljs'
 WebSocketClient = require('websocket').client
+semver = require 'semver'
 
 check = (done, f) ->
   try
@@ -10,32 +11,35 @@ check = (done, f) ->
   catch e
     done e
 
-exports.testRuntime = (runtimeType, startServer, stopServer, host='localhost', port=8080, collection='core') ->
+exports.testRuntime = (runtimeType, startServer, stopServer, host='localhost', port=8080, collection='core', version='0.5') ->
+  if version.length is 3
+    semanticVersion = "#{version}.0"
+  else
+    semanticVersion = version
+
   address = "ws://#{host}:#{port}/"
-  describe "#{runtimeType} webSocket network runtime", ->
+  describe "#{runtimeType} webSocket network runtime version #{version}", ->
     client = null
     connection = null
     send = null
-    before (done) ->
-      tries = 10
-      startServer ->
-        client = new WebSocketClient
-        client.on 'connect', (conn) ->
-          console.log "connected!"
-          connection = conn
-          done()
-        client.on 'connectFailed', (err) ->
-          tries--
-          if tries == 0
-            console.log "failed to connect to runtime after 10 tries"
-            done(err)
-          setTimeout(
-            ->
-              client.connect address, 'noflo'
-            200
-          )
-        console.log "connecting to", address
-        client.connect address, 'noflo'
+    describe "Connecting to the runtime at #{address}", ->
+      it 'should succeed', (done) ->
+        @timeout 4000
+        tries = 10
+        startServer ->
+          client = new WebSocketClient
+          client.on 'connect', (conn) ->
+            connection = conn
+            done()
+          client.on 'connectFailed', (err) ->
+            tries--
+            chai.expect(tries).to.be.above 0
+            setTimeout(
+              ->
+                client.connect address, 'noflo'
+              200
+            )
+          client.connect address, 'noflo'
     after stopServer
 
     send = (protocol, command, payload) ->
@@ -49,6 +53,7 @@ exports.testRuntime = (runtimeType, startServer, stopServer, host='localhost', p
         check done, ->
           chai.expect(message.utf8Data).to.be.a 'string'
           msg = JSON.parse message.utf8Data
+
           if not ignore or not ignore(msg)
             expected = expects.shift()
             if expected.payload
@@ -81,9 +86,14 @@ exports.testRuntime = (runtimeType, startServer, stopServer, host='localhost', p
             command: 'runtime'
             payload:
               type: runtimeType
-              version: String
+              version: version
               capabilities: Array
+              allCapabilities: Array
           ]
+
+          if semver.lt semanticVersion, '0.5.0'
+            delete expects[0].payload.allCapabilities
+
           receive expects, done
           send 'runtime', 'getruntime', ''
 
@@ -700,7 +710,7 @@ exports.testRuntime = (runtimeType, startServer, stopServer, host='localhost', p
       # TODO:
       # getsource => source
 
-exports.testRuntimeCommand = (runtimeType, command=null, host='localhost', port=8080, collection='core') ->
+exports.testRuntimeCommand = (runtimeType, command=null, host='localhost', port=8080, collection='core', version='0.5') ->
   child = null
   exports.testRuntime( runtimeType,
     (done) ->
@@ -716,4 +726,5 @@ exports.testRuntimeCommand = (runtimeType, command=null, host='localhost', port=
     host
     port
     collection
+    version
   )

@@ -1,7 +1,7 @@
 {
   "name": "fbp-protocol",
   "description": "Tests, schemas, and documentation for the Flow Base Programming Network Protocol",
-  "version": "0.1.6",
+  "version": "0.2.0",
   "author": {
     "name": "Henri Bergius",
     "email": "henri.bergius@iki.fi"
@@ -21,12 +21,13 @@
     "fbp-test": "./bin/fbp-test"
   },
   "dependencies": {
-    "websocket": "~1.0.8",
-    "commander": "^2.1.0",
-    "shelljs": "~0.3.0",
     "chai": "~1.9.0",
     "coffee-script": "^1.7.1",
-    "mocha": "~2.1.0"
+    "commander": "^2.1.0",
+    "mocha": "~2.1.0",
+    "semver": "^4.3.1",
+    "shelljs": "~0.3.0",
+    "websocket": "~1.0.8"
   },
   "devDependencies": {
     "grunt": "~0.4.1",
