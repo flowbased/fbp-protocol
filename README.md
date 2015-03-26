@@ -51,6 +51,8 @@ Testing a runtime
    fbp-test
    ```
 
+If the runtime execution requires a `secret` to be sent, define it using the `FBP_PROTOCOL_SECRET` environment variable.
+
 Examples
 --------
 

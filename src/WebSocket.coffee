@@ -43,6 +43,8 @@ exports.testRuntime = (runtimeType, startServer, stopServer, host='localhost', p
     after stopServer
 
     send = (protocol, command, payload) ->
+      payload = {} unless payload
+      payload.secret = process.env.FBP_PROTOCOL_SECRET if process.env.FBP_PROTOCOL_SECRET
       connection.sendUTF JSON.stringify
         protocol: protocol
         command: command
@@ -95,7 +97,7 @@ exports.testRuntime = (runtimeType, startServer, stopServer, host='localhost', p
             delete expects[0].payload.allCapabilities
 
           receive expects, done
-          send 'runtime', 'getruntime', ''
+          send 'runtime', 'getruntime', {}
 
     describe 'Graph Protocol', ->
       describe 'adding a graph and nodes', ->
