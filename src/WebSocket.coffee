@@ -111,7 +111,6 @@ exports.testRuntime = (runtimeType, startServer, stopServer, host='localhost', p
                 baseDir: path.resolve __dirname, '../'
                 id: 'foo'
                 main: true
-                name: 'NoFlo runtime'
             ,
               protocol: 'graph'
               command: 'addnode'
