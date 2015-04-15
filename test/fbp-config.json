@@ -1,0 +1,8 @@
+{
+  "command": "python2 ../examples/python/runtime.py",
+  "host": "localhost",
+  "port": 3569,
+  "type": "fbp-python-example",
+  "collection": "core",
+  "version": "0.4"
+}

@@ -19,7 +19,10 @@ module.exports = ->
 
     # FBP Network Protocol tests
     exec:
-      fbp_test: 'node bin/fbp-test --colors'
+      fbp_test:
+        command: 'node ../bin/fbp-test --colors'
+        options:
+          cwd: 'test/'
 
   # Grunt plugins used for testing
   @loadNpmTasks 'grunt-contrib-coffee'
