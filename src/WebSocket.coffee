@@ -91,6 +91,7 @@ exports.testRuntime = (runtimeType, startServer, stopServer, host='localhost', p
             payload:
               type: runtimeType
               version: version
+              graph: String
               capabilities: Array
               allCapabilities: Array
           ]
@@ -111,6 +112,7 @@ exports.testRuntime = (runtimeType, startServer, stopServer, host='localhost', p
                 baseDir: path.resolve __dirname, '../'
                 id: 'foo'
                 main: true
+                name: 'NoFlo runtime'
             ,
               protocol: 'graph'
               command: 'addnode'
@@ -363,6 +365,7 @@ exports.testRuntime = (runtimeType, startServer, stopServer, host='localhost', p
             command: 'error',
             payload:
               message: 'Requested graph not found'
+              stack: String
           ]
           receive expects, done
           send 'graph', 'addnode',
@@ -376,6 +379,7 @@ exports.testRuntime = (runtimeType, startServer, stopServer, host='localhost', p
             command: 'error',
             payload:
               message: 'No graph specified'
+              stack: String
           ]
           receive expects, done
           send 'graph', 'addnode',
