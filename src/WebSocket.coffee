@@ -385,20 +385,15 @@ exports.testRuntime = (runtimeType, startServer, stopServer, host='localhost', p
             id: 'Repeat1'
             component: "#{collection}/Repeat"
       describe 'adding an in-port to a graph', ->
-        it "should provide the graph's ports back", (done) ->
+        it "should ACK", (done) ->
           expects = [
-            protocol: 'runtime',
-            command: 'ports',
+            protocol: 'graph',
+            command: 'addinport',
             payload:
               graph: 'foo'
-              inPorts:
-                [
-                  addressable: false
-                  id: "in"
-                  required: false
-                  type: "any"
-                ]
-              outPorts: []
+              node: 'RepeatRenamed'
+              public: 'in'
+              port: 'in'
           ]
           receive expects, done
           send 'graph', 'addinport',
@@ -421,26 +416,15 @@ exports.testRuntime = (runtimeType, startServer, stopServer, host='localhost', p
       #       port: 'in'
       #       graph: 'foo'
       describe 'adding an out-port to a graph', ->
-        it "should provide the graph's ports back", (done) ->
+        it "should ACK", (done) ->
           expects = [
-            protocol: 'runtime',
-            command: 'ports',
+            protocol: 'graph',
+            command: 'addoutport',
             payload:
               graph: 'foo'
-              inPorts:
-                [
-                  addressable: false
-                  id: "in"
-                  required: false
-                  type: "any"
-                ]
-              outPorts:
-                [
-                  addressable: false
-                  id: "out"
-                  required: false
-                  type: "any"
-                ]
+              node: 'RepeatRenamed'
+              port: 'out'
+              public: 'out'
           ]
           receive expects, done
           send 'graph', 'addoutport',
@@ -476,20 +460,13 @@ exports.testRuntime = (runtimeType, startServer, stopServer, host='localhost', p
       #       to: 'input'
       #       graph: 'foo'
       describe 'removing an out-port of a graph', ->
-        it "should provide the graph's ports back", (done) ->
+        it "should ACK", (done) ->
           expects = [
-            protocol: 'runtime',
-            command: 'ports',
+            protocol: 'graph',
+            command: 'removeoutport',
             payload:
               graph: 'foo'
-              inPorts:
-                [
-                  addressable: false
-                  id: "in"
-                  required: false
-                  type: "any"
-                ]
-              outPorts: []
+              public: 'out'
           ]
           receive expects, done
           send 'graph', 'removeoutport',
