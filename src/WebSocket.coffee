@@ -91,7 +91,6 @@ exports.testRuntime = (runtimeType, startServer, stopServer, host='localhost', p
             payload:
               type: runtimeType
               version: version
-              graph: String
               capabilities: Array
               allCapabilities: Array
           ]
