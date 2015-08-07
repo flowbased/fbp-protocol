@@ -660,7 +660,7 @@ exports.testRuntime = (runtimeType, startServer, stopServer, host='localhost', p
             command: 'component'
             payload:
               name: "#{collection}/Output"
-              description: "This component receives input on a single inport, and sends the data items directly to console.log"
+              description: String
               icon: String
               subgraph: false
               inPorts:
