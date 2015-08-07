@@ -594,7 +594,13 @@ exports.testRuntime = (runtimeType, startServer, stopServer, host='localhost', p
                src: { node: 'Hello', port: 'out' }
                tgt: { node: 'World', port: 'in' }
           ]
-          receive expects, done
+          ignore = (msg) ->
+            return true if msg.protocol == 'runtime'
+            if msg.command == 'started' and msg.payload.running == false
+              # we might get two messages, one with started:true, running:false
+              # before the one with both set to true
+              return true
+          receive expects, done, ignore
           send 'network', 'start',
             graph: 'bar'
         it "should provide a 'started' status", (done) ->
