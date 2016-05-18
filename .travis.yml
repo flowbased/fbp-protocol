@@ -3,4 +3,9 @@ node_js:
 - '0.10'
 before_script:
 - npm install -g grunt-cli
+after_script:
+- grunt gh-pages
 sudo: false
+env:
+  global:
+    secure: hylkH4bQkZDzSK+i39lMzrii99GsKJCkBHw1fu5HzGd+PdxCLOoWJeSlYFVyGpW4dBnzyRtX0S2iNO+71tU4KYEeSdi/wI/0Hb5r5nPZpyAyqcvQcqKPg28Zo0aChS4yDonXm8GquyarGrbTSxUgYTyQ8vd/quQzl04pgIRXLww=
