@@ -27,7 +27,7 @@ module.exports = ->
       options:
         base: 'dist/',
         user:
-          name: 'fbp-spec bot',
+          name: 'fbp-protocol bot',
           email: 'jononor+fbpprotocolbot@gmail.com'
         silent: true
         repo: 'https://' + process.env.GH_TOKEN + '@github.com/flowbased/fbp-protocol.git'
