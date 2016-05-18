@@ -43,5 +43,5 @@ module.exports = ->
 
   # Our local tasks
   @registerTask 'build', ['coffee', 'exec:spechtml']
-  @registerTask 'test', ['exec:fbp_test']
+  @registerTask 'test', ['build', 'exec:fbp_test']
   @registerTask 'default', ['test']

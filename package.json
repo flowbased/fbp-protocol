@@ -20,6 +20,9 @@
     "fbp-init": "./bin/fbp-init",
     "fbp-test": "./bin/fbp-test"
   },
+  "scripts": {
+    "test": "grunt test"
+  },
   "dependencies": {
     "chai": "~1.9.0",
     "coffee-script": "^1.7.1",
