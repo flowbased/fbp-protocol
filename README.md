@@ -3,9 +3,12 @@ FBP Network Protocol
 
 Tests, schemas, and specifications for the Flow Based Programming Network Protocol.
 
-The primary purpose of this project is to provide an easy way for developers to test their runtimes for compatibility with the [FBP Network Protocol](http://noflojs.org/documentation/protocol/). It also contains files useful to runtime developers, such as message schemas. 
+You can find a built version of the specification at [flowbased.github.io/fbp-protocol](http://flowbased.github.io/fbp-protocol/).
 
-The test suite currently works for runtimes based on the websocket transport.
+The included test suite provide an easy way for developers to test their runtimes for compatibility with the protocol.
+Also included are files useful to runtime developers, such as message schemas.
+
+The test suite currently works for runtimes based on the Websocket transport.
 
 Installing the test suite
 -------------------------
@@ -31,7 +34,7 @@ Installing the test suite
 Testing a runtime
 -----------------
 
-1. Before you can run the tests (successfully), your runtime needs to provide a few basic components.  These are currently Repeat, Drop, and Output.
+1. Before you can run the tests (successfully), your runtime needs to provide a few basic components. These are currently `Repeat`, `Drop`, and `Output`.
 
    By default, the tests will look for these in the "core" collection, however this is configurable.  For example, if you want to implement these components as a one-off just for the tests, you can place them in a "tests" collection and pass `--collection tests` to `fbp-init`.
 
