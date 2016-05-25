@@ -348,7 +348,7 @@
       }
     },
     "getstatus": {
-      "description": "Get the current status of the runtime. The runtime should respond with a status message.",
+      "description": "Get the current status of the runtime. The runtime should respond with a status message and graph protocol messages describing the current state of the graph.",
       "properties": {
         "graph": {
           "type": "string",
