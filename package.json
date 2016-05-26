@@ -36,6 +36,7 @@
     "grunt": "~0.4.1",
     "grunt-contrib-coffee": "~0.11.1",
     "grunt-contrib-watch": "~0.6.1",
+    "grunt-convert": "^0.1.12",
     "grunt-exec": "~0.4.6",
     "grunt-gh-pages": "^1.1.0",
     "showdown": "^1.4.1"

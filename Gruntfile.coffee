@@ -12,10 +12,24 @@ module.exports = ->
         dest: 'src'
         ext: '.js'
 
+    convert:
+      yaml:
+        files: [
+          expand: true
+          cwd: 'schema/yaml'
+          src: ['*.yml']
+          dest: 'schema/json/'
+          ext: '.json'
+        ]
+
     # Automated recompilation and testing when developing
     watch:
-      files: ['test/*.coffee', 'src/*.coffee']
-      tasks: ['test']
+      test:
+        files: ['test/*.coffee', 'src/*.coffee']
+        tasks: ['test']
+      yaml:
+        files: ['schema/yaml/**/*.yml']
+        tasks: ['convert']
 
     # FBP Network Protocol tests
     exec:
@@ -40,8 +54,10 @@ module.exports = ->
 
   # For deploying
   @loadNpmTasks 'grunt-gh-pages'
+  @loadNpmTasks 'grunt-convert'
 
   # Our local tasks
   @registerTask 'build', ['coffee', 'exec:spechtml']
   @registerTask 'test', ['build', 'exec:fbp_test']
   @registerTask 'default', ['test']
+
