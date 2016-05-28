@@ -11,6 +11,12 @@ module.exports = ->
         src: ['**.coffee']
         dest: 'src'
         ext: '.js'
+      test:
+        expand: true
+        cwd: 'test/schema/'
+        src: ['**.coffee']
+        dest: 'test/schema/'
+        ext: '.js'
 
     convert:
       yaml:
@@ -25,11 +31,15 @@ module.exports = ->
     # Automated recompilation and testing when developing
     watch:
       test:
-        files: ['test/*.coffee', 'src/*.coffee']
+        files: ['test/**/*.coffee', 'src/*.coffee']
         tasks: ['test']
       yaml:
         files: ['schema/yaml/**/*.yml']
-        tasks: ['convert']
+        tasks: ['convert', 'test']
+
+    mochaTest:
+      test:
+        src: ['test/schema/*.js']
 
     # FBP Network Protocol tests
     exec:
@@ -51,13 +61,27 @@ module.exports = ->
   @loadNpmTasks 'grunt-contrib-coffee'
   @loadNpmTasks 'grunt-contrib-watch'
   @loadNpmTasks 'grunt-exec'
+  @loadNpmTasks 'grunt-mocha-test'
 
   # For deploying
   @loadNpmTasks 'grunt-gh-pages'
   @loadNpmTasks 'grunt-convert'
 
   # Our local tasks
-  @registerTask 'build', ['coffee', 'exec:spechtml']
-  @registerTask 'test', ['build', 'exec:fbp_test']
+  @registerTask 'build', ['coffee', 'exec:spechtml', 'convert']
+  @registerTask 'test', ['build', 'mochaTest', 'exec:fbp_test']
   @registerTask 'default', ['test']
+
+  @registerTask 'tv4', ->
+    fs = require 'fs'
+    tv4 = require 'tv4'
+
+    schema = JSON.parse(fs.readFileSync 'schema/json/graph.json', 'utf8')
+    tv4.addSchema 'graph.json', schema
+
+    test =
+      component: 'core/Kick'
+      graph: 'coolgraphbro'
+
+    console.log tv4.validate test, 'graph.json/output/addnode'
 

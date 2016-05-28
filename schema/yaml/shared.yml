@@ -1,0 +1,69 @@
+$schema: 'http://json-schema.org/draft-04/schema#'
+title: 'Shared'
+description: 'Shared schema fragments'
+
+message:
+  id: 'message'
+  description: 'protocol message'
+  additionalProperties: false
+  required: ['protocol', 'command', 'payload']
+  properties:
+    protocol:
+      type: string
+      description: 'type of protocol'
+    command:
+      type: string
+      description: 'command to be executed'
+    payload:
+      type: object
+      description: 'content of message'
+
+port:
+  id: 'port'
+  type: object
+  required: ['process', 'port']
+  additionalProperties: false
+  properties:
+    process:
+      type: string
+      description: 'node identifier'
+    port:
+      type: string
+      description: 'port name'
+    index:
+      type: ["string", "number"]
+      description: 'connection index (optional, for addressable ports)'
+
+port_definition:
+  id: 'port_definition'
+  type: array
+  items:
+    type: object
+    required: ['id', 'type']
+    additionalProperties: false
+    properties:
+      addressable:
+        type: boolean
+        description: 'boolean telling whether the port is an ArrayPort'
+      id:
+        type: string
+        description: 'port name'
+      type:
+        description: 'port datatype, for example boolean'
+        type: string
+      required:
+        description: 'boolean telling whether the port needs to be connected for the component to work'
+        type: boolean
+      description:
+        type: string
+        description: 'textual description of the port'
+
+iip:
+  id: 'iip'
+  type: object
+  required: ['data']
+  additionalProperties: false
+  properties:
+    data:
+      description: 'IIP value in its actual data type'
+

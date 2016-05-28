@@ -3,160 +3,245 @@
   "description": "When a client connects to a FBP procotol it may choose to discover the capabilities and other information about the runtime.",
   "input": {
     "error": {
-      "description": "Runtime error"
+      "id": "input/error",
+      "description": "Runtime error",
+      "allOf": [
+        {
+          "$ref": "/shared/message"
+        },
+        {
+          "properties": {
+            "protocol": {
+              "enum": [
+                "runtime"
+              ]
+            },
+            "command": {
+              "enum": [
+                "error"
+              ]
+            }
+          }
+        }
+      ]
     },
     "getruntime": {
-      "description": "Request the information about the runtime. When receiving this message the runtime should response with a runtime message."
+      "id": "input/getruntime",
+      "description": "Request the information about the runtime. When receiving this message the runtime should response with a runtime message.",
+      "allOf": [
+        {
+          "$ref": "/shared/message"
+        },
+        {
+          "properties": {
+            "protocol": {
+              "enum": [
+                "runtime"
+              ]
+            },
+            "command": {
+              "enum": [
+                "getruntime"
+              ]
+            }
+          }
+        }
+      ]
     },
     "packet": {
+      "id": "input/packet",
       "description": "Runtimes that can be used as remote subgraphs (i.e. ones that have reported supporting the protocol:runtime capability) need to be able to receive and transmit information packets at their exposed ports.\nThese packets can be send from the client to the runtime's input ports, or from runtime's output ports to the client.",
-      "properties": {
-        "port": {
-          "type": "string",
-          "description": "port name for the input or output port"
+      "allOf": [
+        {
+          "$ref": "/shared/message"
         },
-        "event": {
-          "type": "string",
-          "enum": [
-            "connect",
-            "begingroup",
-            "data",
-            "endgroup",
-            "disconnect"
-          ],
-          "description": "packet event"
-        },
-        "graph": {
-          "type": "string",
-          "description": "graph the action targets"
-        },
-        "payload": {
-          "type": "object",
-          "description": "(optional) payload for the packet. Used only with begingroup (for group names) and data packets"
+        {
+          "properties": {
+            "protocol": {
+              "enum": [
+                "runtime"
+              ]
+            },
+            "command": {
+              "enum": [
+                "packet"
+              ]
+            },
+            "payload": {
+              "required": [
+                "port",
+                "event",
+                "graph"
+              ],
+              "additionalProperties": false,
+              "properties": {
+                "port": {
+                  "type": "string",
+                  "description": "port name for the input or output port"
+                },
+                "event": {
+                  "type": "string",
+                  "enum": [
+                    "connect",
+                    "begingroup",
+                    "data",
+                    "endgroup",
+                    "disconnect"
+                  ],
+                  "description": "packet event"
+                },
+                "graph": {
+                  "type": "string",
+                  "description": "graph the action targets"
+                },
+                "payload": {
+                  "type": "object",
+                  "description": "(optional) payload for the packet. Used only with begingroup (for group names) and data packets"
+                }
+              }
+            }
+          }
         }
-      }
+      ]
     }
   },
   "output": {
     "error": {
-      "description": "Runtime error"
-    },
-    "ports": {
-      "description": "Message sent by the runtime to signal its available ports. The runtime is responsible for sending the up-to-date list of available ports back to client whenever it changes.",
-      "properties": {
-        "graph": {
-          "type": "string",
-          "description": "ID of the currently configured main graph running on the runtime"
+      "id": "output/error",
+      "description": "Runtime error",
+      "allOf": [
+        {
+          "$ref": "/shared/message"
         },
-        "inPorts": {
-          "description": "list of input ports",
+        {
           "properties": {
-            "addressable": {
-              "type": "boolean",
-              "description": "boolean telling whether the port is an ArrayPort"
+            "protocol": {
+              "enum": [
+                "runtime"
+              ]
             },
-            "id": {
-              "type": "string",
-              "description": "port name"
-            },
-            "type": {
-              "description": "port datatype, for example boolean",
-              "type": "string"
-            },
-            "required": {
-              "description": "boolean telling whether the port needs to be connected for the component to work",
-              "type": "boolean"
-            },
-            "description": {
-              "type": "string",
-              "description": "textual description of the port"
-            }
-          },
-          "type": "array"
-        },
-        "outPorts": {
-          "type": "array",
-          "description": "list of output ports",
-          "properties": {
-            "description": {
-              "type": "string",
-              "description": "textual description of the port"
-            },
-            "required": {
-              "type": "boolean",
-              "description": "boolean telling whether the port needs to be connected for the component to work"
-            },
-            "type": {
-              "description": "port datatype, for example boolean",
-              "type": "string"
-            },
-            "id": {
-              "description": "port name",
-              "type": "string"
-            },
-            "addressable": {
-              "description": "boolean telling whether the port is an ArrayPort",
-              "type": "boolean"
+            "command": {
+              "enum": [
+                "error"
+              ]
             }
           }
         }
-      }
+      ]
+    },
+    "ports": {
+      "id": "output/ports",
+      "description": "Message sent by the runtime to signal its available ports. The runtime is responsible for sending the up-to-date list of available ports back to client whenever it changes.",
+      "allOf": [
+        {
+          "$ref": "/shared/message"
+        },
+        {
+          "properties": {
+            "protocol": {
+              "enum": [
+                "runtime"
+              ]
+            },
+            "command": {
+              "enum": [
+                "ports"
+              ]
+            },
+            "payload": {
+              "required": [
+                "graph",
+                "inPorts",
+                "outPorts"
+              ],
+              "additionalProperties": false,
+              "properties": {
+                "graph": {
+                  "type": "string",
+                  "description": "ID of the currently configured main graph running on the runtime"
+                },
+                "inPorts": {
+                  "description": "list of input ports",
+                  "$ref": "/shared/port_definition"
+                },
+                "outPorts": {
+                  "description": "list of output ports",
+                  "$ref": "/shared/port_definition"
+                }
+              }
+            }
+          }
+        }
+      ]
     },
     "runtime": {
+      "id": "output/runtime",
       "description": "Response from the runtime to the getruntime request.",
-      "properties": {
-        "id": {
-          "required": false,
-          "type": "string",
-          "description": "(optional) runtime ID used with Flowhub Registry"
+      "allOf": [
+        {
+          "$ref": "/shared/message"
         },
-        "label": {
-          "description": "(optional) Human-readable description of the runtime",
-          "type": "string",
-          "required": false
-        },
-        "version": {
-          "description": "version of the runtime protocol that the runtime supports, for example 0.4",
-          "type": "string"
-        },
-        "capabilities": {
-          "type": "array",
-          "items": {
-            "protocol:network": {
-              "description": "the runtime is able to control and introspect its running networks using the Network protocol"
+        {
+          "properties": {
+            "protocol": {
+              "enum": [
+                "runtime"
+              ]
             },
-            "protocol:component": {
-              "description": "the runtime is able to list and modify its components using the Component protocol"
+            "command": {
+              "enum": [
+                "runtime"
+              ]
             },
-            "protocol:runtime": {
-              "description": "the runtime is able to expose the ports of its main graph using the Runtime protocol and transmit packet information to/from them"
-            },
-            "component:getsource": {
-              "description": "runtime is able to read and send component source code back to client"
-            },
-            "network:persist": {
-              "description": "runtime is able to *flash* a running graph setup into itself, making it persistent across reboots"
-            },
-            "protocol:graph": {
-              "description": "the runtime is able to modify its graphs using the Graph protocol"
-            },
-            "component:setsource": {
-              "description": "runtime is able to compile and run custom components sent as source code strings"
+            "payload": {
+              "required": [
+                "version",
+                "capabilities",
+                "type"
+              ],
+              "additionalProperties": false,
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "description": "(optional) runtime ID used with Flowhub Registry"
+                },
+                "label": {
+                  "description": "(optional) Human-readable description of the runtime",
+                  "type": "string"
+                },
+                "version": {
+                  "description": "version of the runtime protocol that the runtime supports, for example 0.4",
+                  "type": "string"
+                },
+                "capabilities": {
+                  "description": "array of capability strings for things the runtime is able to do\nIf the runtime is currently running a graph and it is able to speak the full Runtime protocol, it should follow up with a ports message.",
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "enums": [
+                      "protocol:network",
+                      "protocol:component",
+                      "protocol:runtime",
+                      "component:getsource",
+                      "network:persist",
+                      "protocol:graph",
+                      "component:setsource"
+                    ]
+                  }
+                },
+                "graph": {
+                  "description": "(optional) ID of the currently configured main graph running on the runtime, if any",
+                  "type": "string"
+                },
+                "type": {
+                  "description": "type of the runtime, for example noflo-nodejs or microflo",
+                  "type": "string"
+                }
+              }
             }
-          },
-          "description": "array of capability strings for things the runtime is able to do\nIf the runtime is currently running a graph and it is able to speak the full Runtime protocol, it should follow up with a ports message."
-        },
-        "graph": {
-          "description": "(optional) ID of the currently configured main graph running on the runtime, if any",
-          "type": "string",
-          "required": false
-        },
-        "type": {
-          "description": "type of the runtime, for example noflo-nodejs or microflo",
-          "type": "string",
-          "title": "Type"
+          }
         }
-      }
+      ]
     }
   }
 }
