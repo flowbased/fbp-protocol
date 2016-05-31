@@ -1,6 +1,6 @@
 {
   "title": "Runtime protocol",
-  "description": "When a client connects to a FBP procotol it may choose to discover the capabilities and other information about the runtime.",
+  "description": "When a client connects to a FBP procotol it may choose to discover the capabilities and other information about the runtime.\n",
   "input": {
     "error": {
       "id": "input/error",
@@ -27,7 +27,7 @@
     },
     "getruntime": {
       "id": "input/getruntime",
-      "description": "Request the information about the runtime. When receiving this message the runtime should response with a runtime message.",
+      "description": "Request the information about the runtime. When receiving this message the runtime should response with a runtime message.\n",
       "allOf": [
         {
           "$ref": "/shared/message"
@@ -50,7 +50,7 @@
     },
     "packet": {
       "id": "input/packet",
-      "description": "Runtimes that can be used as remote subgraphs (i.e. ones that have reported supporting the protocol:runtime capability) need to be able to receive and transmit information packets at their exposed ports.\nThese packets can be send from the client to the runtime's input ports, or from runtime's output ports to the client.",
+      "description": "Runtimes that can be used as remote subgraphs (i.e. ones that have reported supporting the protocol:runtime capability) need to be able to receive and transmit information packets at their exposed ports.These packets can be send from the client to the runtimes input ports, or from runtimes output ports to the client.\n",
       "allOf": [
         {
           "$ref": "/shared/message"
@@ -96,7 +96,7 @@
                 },
                 "payload": {
                   "type": "object",
-                  "description": "(optional) payload for the packet. Used only with begingroup (for group names) and data packets"
+                  "description": "(optional) payload for the packet. Used only with begingroup (for group names) and data packets\n"
                 }
               }
             }
@@ -131,7 +131,7 @@
     },
     "ports": {
       "id": "output/ports",
-      "description": "Message sent by the runtime to signal its available ports. The runtime is responsible for sending the up-to-date list of available ports back to client whenever it changes.",
+      "description": "Message sent by the runtime to signal its available ports. The runtime is responsible for sending the up-to-date list of available ports back to client whenever it changes.\n",
       "allOf": [
         {
           "$ref": "/shared/message"
@@ -158,7 +158,7 @@
               "properties": {
                 "graph": {
                   "type": "string",
-                  "description": "ID of the currently configured main graph running on the runtime"
+                  "description": "ID of the currently configured main graph running on the runtime\n"
                 },
                 "inPorts": {
                   "description": "list of input ports",
@@ -210,11 +210,11 @@
                   "type": "string"
                 },
                 "version": {
-                  "description": "version of the runtime protocol that the runtime supports, for example 0.4",
+                  "description": "version of the runtime protocol that the runtime supports, for example 0.4\n",
                   "type": "string"
                 },
                 "capabilities": {
-                  "description": "array of capability strings for things the runtime is able to do\nIf the runtime is currently running a graph and it is able to speak the full Runtime protocol, it should follow up with a ports message.",
+                  "description": "array of capability strings for things the runtime is able to do. If the runtime is currently running a graph and it is able to speak the full Runtime protocol, it should follow up with a ports message.\n",
                   "type": "array",
                   "items": {
                     "type": "string",
@@ -230,31 +230,31 @@
                     "_enumDescriptions": [
                       {
                         "name": "protocol:network",
-                        "description": "the runtime is able to control and introspect its running networks using the Network protocol"
+                        "description": "the runtime is able to control and introspect its running networks using the Network protocol\n"
                       },
                       {
                         "name": "protocol:component",
-                        "description": "the runtime is able to list and modify its components using the Component protocol"
+                        "description": "the runtime is able to list and modify its components using the Component protocol\n"
                       },
                       {
                         "name": "protocol:runtime",
-                        "description": "the runtime is able to expose the ports of its main graph using the Runtime protocol and transmit packet information to/from them"
+                        "description": "the runtime is able to expose the ports of its main graph using the Runtime protocol and transmit packet information to/from them\n"
                       },
                       {
                         "name": "component:getsource",
-                        "description": "runtime is able to read and send component source code back to client"
+                        "description": "runtime is able to read and send component source code back to client\n"
                       },
                       {
                         "name": "network:persist",
-                        "description": "runtime is able to *flash* a running graph setup into itself, making it persistent across reboots"
+                        "description": "runtime is able to *flash* a running graph setup into itself, making it persistent across reboots\n"
                       },
                       {
                         "name": "protocol:graph",
-                        "description": "the runtime is able to modify its graphs using the Graph protocol"
+                        "description": "the runtime is able to modify its graphs using the Graph protocol\n"
                       },
                       {
                         "name": "component:setsource",
-                        "description": "runtime is able to compile and run custom components sent as source code strings"
+                        "description": "runtime is able to compile and run custom components sent as source code strings\n"
                       }
                     ]
                   }

@@ -1,6 +1,8 @@
 $schema: 'http://json-schema.org/draft-04/schema#'
 title: 'Network protocol'
-description: 'Protocol for starting and stopping FBP networks, and finding out about their state.'
+description: >
+  Protocol for starting and stopping FBP networks, and finding out
+  about their state.
 
 output:
   stopped:
@@ -76,7 +78,10 @@ output:
 
   output:
     id: 'output/output'
-    description: 'An output message from a running network, roughly similar to STDOUT output of a Unix process, or a line of console.log in JavaScript. Output can also be used for passing images from the runtime to the UI.'
+    description: >
+      An output message from a running network, roughly similar to STDOUT output
+      of a Unix process, or a line of console.log in JavaScript. Output can also
+      be used for passing images from the runtime to the UI.'
     allOf:
       - $ref: '/shared/message'
       - properties:
@@ -102,7 +107,9 @@ output:
 
   error:
     id: 'output/error'
-    description: 'An error from a running network, roughly similar to STDERR output of a Unix process, or a line of console.error in JavaScript.'
+    description: >
+      An error from a running network, roughly similar to STDERR
+      output of a Unix process, or a line of console.error in JavaScript.'
     allOf:
       - $ref: '/shared/message'
       - properties:
@@ -152,24 +159,8 @@ output:
           command:
             enum: ['connect']
           payload:
-            required: ['id', 'src', 'tgt', 'graph']
+            $ref: '/shared/network_event'
             additionalProperties: false
-            properties:
-              id:
-                type: 'string'
-                description: 'textual edge identifier, usually in form of a FBP language line'
-              src:
-                description: 'source node for the edge'
-                $ref: '/shared/port'
-              tgt:
-                description: 'target node for the edge'
-                $ref: '/shared/port'
-              graph:
-                type: 'string'
-                description: 'graph the action targets'
-              subgraph:
-                type: 'string'
-                description: '(optional): subgraph identifier for the event. An array of node IDs'
 
   begingroup:
     id: 'output/begingroup'
@@ -182,27 +173,21 @@ output:
           command:
             enum: ['begingroup']
           payload:
-            required: ['id', 'src', 'tgt', 'group', 'graph']
-            additionalProperties: false
-            properties:
-              id:
-                type: "string"
-                description: 'textual edge identifier, usually in form of a FBP language line'
-              src:
-                description: 'source node for the edge'
-                $ref: '/shared/port'
-              tgt:
-                description: 'target node for the edge'
-                $ref: '/shared/port'
-              group:
-                description: 'group name'
-                type: "string"
-              graph:
-                type: "string"
-                description: 'graph the action targets'
-              subgraph:
-                type: "array"
-                description: '(optional): subgraph identifier for the event. An array of node IDs'
+            allOf:
+              - $ref: '/shared/network_event'
+              - required: ['group']
+                properties:
+                  group:
+                    description: 'group name'
+                    type: "string"
+              - additionalProperties: false
+                properties:
+                  group: true
+                  id: true
+                  tgt: true
+                  src: true
+                  graph: true
+                  subgraph: true
 
   data:
     id: 'output/data'
@@ -215,26 +200,22 @@ output:
           command:
             enum: ['data']
           payload:
-            required: ['id', 'src', 'tgt', 'data', 'graph']
-            additionalProperties: false
-            properties:
-              id:
-                type: "string"
-                description: 'textual edge identifier, usually in form of a FBP language line'
-              src:
-                description: 'source node for the edge'
-                $ref: '/shared/port'
-              tgt:
-                description: 'target node for the edge'
-                $ref: '/shared/port'
-              data:
-                description: 'actual data being transmitted, encoded in a way that can be carried over the protocol transport'
-              graph:
-                type: "string"
-                description: 'graph the action targets'
-              subgraph:
-                type: "string"
-                description: '(optional): subgraph identifier for the event. An array of node IDs'
+            allOf:
+              - $ref: '/shared/network_event'
+              - required: ['data']
+                properties:
+                  data:
+                    description: >
+                      actual data being transmitted, encoded in a way
+                      that can be carried over the protocol transport
+              - additionalProperties: false
+                properties:
+                  data: true
+                  id: true
+                  src: true
+                  tgt: true
+                  graph: true
+                  subgraph: true
 
   endgroup:
     id: 'output/endgroup'
@@ -247,27 +228,21 @@ output:
           command:
             enum: ['endgroup']
           payload:
-            required: ['id', 'src', 'tgt', 'group', 'graph']
-            additionalProperties: false
-            properties:
-              id:
-                type: "string"
-                description: 'textual edge identifier, usually in form of a FBP language line'
-              src:
-                description: 'source node for the edge'
-                $ref: '/shared/port'
-              tgt:
-                description: 'target node for the edge'
-                $ref: '/shared/port'
-              group:
-                description: 'group name'
-                type: "string"
-              graph:
-                description: 'graph the action targets'
-                type: "string"
-              subgraph:
-                type: "array"
-                description: '(optional): subgraph identifier for the event. An array of node IDs'
+            allOf:
+              - $ref: '/shared/network_event'
+              - required: ['group']
+                properties:
+                  group:
+                    description: 'group name'
+                    type: "string"
+              - additionalProperties: false
+                properties:
+                  group: true
+                  id: true
+                  src: true
+                  tgt: true
+                  graph: true
+                  subgraph: true
 
   disconnect:
     id: 'output/disconnect'
@@ -280,23 +255,8 @@ output:
           command:
             enum: ['disconnect']
           payload:
-            required: ['id', 'src', 'tgt', 'graph']
+            $ref: '/shared/network_event'
             additionalProperties: false
-            properties:
-              id:
-                description: 'textual edge identifier, usually in form of a FBP language line'
-              src:
-                description: 'source node for the edge'
-                $ref: '/shared/port'
-              tgt:
-                description: 'target node for the edge'
-                $ref: '/shared/port'
-              graph:
-                type: "string"
-                description: 'graph the action targets'
-              subgraph:
-                type: "string"
-                description: '(optional): subgraph identifier for the event. An array of node IDs'
 
 input:
   error:
@@ -330,7 +290,9 @@ input:
 
   getstatus:
     id: 'input/getstatus'
-    description: 'Get the current status of the runtime. The runtime should respond with a status message.'
+    description: >
+      Get the current status of the runtime. The runtime should
+      respond with a status message.
     allOf:
       - $ref: '/shared/message'
       - properties:
@@ -366,7 +328,9 @@ input:
 
   edges:
     id: 'input/edges'
-    description: 'List of edges user has selected for inspection in a user interface or debugger, sent from UI to a runtime.'
+    description: >
+      List of edges user has selected for inspection in a user
+      interface or debugger, sent from UI to a runtime.
     allOf:
       - $ref: '/shared/message'
       - properties:

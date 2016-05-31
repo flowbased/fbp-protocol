@@ -217,7 +217,7 @@
         it('should have schema', function() {
           return chai.expect(tv4.getSchema(schema)).to.exist;
         });
-        return it('should validate event with required fields', function() {
+        it('should validate event with required fields', function() {
           var event, res;
           event = {
             protocol: 'network',
@@ -238,6 +238,50 @@
           };
           res = tv4.validate(event, schema);
           return chai.expect(res).to.be["true"];
+        });
+        it('should invalidate event without required fields', function() {
+          var event, res;
+          event = {
+            protocol: 'network',
+            command: 'begingroup',
+            payload: {
+              id: 'node1 OUT -> IN node2',
+              src: {
+                process: 'node1',
+                port: 'out'
+              },
+              tgt: {
+                process: 'node2',
+                port: 'in'
+              },
+              graph: 'mygraph'
+            }
+          };
+          res = tv4.validate(event, schema);
+          return chai.expect(res).to.be["false"];
+        });
+        return it('should invalidate event with extra fields', function() {
+          var event, res;
+          event = {
+            protocol: 'network',
+            command: 'begingroup',
+            payload: {
+              id: 'node1 OUT -> IN node2',
+              src: {
+                process: 'node1',
+                port: 'out'
+              },
+              tgt: {
+                process: 'node2',
+                port: 'in'
+              },
+              group: 'group1',
+              graph: 'mygraph',
+              extra: 'test'
+            }
+          };
+          res = tv4.validate(event, schema);
+          return chai.expect(res).to.be["false"];
         });
       });
       describe('data', function() {

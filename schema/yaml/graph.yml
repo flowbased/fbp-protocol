@@ -1,6 +1,8 @@
 $schema: 'http://json-schema.org/draft-04/schema#'
 title: 'Graph protocol'
-description: 'This protocol is utilized for communicating about graph changes in both directions.'
+description: >
+  This protocol is utilized for communicating about graph changes in both
+  directions.
 
 output:
   error:

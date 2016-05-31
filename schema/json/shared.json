@@ -76,7 +76,7 @@
           "type": "string"
         },
         "required": {
-          "description": "boolean telling whether the port needs to be connected for the component to work",
+          "description": "boolean telling whether the port needs to be connected for the component to work\n",
           "type": "boolean"
         },
         "description": {
@@ -96,6 +96,37 @@
     "properties": {
       "data": {
         "description": "IIP value in its actual data type"
+      }
+    }
+  },
+  "network_event": {
+    "id": "network_event",
+    "required": [
+      "id",
+      "src",
+      "tgt",
+      "graph"
+    ],
+    "properties": {
+      "id": {
+        "type": "string",
+        "description": "textual edge identifier, usually in form of a FBP language line\n"
+      },
+      "src": {
+        "description": "source node for the edge",
+        "$ref": "/shared/port"
+      },
+      "tgt": {
+        "description": "target node for the edge",
+        "$ref": "/shared/port"
+      },
+      "graph": {
+        "type": "string",
+        "description": "graph the action targets"
+      },
+      "subgraph": {
+        "type": "string",
+        "description": "(optional): subgraph identifier for the event. An array of node IDs\n"
       }
     }
   }

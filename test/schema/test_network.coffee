@@ -200,6 +200,42 @@ describe 'Test network protocol schema on events', ->
         res = tv4.validate event, schema
         chai.expect(res).to.be.true
 
+      it 'should invalidate event without required fields', ->
+        event =
+          protocol: 'network'
+          command: 'begingroup'
+          payload:
+            id: 'node1 OUT -> IN node2'
+            src:
+              process: 'node1'
+              port: 'out'
+            tgt:
+              process: 'node2'
+              port: 'in'
+            graph: 'mygraph'
+
+        res = tv4.validate event, schema
+        chai.expect(res).to.be.false
+
+      it 'should invalidate event with extra fields', ->
+        event =
+          protocol: 'network'
+          command: 'begingroup'
+          payload:
+            id: 'node1 OUT -> IN node2'
+            src:
+              process: 'node1'
+              port: 'out'
+            tgt:
+              process: 'node2'
+              port: 'in'
+            group: 'group1'
+            graph: 'mygraph'
+            extra: 'test'
+
+        res = tv4.validate event, schema
+        chai.expect(res).to.be.false
+
     describe 'data', ->
       schema = '/network/output/data'
 
