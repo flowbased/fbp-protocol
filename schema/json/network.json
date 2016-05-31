@@ -36,8 +36,7 @@
                   "description": "time when the network was stopped"
                 },
                 "uptime": {
-                  "type": "string",
-                  "format": "date-time",
+                  "type": "number",
                   "description": "time the network was running, in seconds"
                 },
                 "graph": {
@@ -127,8 +126,7 @@
                   "description": "graph the action targets"
                 },
                 "uptime": {
-                  "type": "string",
-                  "format": "date-time",
+                  "type": "number",
                   "description": "(optional) time the network has been running, in seconds"
                 }
               }

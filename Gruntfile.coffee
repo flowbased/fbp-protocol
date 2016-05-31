@@ -11,6 +11,12 @@ module.exports = ->
         src: ['**.coffee']
         dest: 'src'
         ext: '.js'
+      schema:
+        expand: true
+        cwd: 'schema'
+        src: ['**.coffee']
+        dest: 'schema'
+        ext: '.js'
       test:
         expand: true
         cwd: 'test/schema/'
@@ -31,7 +37,7 @@ module.exports = ->
     # Automated recompilation and testing when developing
     watch:
       test:
-        files: ['test/**/*.coffee', 'src/*.coffee']
+        files: ['test/**/*.coffee', 'src/*.coffee', 'schema/*.coffee']
         tasks: ['test']
       yaml:
         files: ['schema/yaml/**/*.yml']

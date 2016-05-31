@@ -28,6 +28,7 @@
     "coffee-script": "^1.7.1",
     "commander": "^2.1.0",
     "mocha": "~2.1.0",
+    "moment": "^2.13.0",
     "semver": "^4.3.1",
     "shelljs": "~0.3.0",
     "tv4": "^1.2.7",

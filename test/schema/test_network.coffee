@@ -1,6 +1,7 @@
 chai = require 'chai'
 fs = require 'fs'
 tv4 = require 'tv4'
+format = require '../../schema/format'
 
 describe 'Test network protocol schema on events', ->
   before ->
@@ -8,6 +9,7 @@ describe 'Test network protocol schema on events', ->
     networkSchema = JSON.parse fs.readFileSync './schema/json/network.json'
     tv4.addSchema '/shared/', sharedSchema
     tv4.addSchema '/network/', networkSchema
+    format(tv4)
 
   describe 'output', ->
     describe 'stopped', ->
@@ -21,12 +23,24 @@ describe 'Test network protocol schema on events', ->
           protocol: 'network'
           command: 'stopped'
           payload:
-            time: '5:00PM'
-            uptime: '5 years'
+            time: '2016-05-29 13:26:01Z-1:00'
+            uptime: 1000
             graph: 'mygraph'
 
         res = tv4.validate event, schema
         chai.expect(res).to.be.true
+
+      it 'should invalidate event with invalid date', ->
+        event =
+          protocol: 'network'
+          command: 'stopped'
+          payload:
+            time: '5:00PM'
+            uptime: 1000
+            graph: 'mygraph'
+
+        res = tv4.validate event, schema
+        chai.expect(res).to.be.false
 
       it 'should invalidate event with extra fields', ->
         # Tests that /shared/message $ref is added properly
@@ -36,7 +50,7 @@ describe 'Test network protocol schema on events', ->
           command: 'stopped'
           payload:
             time: '5:00PM'
-            uptime: '5 years'
+            uptime: 1000
             graph: 'mygraph'
 
         res = tv4.validate event, schema
@@ -53,7 +67,7 @@ describe 'Test network protocol schema on events', ->
           protocol: 'network'
           command: 'started'
           payload:
-            time: '5:00PM'
+            time: '2016-05-29T13:26:01Z+1:00'
             graph: 'mygraph'
 
         res = tv4.validate event, schema
@@ -71,7 +85,7 @@ describe 'Test network protocol schema on events', ->
           command: 'status'
           payload:
             running: true
-            uptime: '1000'
+            uptime: 1000
             graph: 'mygraph'
 
         res = tv4.validate event, schema
