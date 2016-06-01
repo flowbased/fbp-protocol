@@ -1,11 +1,11 @@
 chai = require 'chai'
-fs = require 'fs'
+schemas = require '../../schema/schemas.js'
 tv4 = require 'tv4'
 
 describe 'Test runtime protocol schema on event', ->
   before ->
-    sharedSchema = JSON.parse fs.readFileSync './schema/json/shared.json'
-    runtimeSchema = JSON.parse fs.readFileSync './schema/json/runtime.json'
+    sharedSchema = schemas.shared
+    runtimeSchema = schemas.runtime
     tv4.addSchema '/shared/', sharedSchema
     tv4.addSchema '/runtime/', runtimeSchema
 

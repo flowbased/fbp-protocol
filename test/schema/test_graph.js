@@ -1,17 +1,17 @@
 (function() {
-  var chai, fs, tv4;
+  var chai, schemas, tv4;
 
   chai = require('chai');
 
-  fs = require('fs');
+  schemas = require('../../schema/schemas.js');
 
   tv4 = require('tv4');
 
   describe('Test graph protocol schema on event', function() {
     before(function() {
       var graphSchema, sharedSchema;
-      sharedSchema = JSON.parse(fs.readFileSync('./schema/json/shared.json'));
-      graphSchema = JSON.parse(fs.readFileSync('./schema/json/graph.json'));
+      sharedSchema = schemas.shared;
+      graphSchema = schemas.graph;
       tv4.addSchema('/shared/', sharedSchema);
       return tv4.addSchema('/graph/', graphSchema);
     });
@@ -176,11 +176,11 @@
           payload: {
             graph: 'mygraph',
             src: {
-              process: 'node1',
+              node: 'node1',
               port: 'OUT'
             },
             tgt: {
-              process: 'node2',
+              node: 'node2',
               port: 'IN'
             }
           }
@@ -222,11 +222,11 @@
           payload: {
             graph: 'mygraph',
             src: {
-              process: 'node1',
+              node: 'node1',
               port: 'OUT'
             },
             tgt: {
-              process: 'node2',
+              node: 'node2',
               port: 'IN'
             }
           }
@@ -251,11 +251,11 @@
           payload: {
             graph: 'mygraph',
             src: {
-              process: 'node1',
+              node: 'node1',
               port: 'OUT'
             },
             tgt: {
-              process: 'node2',
+              node: 'node2',
               port: 'IN'
             },
             metadata: {
@@ -286,7 +286,7 @@
               data: 5
             },
             tgt: {
-              process: 'node2',
+              node: 'node2',
               port: 'IN'
             }
           }
@@ -303,7 +303,7 @@
             src: {},
             tgt: {
               port: 'IN',
-              process: 'node2'
+              node: 'node2'
             }
           }
         };
@@ -327,7 +327,7 @@
           payload: {
             graph: 'mygraph',
             tgt: {
-              process: 'node2',
+              node: 'node2',
               port: 'IN'
             }
           }
@@ -345,7 +345,7 @@
               data: 5
             },
             tgt: {
-              process: 'node2',
+              node: 'node2',
               port: 'IN'
             }
           }
@@ -370,7 +370,7 @@
           payload: {
             graph: 'mygraph',
             "public": 'IN',
-            process: 'core/Kick',
+            node: 'core/Kick',
             port: 'DATA'
           }
         };
@@ -384,7 +384,7 @@
           payload: {
             graph: 'mygraph',
             "public": 'IN',
-            process: 'core/Kick',
+            node: 'core/Kick',
             port: 'DATA',
             extra: 'doesntwork'
           }
@@ -421,7 +421,7 @@
           payload: {
             graph: 'mygraph',
             "public": 'IN',
-            process: 'core/Kick',
+            node: 'core/Kick',
             port: 'DATA'
           }
         };
@@ -468,7 +468,7 @@
           payload: {
             graph: 'mygraph',
             "public": 'OUT',
-            process: 'core/Repeat',
+            node: 'core/Repeat',
             port: 'OUT'
           }
         };
@@ -482,7 +482,7 @@
           payload: {
             graph: 'mygraph',
             "public": 'OUT',
-            process: 'core/Repeat',
+            node: 'core/Repeat',
             port: 'OUT',
             extra: 'doesntwork'
           }
@@ -519,7 +519,7 @@
           payload: {
             graph: 'mygraph',
             "public": 'OUT',
-            process: 'core/Kick',
+            node: 'core/Kick',
             port: 'DATA'
           }
         };
@@ -566,7 +566,7 @@
           payload: {
             graph: 'mygraph',
             name: 'mygroup',
-            processes: ['Kick', 'Drop']
+            nodes: ['Kick', 'Drop']
           }
         };
         return chai.expect(tv4.validate(event, schema)).to.be["true"];
@@ -579,7 +579,7 @@
           payload: {
             graph: 'mygraph',
             name: 'mygroup',
-            processes: ['Kick', 'Drop'],
+            nodes: ['Kick', 'Drop'],
             extra: 'nope'
           }
         };

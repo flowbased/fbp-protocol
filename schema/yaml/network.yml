@@ -16,7 +16,7 @@ output:
           command:
             enum: ['stopped']
           payload:
-            required: ['time', 'uptime', 'graph']
+            required: ['graph']
             additionalProperties: false
             properties:
               time:
@@ -29,6 +29,15 @@ output:
               graph:
                 type: "string"
                 description: 'graph the action targets'
+              running:
+                type: boolean
+                description: 'whether or not network is currently running'
+              started:
+                type: boolean
+                description: 'whether or not network has been started'
+              debug:
+                type: boolean
+                description: 'whether or not network is in debug mode'
 
   started:
     id: 'output/started'
@@ -41,7 +50,7 @@ output:
           command:
             enum: ['started']
           payload:
-            required: ['time', 'graph']
+            required: ['graph']
             additionalProperties: false
             properties:
               time:
@@ -51,6 +60,15 @@ output:
               graph:
                 type: "string"
                 description: 'graph the action targets'
+              started:
+                type: "boolean"
+                description: 'whether or not network has started running'
+              running:
+                type: "boolean"
+                description: 'whether or not network is currently running'
+              debug:
+                type: "boolean"
+                description: 'whether or not network is in debug mode'
 
   status:
     id: 'output/status'

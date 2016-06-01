@@ -355,12 +355,12 @@ input:
             enum: ['addinport']
           payload:
             additionalProperties: false
-            required: ['public', 'port', 'process', 'graph']
+            required: ['public', 'port', 'node', 'graph']
             properties:
               public:
                 type: string
                 description: 'the exported name of the port'
-              process:
+              node:
                 type: string
                 description: 'node identifier'
               port:
@@ -427,13 +427,13 @@ input:
           command:
             enum: ['addoutport']
           payload:
-            required: ['public', 'process', 'port', 'graph']
+            required: ['public', 'node', 'port', 'graph']
             additionalProperties: false
             properties:
               public:
                 type: string
                 description: 'the exported name of the port'
-              process:
+              node:
                 type: string
                 description: 'node identifier'
               port:
@@ -502,13 +502,13 @@ input:
           command:
             enum: ['addgroup']
           payload:
-            required: ['name', 'processes', 'graph']
+            required: ['name', 'nodes', 'graph']
             additionalProperties: false
             properties:
               name:
                 type: string
                 description: 'the group name'
-              processes:
+              nodes:
                 type: array
                 description: 'an array of node ids part of the group'
               metadata:

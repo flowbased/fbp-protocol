@@ -1,17 +1,17 @@
 (function() {
-  var chai, fs, tv4;
+  var chai, schemas, tv4;
 
   chai = require('chai');
 
-  fs = require('fs');
+  schemas = require('../../schema/schemas.js');
 
   tv4 = require('tv4');
 
   describe('Test component protocol schema on event', function() {
     before(function() {
       var componentSchema, sharedSchema;
-      sharedSchema = JSON.parse(fs.readFileSync('./schema/json/shared.json'));
-      componentSchema = JSON.parse(fs.readFileSync('./schema/json/component.json'));
+      sharedSchema = schemas.shared;
+      componentSchema = schemas.component;
       tv4.addSchema('/shared/', sharedSchema);
       return tv4.addSchema('/component/', componentSchema);
     });

@@ -550,7 +550,7 @@
               "required": [
                 "public",
                 "port",
-                "process",
+                "node",
                 "graph"
               ],
               "properties": {
@@ -558,7 +558,7 @@
                   "type": "string",
                   "description": "the exported name of the port"
                 },
-                "process": {
+                "node": {
                   "type": "string",
                   "description": "node identifier"
                 },
@@ -678,7 +678,7 @@
             "payload": {
               "required": [
                 "public",
-                "process",
+                "node",
                 "port",
                 "graph"
               ],
@@ -688,7 +688,7 @@
                   "type": "string",
                   "description": "the exported name of the port"
                 },
-                "process": {
+                "node": {
                   "type": "string",
                   "description": "node identifier"
                 },
@@ -816,7 +816,7 @@
             "payload": {
               "required": [
                 "name",
-                "processes",
+                "nodes",
                 "graph"
               ],
               "additionalProperties": false,
@@ -825,7 +825,7 @@
                   "type": "string",
                   "description": "the group name"
                 },
-                "processes": {
+                "nodes": {
                   "type": "array",
                   "description": "an array of node ids part of the group"
                 },

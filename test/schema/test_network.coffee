@@ -1,12 +1,12 @@
 chai = require 'chai'
-fs = require 'fs'
+schemas = require '../../schema/schemas.js'
 tv4 = require 'tv4'
 format = require '../../schema/format'
 
 describe 'Test network protocol schema on events', ->
   before ->
-    sharedSchema = JSON.parse fs.readFileSync './schema/json/shared.json'
-    networkSchema = JSON.parse fs.readFileSync './schema/json/network.json'
+    sharedSchema = schemas.shared
+    networkSchema = schemas.network
     tv4.addSchema '/shared/', sharedSchema
     tv4.addSchema '/network/', networkSchema
     format(tv4)
@@ -166,10 +166,10 @@ describe 'Test network protocol schema on events', ->
           payload:
             id: 'node1 OUT -> IN node2'
             src:
-              process: 'node1'
+              node: 'node1'
               port: 'out'
             tgt:
-              process: 'node2'
+              node: 'node2'
               port: 'in'
             graph: 'mygraph'
 
@@ -189,10 +189,10 @@ describe 'Test network protocol schema on events', ->
           payload:
             id: 'node1 OUT -> IN node2'
             src:
-              process: 'node1'
+              node: 'node1'
               port: 'out'
             tgt:
-              process: 'node2'
+              node: 'node2'
               port: 'in'
             group: 'group1'
             graph: 'mygraph'
@@ -207,10 +207,10 @@ describe 'Test network protocol schema on events', ->
           payload:
             id: 'node1 OUT -> IN node2'
             src:
-              process: 'node1'
+              node: 'node1'
               port: 'out'
             tgt:
-              process: 'node2'
+              node: 'node2'
               port: 'in'
             graph: 'mygraph'
 
@@ -224,10 +224,10 @@ describe 'Test network protocol schema on events', ->
           payload:
             id: 'node1 OUT -> IN node2'
             src:
-              process: 'node1'
+              node: 'node1'
               port: 'out'
             tgt:
-              process: 'node2'
+              node: 'node2'
               port: 'in'
             group: 'group1'
             graph: 'mygraph'
@@ -249,10 +249,10 @@ describe 'Test network protocol schema on events', ->
           payload:
             id: 'node1 OUT -> IN node2'
             src:
-              process: 'node1'
+              node: 'node1'
               port: 'out'
             tgt:
-              process: 'node2'
+              node: 'node2'
               port: 'in'
             data: 5
             graph: 'mygraph'
@@ -274,10 +274,10 @@ describe 'Test network protocol schema on events', ->
           payload:
             id: 'node1 OUT -> IN node2'
             src:
-              process: 'node1'
+              node: 'node1'
               port: 'out'
             tgt:
-              process: 'node2'
+              node: 'node2'
               port: 'in'
             group: 'group1'
             graph: 'mygraph'
@@ -298,10 +298,10 @@ describe 'Test network protocol schema on events', ->
           payload:
             id: 'node1 OUT -> IN node2'
             src:
-              process: 'node1'
+              node: 'node1'
               port: 'out'
             tgt:
-              process: 'node2'
+              node: 'node2'
               port: 'in'
             graph: 'mygraph'
 
@@ -401,10 +401,10 @@ describe 'Test network protocol schema on events', ->
           payload:
             edges: [
               src:
-                process: 'node1'
+                node: 'node1'
                 port: 'OUT'
               tgt:
-                process: 'node2'
+                node: 'node2'
                 port: 'IN'
                 index: 0
             ]

@@ -1,3 +1,6 @@
+fs = require 'fs'
+path = require 'path'
+
 module.exports = ->
   # Project configuration
   @initConfig
@@ -41,7 +44,7 @@ module.exports = ->
         tasks: ['test']
       yaml:
         files: ['schema/yaml/**/*.yml']
-        tasks: ['convert', 'test']
+        tasks: ['convert', 'json-to-js', 'test']
 
     mochaTest:
       test:
@@ -78,16 +81,16 @@ module.exports = ->
   @registerTask 'test', ['build', 'mochaTest', 'exec:fbp_test']
   @registerTask 'default', ['test']
 
-  @registerTask 'tv4', ->
-    fs = require 'fs'
-    tv4 = require 'tv4'
+  @registerTask 'json-to-js', ->
+    schemas = {}
+    dir = './schema/json/'
+    for jsonFile in fs.readdirSync dir
+      if jsonFile not in ['.', '..']
+        name = jsonFile.split('.')[0]
+        filename = path.join dir, jsonFile
+        schema = JSON.parse fs.readFileSync filename
+        schemas[name] = schema
 
-    schema = JSON.parse(fs.readFileSync 'schema/json/graph.json', 'utf8')
-    tv4.addSchema 'graph.json', schema
-
-    test =
-      component: 'core/Kick'
-      graph: 'coolgraphbro'
-
-    console.log tv4.validate test, 'graph.json/output/addnode'
+    schemaJs = "module.exports = #{JSON.stringify schemas}"
+    fs.writeFileSync './schema/schemas.js', schemaJs, 'utf8'
 

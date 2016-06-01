@@ -1,11 +1,11 @@
 chai = require 'chai'
-fs = require 'fs'
+schemas = require '../../schema/schemas.js'
 tv4 = require 'tv4'
 
 describe 'Test component protocol schema on event', ->
   before ->
-    sharedSchema = JSON.parse fs.readFileSync './schema/json/shared.json'
-    componentSchema = JSON.parse fs.readFileSync './schema/json/component.json'
+    sharedSchema = schemas.shared
+    componentSchema = schemas.component
     tv4.addSchema '/shared/', sharedSchema
     tv4.addSchema '/component/', componentSchema
 

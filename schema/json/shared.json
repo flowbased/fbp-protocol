@@ -30,12 +30,12 @@
     "id": "port",
     "type": "object",
     "required": [
-      "process",
+      "node",
       "port"
     ],
     "additionalProperties": false,
     "properties": {
-      "process": {
+      "node": {
         "type": "string",
         "description": "node identifier"
       },

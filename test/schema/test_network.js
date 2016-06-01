@@ -1,9 +1,9 @@
 (function() {
-  var chai, format, fs, tv4;
+  var chai, format, schemas, tv4;
 
   chai = require('chai');
 
-  fs = require('fs');
+  schemas = require('../../schema/schemas.js');
 
   tv4 = require('tv4');
 
@@ -12,8 +12,8 @@
   describe('Test network protocol schema on events', function() {
     before(function() {
       var networkSchema, sharedSchema;
-      sharedSchema = JSON.parse(fs.readFileSync('./schema/json/shared.json'));
-      networkSchema = JSON.parse(fs.readFileSync('./schema/json/network.json'));
+      sharedSchema = schemas.shared;
+      networkSchema = schemas.network;
       tv4.addSchema('/shared/', sharedSchema);
       tv4.addSchema('/network/', networkSchema);
       return format(tv4);
@@ -197,11 +197,11 @@
             payload: {
               id: 'node1 OUT -> IN node2',
               src: {
-                process: 'node1',
+                node: 'node1',
                 port: 'out'
               },
               tgt: {
-                process: 'node2',
+                node: 'node2',
                 port: 'in'
               },
               graph: 'mygraph'
@@ -225,11 +225,11 @@
             payload: {
               id: 'node1 OUT -> IN node2',
               src: {
-                process: 'node1',
+                node: 'node1',
                 port: 'out'
               },
               tgt: {
-                process: 'node2',
+                node: 'node2',
                 port: 'in'
               },
               group: 'group1',
@@ -247,11 +247,11 @@
             payload: {
               id: 'node1 OUT -> IN node2',
               src: {
-                process: 'node1',
+                node: 'node1',
                 port: 'out'
               },
               tgt: {
-                process: 'node2',
+                node: 'node2',
                 port: 'in'
               },
               graph: 'mygraph'
@@ -268,11 +268,11 @@
             payload: {
               id: 'node1 OUT -> IN node2',
               src: {
-                process: 'node1',
+                node: 'node1',
                 port: 'out'
               },
               tgt: {
-                process: 'node2',
+                node: 'node2',
                 port: 'in'
               },
               group: 'group1',
@@ -298,11 +298,11 @@
             payload: {
               id: 'node1 OUT -> IN node2',
               src: {
-                process: 'node1',
+                node: 'node1',
                 port: 'out'
               },
               tgt: {
-                process: 'node2',
+                node: 'node2',
                 port: 'in'
               },
               data: 5,
@@ -327,11 +327,11 @@
             payload: {
               id: 'node1 OUT -> IN node2',
               src: {
-                process: 'node1',
+                node: 'node1',
                 port: 'out'
               },
               tgt: {
-                process: 'node2',
+                node: 'node2',
                 port: 'in'
               },
               group: 'group1',
@@ -356,11 +356,11 @@
             payload: {
               id: 'node1 OUT -> IN node2',
               src: {
-                process: 'node1',
+                node: 'node1',
                 port: 'out'
               },
               tgt: {
-                process: 'node2',
+                node: 'node2',
                 port: 'in'
               },
               graph: 'mygraph'
@@ -480,11 +480,11 @@
               edges: [
                 {
                   src: {
-                    process: 'node1',
+                    node: 'node1',
                     port: 'OUT'
                   },
                   tgt: {
-                    process: 'node2',
+                    node: 'node2',
                     port: 'IN',
                     index: 0
                   }

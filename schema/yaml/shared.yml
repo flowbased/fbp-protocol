@@ -21,10 +21,10 @@ message:
 port:
   id: 'port'
   type: object
-  required: ['process', 'port']
+  required: ['node', 'port']
   additionalProperties: false
   properties:
-    process:
+    node:
       type: string
       description: 'node identifier'
     port:

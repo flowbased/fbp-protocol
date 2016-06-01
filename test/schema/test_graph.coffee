@@ -1,11 +1,11 @@
 chai = require 'chai'
-fs = require 'fs'
+schemas = require '../../schema/schemas.js'
 tv4 = require 'tv4'
 
 describe 'Test graph protocol schema on event', ->
   before ->
-    sharedSchema = JSON.parse fs.readFileSync './schema/json/shared.json'
-    graphSchema = JSON.parse fs.readFileSync './schema/json/graph.json'
+    sharedSchema = schemas.shared
+    graphSchema = schemas.graph
     tv4.addSchema '/shared/', sharedSchema
     tv4.addSchema '/graph/', graphSchema
 
@@ -155,10 +155,10 @@ describe 'Test graph protocol schema on event', ->
         payload:
           graph: 'mygraph'
           src:
-            process: 'node1'
+            node: 'node1'
             port: 'OUT'
           tgt:
-            process: 'node2'
+            node: 'node2'
             port: 'IN'
 
       chai.expect(tv4.validate event, schema).to.be.true
@@ -193,10 +193,10 @@ describe 'Test graph protocol schema on event', ->
         payload:
           graph: 'mygraph'
           src:
-            process: 'node1'
+            node: 'node1'
             port: 'OUT'
           tgt:
-            process: 'node2'
+            node: 'node2'
             port: 'IN'
 
       chai.expect(tv4.validate event, schema).to.be.true
@@ -218,10 +218,10 @@ describe 'Test graph protocol schema on event', ->
         payload:
           graph: 'mygraph'
           src:
-            process: 'node1'
+            node: 'node1'
             port: 'OUT'
           tgt:
-            process: 'node2'
+            node: 'node2'
             port: 'IN'
           metadata:
             route: 1
@@ -247,7 +247,7 @@ describe 'Test graph protocol schema on event', ->
           src:
             data: 5
           tgt:
-            process: 'node2'
+            node: 'node2'
             port: 'IN'
 
       chai.expect(tv4.validate event, schema).to.be.true
@@ -261,7 +261,7 @@ describe 'Test graph protocol schema on event', ->
             src: {}
             tgt:
               port: 'IN'
-              process: 'node2'
+              node: 'node2'
 
         chai.expect(tv4.validate event, schema).to.be.false
 
@@ -282,7 +282,7 @@ describe 'Test graph protocol schema on event', ->
         payload:
           graph: 'mygraph'
           tgt:
-            process: 'node2'
+            node: 'node2'
             port: 'IN'
 
       chai.expect(tv4.validate event, schema).to.be.true
@@ -296,7 +296,7 @@ describe 'Test graph protocol schema on event', ->
           src:
             data: 5
           tgt:
-            process: 'node2'
+            node: 'node2'
             port: 'IN'
 
       chai.expect(tv4.validate event, schema).to.be.false
@@ -318,7 +318,7 @@ describe 'Test graph protocol schema on event', ->
         payload:
           graph: 'mygraph'
           public: 'IN'
-          process: 'core/Kick'
+          node: 'core/Kick'
           port: 'DATA'
 
       chai.expect(tv4.validate event, schema).to.be.true
@@ -330,7 +330,7 @@ describe 'Test graph protocol schema on event', ->
         payload:
           graph: 'mygraph'
           public: 'IN'
-          process: 'core/Kick'
+          node: 'core/Kick'
           port: 'DATA'
           extra: 'doesntwork'
 
@@ -363,7 +363,7 @@ describe 'Test graph protocol schema on event', ->
         payload:
           graph: 'mygraph'
           public: 'IN'
-          process: 'core/Kick'
+          node: 'core/Kick'
           port: 'DATA'
 
       chai.expect(tv4.validate event, schema).to.be.false
@@ -406,7 +406,7 @@ describe 'Test graph protocol schema on event', ->
         payload:
           graph: 'mygraph'
           public: 'OUT'
-          process: 'core/Repeat'
+          node: 'core/Repeat'
           port: 'OUT'
 
       chai.expect(tv4.validate event, schema).to.be.true
@@ -418,7 +418,7 @@ describe 'Test graph protocol schema on event', ->
         payload:
           graph: 'mygraph'
           public: 'OUT'
-          process: 'core/Repeat'
+          node: 'core/Repeat'
           port: 'OUT'
           extra: 'doesntwork'
 
@@ -451,7 +451,7 @@ describe 'Test graph protocol schema on event', ->
         payload:
           graph: 'mygraph'
           public: 'OUT'
-          process: 'core/Kick'
+          node: 'core/Kick'
           port: 'DATA'
 
       chai.expect(tv4.validate event, schema).to.be.false
@@ -494,7 +494,7 @@ describe 'Test graph protocol schema on event', ->
         payload:
           graph: 'mygraph'
           name: 'mygroup'
-          processes: ['Kick', 'Drop']
+          nodes: ['Kick', 'Drop']
 
       chai.expect(tv4.validate event, schema).to.be.true
 
@@ -505,7 +505,7 @@ describe 'Test graph protocol schema on event', ->
         payload:
           graph: 'mygraph'
           name: 'mygroup'
-          processes: ['Kick', 'Drop']
+          nodes: ['Kick', 'Drop']
           extra: 'nope'
 
       chai.expect(tv4.validate event, schema).to.be.false

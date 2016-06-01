@@ -1,17 +1,17 @@
 (function() {
-  var chai, fs, tv4;
+  var chai, schemas, tv4;
 
   chai = require('chai');
 
-  fs = require('fs');
+  schemas = require('../../schema/schemas.js');
 
   tv4 = require('tv4');
 
   describe('Test runtime protocol schema on event', function() {
     before(function() {
       var runtimeSchema, sharedSchema;
-      sharedSchema = JSON.parse(fs.readFileSync('./schema/json/shared.json'));
-      runtimeSchema = JSON.parse(fs.readFileSync('./schema/json/runtime.json'));
+      sharedSchema = schemas.shared;
+      runtimeSchema = schemas.runtime;
       tv4.addSchema('/shared/', sharedSchema);
       return tv4.addSchema('/runtime/', runtimeSchema);
     });
