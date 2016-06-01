@@ -76,7 +76,7 @@
           "type": "string"
         },
         "required": {
-          "description": "boolean telling whether the port needs to be connected for the component to work\n",
+          "description": "boolean telling whether the port needs to be connected for the component to work",
           "type": "boolean"
         },
         "description": {
@@ -110,7 +110,7 @@
     "properties": {
       "id": {
         "type": "string",
-        "description": "textual edge identifier, usually in form of a FBP language line\n"
+        "description": "textual edge identifier, usually in form of a FBP language line"
       },
       "src": {
         "description": "source node for the edge",
@@ -126,7 +126,7 @@
       },
       "subgraph": {
         "type": "string",
-        "description": "(optional): subgraph identifier for the event. An array of node IDs\n"
+        "description": "(optional): subgraph identifier for the event. An array of node IDs"
       }
     }
   }

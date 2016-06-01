@@ -52,7 +52,7 @@ port_definition:
         description: 'port datatype, for example boolean'
         type: string
       required:
-        description: >
+        description: >-
           boolean telling whether the port needs to be
           connected for the component to work
         type: boolean
@@ -75,7 +75,7 @@ network_event:
   properties:
     id:
       type: 'string'
-      description: >
+      description: >-
         textual edge identifier, usually in form of
         a FBP language line
     src:
@@ -89,7 +89,7 @@ network_event:
       description: 'graph the action targets'
     subgraph:
       type: 'string'
-      description: >
+      description: >-
         (optional): subgraph identifier for the event.
         An array of node IDs
 

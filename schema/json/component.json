@@ -63,7 +63,7 @@
                 },
                 "icon": {
                   "type": "string",
-                  "description": "(optional): visual icon for the component, matching icon   names in [Font Awesome](http://fortawesome.github.io/Font-Awesome/icons/)\n"
+                  "description": "(optional): visual icon for the component, matching icon names in [Font Awesome](http://fortawesome.github.io/Font-Awesome/icons/)"
                 },
                 "subgraph": {
                   "type": "boolean",
@@ -85,7 +85,7 @@
     },
     "source": {
       "id": "output/source",
-      "description": "Source code for a component. In cases where a runtime receives a `source` message, it should do whatever operations are needed for making that component available for graphs, including possible compilation.\n",
+      "description": "Source code for a component. In cases where a runtime receives a `source` message, it should do whatever operations are needed for making that component available for graphs, including possible compilation.",
       "allOf": [
         {
           "$ref": "/shared/message"
@@ -116,7 +116,7 @@
                 },
                 "language": {
                   "type": "string",
-                  "description": "The programming language used for the component code, for example `coffeescript`\n"
+                  "description": "The programming language used for the component code, for example `coffeescript`"
                 },
                 "library": {
                   "type": "string",
@@ -163,7 +163,7 @@
     },
     "list": {
       "id": "input/list",
-      "description": "Request a list of currently available components. Will be responded with a set of `component` messages.\n",
+      "description": "Request a list of currently available components. Will be responded with a set of `component` messages.",
       "allOf": [
         {
           "$ref": "/shared/message"
@@ -186,7 +186,7 @@
     },
     "getsource": {
       "id": "input/getsource",
-      "description": "Request for the source code of a given component. Will be responded with a `source` message.\n",
+      "description": "Request for the source code of a given component. Will be responded with a `source` message.",
       "allOf": [
         {
           "$ref": "/shared/message"
@@ -221,7 +221,7 @@
     },
     "source": {
       "id": "input/source",
-      "description": "Source code for a component. In cases where a runtime receives a `source` message, it should do whatever operations are needed for making that component available for graphs, including possible compilation.\n",
+      "description": "Source code for a component. In cases where a runtime receives a `source` message, it should do whatever operations are needed for making that component available for graphs, including possible compilation.",
       "allOf": [
         {
           "$ref": "/shared/message"
@@ -252,7 +252,7 @@
                 },
                 "language": {
                   "type": "string",
-                  "description": "The programming language used for the component code, for example `coffeescript`\n"
+                  "description": "The programming language used for the component code, for example `coffeescript`"
                 },
                 "library": {
                   "type": "string",

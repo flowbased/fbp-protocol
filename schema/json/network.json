@@ -1,7 +1,7 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
   "title": "Network protocol",
-  "description": "Protocol for starting and stopping FBP networks, and finding out about their state.\n",
+  "description": "Protocol for starting and stopping FBP networks, and finding out about their state.",
   "output": {
     "stopped": {
       "id": "output/stopped",
@@ -158,7 +158,7 @@
     },
     "output": {
       "id": "output/output",
-      "description": "An output message from a running network, roughly similar to STDOUT output of a Unix process, or a line of console.log in JavaScript. Output can also be used for passing images from the runtime to the UI.'\n",
+      "description": "An output message from a running network, roughly similar to STDOUT output of a Unix process, or a line of console.log in JavaScript. Output can also be used for passing images from the runtime to the UI.'",
       "allOf": [
         {
           "$ref": "/shared/message"
@@ -206,7 +206,7 @@
     },
     "error": {
       "id": "output/error",
-      "description": "An error from a running network, roughly similar to STDERR output of a Unix process, or a line of console.error in JavaScript.'\n",
+      "description": "An error from a running network, roughly similar to STDERR output of a Unix process, or a line of console.error in JavaScript.'",
       "allOf": [
         {
           "$ref": "/shared/message"
@@ -392,7 +392,7 @@
                   ],
                   "properties": {
                     "data": {
-                      "description": "actual data being transmitted, encoded in a way that can be carried over the protocol transport\n"
+                      "description": "actual data being transmitted, encoded in a way that can be carried over the protocol transport"
                     }
                   }
                 },
@@ -554,7 +554,7 @@
     },
     "getstatus": {
       "id": "input/getstatus",
-      "description": "Get the current status of the runtime. The runtime should respond with a status message.\n",
+      "description": "Get the current status of the runtime. The runtime should respond with a status message.",
       "allOf": [
         {
           "$ref": "/shared/message"
@@ -624,7 +624,7 @@
     },
     "edges": {
       "id": "input/edges",
-      "description": "List of edges user has selected for inspection in a user interface or debugger, sent from UI to a runtime.\n",
+      "description": "List of edges user has selected for inspection in a user interface or debugger, sent from UI to a runtime.",
       "allOf": [
         {
           "$ref": "/shared/message"

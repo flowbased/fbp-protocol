@@ -1,5 +1,5 @@
 title: 'Runtime protocol'
-description: >
+description: >-
   When a client connects to a FBP procotol it may choose to discover the
   capabilities and other information about the runtime.
 input:
@@ -16,7 +16,7 @@ input:
 
   getruntime:
     id: 'input/getruntime'
-    description: >
+    description: >-
       Request the information about the runtime. When receiving this message
       the runtime should response with a runtime message.
     allOf:
@@ -29,7 +29,7 @@ input:
 
   packet:
     id: 'input/packet'
-    description: >
+    description: >-
       Runtimes that can be used as remote subgraphs (i.e. ones that have
       reported supporting the protocol:runtime capability) need to be able to
       receive and transmit information packets at their exposed ports.These
@@ -63,7 +63,7 @@ input:
                 description: 'graph the action targets'
               payload:
                 type: object
-                description: >
+                description: >-
                   (optional) payload for the packet. Used only with begingroup
                   (for group names) and data packets
 
@@ -81,7 +81,7 @@ output:
 
   ports:
     id: 'output/ports'
-    description: >
+    description: >-
       Message sent by the runtime to signal its available ports. The runtime
       is responsible for sending the up-to-date list of available ports back to
       client whenever it changes.
@@ -98,7 +98,7 @@ output:
             properties:
               graph:
                 type: string
-                description: >
+                description: >-
                   ID of the currently configured main graph running on the
                   runtime
               inPorts:
@@ -129,12 +129,12 @@ output:
                 description: '(optional) Human-readable description of the runtime'
                 type: string
               version:
-                description: >
+                description: >-
                   version of the runtime protocol that the runtime supports,
                   for example 0.4
                 type: string
               capabilities:
-                description: >
+                description: >-
                   array of capability strings for things the runtime is able
                   to do. If the runtime is currently running a graph and it is
                   able to speak the full Runtime protocol, it should follow up
@@ -152,35 +152,37 @@ output:
                     - 'component:setsource'
                   _enumDescriptions: # Documentation
                     - name: 'protocol:network'
-                      description: >
+                      description: >-
                         the runtime is able to control and introspect its
                         running networks using the Network protocol
                     - name: 'protocol:component'
-                      description: >
+                      description: >-
                         the runtime is able to list and modify its components
                         using the Component protocol
                     - name: 'protocol:runtime'
-                      description: >
+                      description: >-
                         the runtime is able to expose the ports of its main
                         graph using the Runtime protocol and transmit packet information to/from them
                     - name: 'component:getsource'
-                      description: >
+                      description: >-
                         runtime is able to read and send component source code
                         back to client
                     - name: 'network:persist'
-                      description: >
+                      description: >-
                         runtime is able to *flash* a running graph setup into
                         itself, making it persistent across reboots
                     - name: 'protocol:graph'
-                      description: >
+                      description: >-
                         the runtime is able to modify its graphs using the
                         Graph protocol
                     - name: 'component:setsource'
-                      description: >
+                      description: >-
                         runtime is able to compile and run custom components
                         sent as source code strings
               graph:
-                description: '(optional) ID of the currently configured main graph running on the runtime, if any'
+                description: >-
+                  (optional) ID of the currently configured main graph running
+                  on the runtime, if any
                 type: string
               type:
                 description: 'type of the runtime, for example noflo-nodejs or microflo'
