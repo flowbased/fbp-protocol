@@ -4,14 +4,7 @@ path = require 'path'
 shelljs = require 'shelljs'
 WebSocketClient = require('websocket').client
 semver = require 'semver'
-tv4 = require 'tv4'
-schemas = require '../schema/schemas.js'
-
-tv4.addSchema '/shared/', schemas.shared
-tv4.addSchema '/graph/', schemas.graph
-tv4.addSchema '/network/', schemas.network
-tv4.addSchema '/runtime/', schemas.runtime
-tv4.addSchema '/component/', schemas.component
+tv4 = require '../schema/index.js'
 
 check = (done, f) ->
   try
