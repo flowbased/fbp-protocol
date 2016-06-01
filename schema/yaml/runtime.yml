@@ -32,8 +32,9 @@ input:
     description: >-
       Runtimes that can be used as remote subgraphs (i.e. ones that have
       reported supporting the protocol:runtime capability) need to be able to
-      receive and transmit information packets at their exposed ports.These
-      packets can be send from the client to the runtimes input ports, or from
+      receive and transmit information packets at their exposed ports.
+
+      These packets can be send from the client to the runtimes input ports, or from
       runtimes output ports to the client.
     allOf:
       - $ref: '/shared/message'
@@ -135,8 +136,9 @@ output:
                 type: string
               capabilities:
                 description: >-
-                  array of capability strings for things the runtime is able
-                  to do. If the runtime is currently running a graph and it is
+                  array of capability strings for things the runtime is able to do.
+
+                  If the runtime is currently running a graph and it is
                   able to speak the full Runtime protocol, it should follow up
                   with a ports message.
                 type: array
