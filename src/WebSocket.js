@@ -155,7 +155,7 @@
           });
         });
       });
-      xdescribe('Graph Protocol', function() {
+      describe('Graph Protocol', function() {
         describe('adding a graph and nodes', function() {
           return it('should provide the nodes back', function(done) {
             var expects;
@@ -671,7 +671,7 @@
           });
         });
       });
-      xdescribe('Network protocol', function() {
+      describe('Network protocol', function() {
         before(function(done) {
           var listener, waitFor;
           waitFor = 5;
@@ -909,42 +909,7 @@
       return describe('Component protocol', function() {
         return describe('on requesting a component list', function() {
           return it('should receive some known components', function(done) {
-            var expects, listener;
-            expects = [
-              {
-                protocol: 'component',
-                command: 'component',
-                payload: {
-                  name: "" + collection + "/Output",
-                  description: String,
-                  icon: String,
-                  subgraph: false,
-                  inPorts: [
-                    {
-                      id: 'in',
-                      type: 'all',
-                      required: false,
-                      addressable: false,
-                      description: 'Packet to be printed through console.log'
-                    }, {
-                      id: 'options',
-                      type: 'object',
-                      required: false,
-                      addressable: false,
-                      description: 'Options to be passed to console.log'
-                    }
-                  ],
-                  outPorts: [
-                    {
-                      id: 'out',
-                      type: 'all',
-                      required: false,
-                      addressable: false
-                    }
-                  ]
-                }
-              }
-            ];
+            var listener;
             listener = function(message) {
               var data;
               data = JSON.parse(message.utf8Data);

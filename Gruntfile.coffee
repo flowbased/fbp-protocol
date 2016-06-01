@@ -77,7 +77,7 @@ module.exports = ->
   @loadNpmTasks 'grunt-convert'
 
   # Our local tasks
-  @registerTask 'build', ['coffee', 'exec:spechtml', 'convert']
+  @registerTask 'build', ['coffee', 'exec:spechtml', 'convert', 'json-to-js']
   @registerTask 'test', ['build', 'mochaTest', 'exec:fbp_test']
   @registerTask 'default', ['test']
 
