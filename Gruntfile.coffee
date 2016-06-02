@@ -128,10 +128,10 @@ module.exports = ->
 
     desc = {}
     protocols =
-      graph: ['input']
-      network: ['input', 'output']
       runtime: ['input', 'output']
+      graph: ['input']
       component: ['input', 'output']
+      network: ['input', 'output']
 
     for protocol, categories of protocols
       messages = {}

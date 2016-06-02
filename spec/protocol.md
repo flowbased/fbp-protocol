@@ -93,6 +93,88 @@ All messages consist of three parts:
 The keys listed in specific messages are for the message payloads. The values are strings unless stated differently.
 
 
+<a id="runtime"></a>
+
+## Runtime protocol
+
+When a client connects to a FBP procotol it may choose to discover the capabilities and other information about the runtime.
+
+
+### `error`
+
+Runtime error
+
+
+
+### `getruntime`
+
+Request the information about the runtime. When receiving this message the runtime should response with a runtime message.
+
+* `secret`: access token to authorize user
+
+
+### `packet`
+
+Runtimes that can be used as remote subgraphs (i.e. ones that have reported supporting the protocol:runtime capability) need to be able to receive and transmit information packets at their exposed ports. 
+These packets can be send from the client to the runtimes input ports, or from runtimes output ports to the client.
+
+* `port`: port name for the input or output port
+* `event`: packet event
+* `graph`: graph the action targets
+* `payload`: (optional) payload for the packet. Used only with begingroup (for group names) and data packets
+* `secret`: access token to authorize user
+
+
+### `ports`
+
+Message sent by the runtime to signal its available ports. The runtime is responsible for sending the up-to-date list of available ports back to client whenever it changes.
+
+* `graph`: ID of the currently configured main graph running on the runtime
+* `inPorts`: list of input ports, each containing:
+  - `addressable`: boolean telling whether the port is an ArrayPort
+  - `id`: port name
+  - `type`: port datatype, for example boolean
+  - `required`: boolean telling whether the port needs to be connected for the component to work
+  - `description`: textual description of the port
+
+* `outPorts`: list of output ports, each containing:
+  - `addressable`: boolean telling whether the port is an ArrayPort
+  - `id`: port name
+  - `type`: port datatype, for example boolean
+  - `required`: boolean telling whether the port needs to be connected for the component to work
+  - `description`: textual description of the port
+
+
+
+### `runtime`
+
+Response from the runtime to the getruntime request.
+
+* `id`: (optional) runtime ID used with Flowhub Registry
+* `label`: (optional) Human-readable description of the runtime
+* `version`: version of the runtime protocol that the runtime supports, for example 0.4
+* `allCapabilities`: array of capability strings for things the runtime is able to do. May include things not permitted for the user Options include: 
+  - `protocol:network`: the runtime is able to control and introspect its running networks using the Network protocol
+  - `protocol:component`: the runtime is able to list and modify its components using the Component protocol
+  - `protocol:runtime`: the runtime is able to expose the ports of its main graph using the Runtime protocol and transmit packet information to/from them
+  - `component:getsource`: runtime is able to read and send component source code back to client
+  - `network:persist`: runtime is able to *flash* a running graph setup into itself, making it persistent across reboots
+  - `protocol:graph`: the runtime is able to modify its graphs using the Graph protocol
+  - `component:setsource`: runtime is able to compile and run custom components sent as source code strings
+* `capabilities`: array of capability strings for things the runtime is able to do. 
+If the runtime is currently running a graph and it is able to speak the full Runtime protocol, it should follow up with a ports message. Options include: 
+  - `protocol:network`: the runtime is able to control and introspect its running networks using the Network protocol
+  - `protocol:component`: the runtime is able to list and modify its components using the Component protocol
+  - `protocol:runtime`: the runtime is able to expose the ports of its main graph using the Runtime protocol and transmit packet information to/from them
+  - `component:getsource`: runtime is able to read and send component source code back to client
+  - `network:persist`: runtime is able to *flash* a running graph setup into itself, making it persistent across reboots
+  - `protocol:graph`: the runtime is able to modify its graphs using the Graph protocol
+  - `component:setsource`: runtime is able to compile and run custom components sent as source code strings
+* `graph`: (optional) ID of the currently configured main graph running on the runtime, if any
+* `type`: type of the runtime, for example noflo-nodejs or microflo
+
+
+
 <a id="graph"></a>
 
 ## Graph protocol
@@ -340,6 +422,70 @@ Change a group&#x27;s metadata
 
 
 
+<a id="component"></a>
+
+## Component protocol
+
+Protocol for handling the component registry.
+
+
+### `error`
+
+Component error
+
+
+
+### `list`
+
+Request a list of currently available components. Will be responded with a set of &#x60;component&#x60; messages.
+
+* `secret`: access token to authorize user
+
+
+### `getsource`
+
+Request for the source code of a given component. Will be responded with a &#x60;source&#x60; message.
+
+* `name`: Name of the component to for which to get source code
+* `secret`: access token to authorize user
+
+
+### `source`
+
+Source code for a component. In cases where a runtime receives a &#x60;source&#x60; message, it should do whatever operations are needed for making that component available for graphs, including possible compilation.
+
+* `name`: Name of the component
+* `language`: The programming language used for the component code, for example &#x60;coffeescript&#x60;
+* `library`: (optional) Component library identifier
+* `code`: Component source code
+* `tests`: (optional) unit tests for the component
+
+
+### `component`
+
+Transmit the metadata about a component instance.
+
+* `name`: component name in format that can be used in graphs
+* `description`: (optional) textual description on what the component does
+* `icon`: (optional): visual icon for the component, matching icon names in [Font Awesome](http://fortawesome.github.io/Font-Awesome/icons/)
+* `subgraph`: boolean telling whether the component is a subgraph
+* `inPorts`: list of input ports, each containing:, each containing:
+  - `addressable`: boolean telling whether the port is an ArrayPort
+  - `id`: port name
+  - `type`: port datatype, for example boolean
+  - `required`: boolean telling whether the port needs to be connected for the component to work
+  - `description`: textual description of the port
+
+* `outPorts`: list of output ports, each containing:
+  - `addressable`: boolean telling whether the port is an ArrayPort
+  - `id`: port name
+  - `type`: port datatype, for example boolean
+  - `required`: boolean telling whether the port needs to be connected for the component to work
+  - `description`: textual description of the port
+
+
+
+
 <a id="network"></a>
 
 ## Network protocol
@@ -522,152 +668,6 @@ End of transmission on an edge.
   - `index`: connection index (optional, for addressable ports)
 * `graph`: graph the action targets
 * `subgraph`: (optional): subgraph identifier for the event. An array of node IDs
-
-
-
-<a id="runtime"></a>
-
-## Runtime protocol
-
-When a client connects to a FBP procotol it may choose to discover the capabilities and other information about the runtime.
-
-
-### `error`
-
-Runtime error
-
-
-
-### `getruntime`
-
-Request the information about the runtime. When receiving this message the runtime should response with a runtime message.
-
-* `secret`: access token to authorize user
-
-
-### `packet`
-
-Runtimes that can be used as remote subgraphs (i.e. ones that have reported supporting the protocol:runtime capability) need to be able to receive and transmit information packets at their exposed ports. 
-These packets can be send from the client to the runtimes input ports, or from runtimes output ports to the client.
-
-* `port`: port name for the input or output port
-* `event`: packet event
-* `graph`: graph the action targets
-* `payload`: (optional) payload for the packet. Used only with begingroup (for group names) and data packets
-* `secret`: access token to authorize user
-
-
-### `ports`
-
-Message sent by the runtime to signal its available ports. The runtime is responsible for sending the up-to-date list of available ports back to client whenever it changes.
-
-* `graph`: ID of the currently configured main graph running on the runtime
-* `inPorts`: list of input ports, each containing:
-  - `addressable`: boolean telling whether the port is an ArrayPort
-  - `id`: port name
-  - `type`: port datatype, for example boolean
-  - `required`: boolean telling whether the port needs to be connected for the component to work
-  - `description`: textual description of the port
-
-* `outPorts`: list of output ports, each containing:
-  - `addressable`: boolean telling whether the port is an ArrayPort
-  - `id`: port name
-  - `type`: port datatype, for example boolean
-  - `required`: boolean telling whether the port needs to be connected for the component to work
-  - `description`: textual description of the port
-
-
-
-### `runtime`
-
-Response from the runtime to the getruntime request.
-
-* `id`: (optional) runtime ID used with Flowhub Registry
-* `label`: (optional) Human-readable description of the runtime
-* `version`: version of the runtime protocol that the runtime supports, for example 0.4
-* `allCapabilities`: array of capability strings for things the runtime is able to do. May include things not permitted for the user Options include: 
-  - `protocol:network`: the runtime is able to control and introspect its running networks using the Network protocol
-  - `protocol:component`: the runtime is able to list and modify its components using the Component protocol
-  - `protocol:runtime`: the runtime is able to expose the ports of its main graph using the Runtime protocol and transmit packet information to/from them
-  - `component:getsource`: runtime is able to read and send component source code back to client
-  - `network:persist`: runtime is able to *flash* a running graph setup into itself, making it persistent across reboots
-  - `protocol:graph`: the runtime is able to modify its graphs using the Graph protocol
-  - `component:setsource`: runtime is able to compile and run custom components sent as source code strings
-* `capabilities`: array of capability strings for things the runtime is able to do. 
-If the runtime is currently running a graph and it is able to speak the full Runtime protocol, it should follow up with a ports message. Options include: 
-  - `protocol:network`: the runtime is able to control and introspect its running networks using the Network protocol
-  - `protocol:component`: the runtime is able to list and modify its components using the Component protocol
-  - `protocol:runtime`: the runtime is able to expose the ports of its main graph using the Runtime protocol and transmit packet information to/from them
-  - `component:getsource`: runtime is able to read and send component source code back to client
-  - `network:persist`: runtime is able to *flash* a running graph setup into itself, making it persistent across reboots
-  - `protocol:graph`: the runtime is able to modify its graphs using the Graph protocol
-  - `component:setsource`: runtime is able to compile and run custom components sent as source code strings
-* `graph`: (optional) ID of the currently configured main graph running on the runtime, if any
-* `type`: type of the runtime, for example noflo-nodejs or microflo
-
-
-
-<a id="component"></a>
-
-## Component protocol
-
-Protocol for handling the component registry.
-
-
-### `error`
-
-Component error
-
-
-
-### `list`
-
-Request a list of currently available components. Will be responded with a set of &#x60;component&#x60; messages.
-
-* `secret`: access token to authorize user
-
-
-### `getsource`
-
-Request for the source code of a given component. Will be responded with a &#x60;source&#x60; message.
-
-* `name`: Name of the component to for which to get source code
-* `secret`: access token to authorize user
-
-
-### `source`
-
-Source code for a component. In cases where a runtime receives a &#x60;source&#x60; message, it should do whatever operations are needed for making that component available for graphs, including possible compilation.
-
-* `name`: Name of the component
-* `language`: The programming language used for the component code, for example &#x60;coffeescript&#x60;
-* `library`: (optional) Component library identifier
-* `code`: Component source code
-* `tests`: (optional) unit tests for the component
-
-
-### `component`
-
-Transmit the metadata about a component instance.
-
-* `name`: component name in format that can be used in graphs
-* `description`: (optional) textual description on what the component does
-* `icon`: (optional): visual icon for the component, matching icon names in [Font Awesome](http://fortawesome.github.io/Font-Awesome/icons/)
-* `subgraph`: boolean telling whether the component is a subgraph
-* `inPorts`: list of input ports, each containing:, each containing:
-  - `addressable`: boolean telling whether the port is an ArrayPort
-  - `id`: port name
-  - `type`: port datatype, for example boolean
-  - `required`: boolean telling whether the port needs to be connected for the component to work
-  - `description`: textual description of the port
-
-* `outPorts`: list of output ports, each containing:
-  - `addressable`: boolean telling whether the port is an ArrayPort
-  - `id`: port name
-  - `type`: port datatype, for example boolean
-  - `required`: boolean telling whether the port needs to be connected for the component to work
-  - `description`: textual description of the port
-
 
 
 
