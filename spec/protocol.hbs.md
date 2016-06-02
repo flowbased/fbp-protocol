@@ -107,7 +107,7 @@ The keys listed in specific messages are for the message payloads. The values ar
 {{value.description}}
 
 {{#eachKey value.properties}}
-* `{{key}}`: {{value.description}}{{#if value.items}}, each containing:
+* `{{key}}`: {{value.description}}{{#if value.items}}{{#if (isObject value.items)}}, each containing:
 {{#eachKey value.items.properties}}
 {{#if (isObject value)}}
   * `{{key}}`: {{value.description}}
@@ -117,13 +117,16 @@ The keys listed in specific messages are for the message payloads. The values ar
 {{else}}
   - `{{key}}`: {{value.description}}
 {{/if}}
-{{/eachKey}}{{/if}}{{#if (isObject value)}}
-{{#eachKey value.properties}}
-  - `{{key}}`: {{value.description}}
-{{/eachKey}}{{/if}}
-{{/eachKey}}
-{{/eachKey}}
-{{/eachKey}}
+{{/eachKey}}{{/if}}{{!-- if: payload property items are objects
+--}}{{#if (isStringEnum value.items)}} Options include: {{#each value.items._enumDescriptions}}
+  - `{{name}}`: {{description}}{{/each}}{{!-- each: enum description
+--}}{{/if}}{{!--  if: payload property items are enums
+--}}{{/if}}{{!-- if: payload property is array
+--}}{{#if (isObject value)}}{{#eachKey value.properties}}
+  - `{{key}}`: {{value.description}}{{/eachKey}}{{/if}}{{!-- if: payload property is object --}}
+{{/eachKey}}{{!-- eachKey:  payload properties --}}
+{{/eachKey}}{{!-- eachKey: messages --}}
+{{/eachKey}}{{!-- eachKey: schemas --}}
 
 <a id="trace"></a>
 ## Tracing protocol
@@ -168,6 +171,3 @@ Clear current tracing buffer.
 * `secret`: access token to authorize the user
 * `graph`: Graph identifier for network to trace
 
-# TEST
-
-<a id="anothergraph"></a>

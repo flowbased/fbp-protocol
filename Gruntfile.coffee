@@ -79,12 +79,12 @@ module.exports = ->
   @loadNpmTasks 'grunt-convert'
 
   # Our local tasks
-  @registerTask 'build', ['coffee', 'exec:spechtml', 'convert', 'json-to-js']
+  @registerTask 'build', ['coffee', 'convert', 'json-to-js', 'handlebars', 'exec:spechtml']
   @registerTask 'test', ['build', 'mochaTest', 'exec:fbp_test']
   @registerTask 'default', ['test']
 
   schemas = null
-  getSchemas = () ->
+  getSchemas = ->
     unless schemas
       schemas = {}
       dir = './schema/json/'
@@ -97,11 +97,7 @@ module.exports = ->
 
     return schemas
 
-  @registerTask 'json-to-js', ->
-    schemaJs = "module.exports = #{JSON.stringify getSchemas()}"
-    fs.writeFileSync './schema/schemas.js', schemaJs, 'utf8'
-
-  @registerTask 'handlebars', ->
+  getDescriptions = ->
     tv4 = require './schema/index.js'
     schemas = getSchemas()
 
@@ -124,36 +120,41 @@ module.exports = ->
 
       return newObj
 
-    descriptions = (obj) ->
-      desc = {}
-      protocols =
-        graph: ['input']
-        network: ['input', 'output']
-        runtime: ['input', 'output']
-        component: ['input', 'output']
+    desc = {}
+    protocols =
+      graph: ['input']
+      network: ['input', 'output']
+      runtime: ['input', 'output']
+      component: ['input', 'output']
 
-      for protocol, categories of protocols
-        messages = {}
-        desc[protocol] =
-          title: schemas[protocol].title
-          description: schemas[protocol].description
-          messages: messages
+    for protocol, categories of protocols
+      messages = {}
+      desc[protocol] =
+        title: schemas[protocol].title
+        description: schemas[protocol].description
+        messages: messages
 
-        for category in categories
-          for event, schema of schemas[protocol][category]
-            schema = fillRefs schema
-            message =
-              id: schema.id
-              description: schema.description
+      for category in categories
+        for event, schema of schemas[protocol][category]
+          schema = fillRefs schema
+          message =
+            id: schema.id
+            description: schema.description
 
-            if schema.allOf?
-              for key, value of schema.allOf[1].properties.payload
-                message[key] = value
+          if schema.allOf?
+            for key, value of schema.allOf[1].properties.payload
+              message[key] = value
 
-            messages[event] = message
+          messages[event] = message
 
-      return desc
+    return desc
 
+  @registerTask 'json-to-js', ->
+    schemaJs = "module.exports = #{JSON.stringify getSchemas()}"
+    fs.writeFileSync './schema/schemas.js', schemaJs, 'utf8'
+
+  @registerTask 'hbs', ['handlebars']
+  @registerTask 'handlebars', ->
     hbs.registerHelper 'eachKey', (obj, options) ->
       out = ''
       for own key, value of obj
@@ -162,9 +163,14 @@ module.exports = ->
       out
 
     hbs.registerHelper 'isObject', (obj) ->
-      return obj?.type is 'object'
+      return (obj?.type is 'object') and obj.properties?
+
+    hbs.registerHelper 'isStringEnum', (obj) ->
+      return (obj?.type is 'string') and obj?.enums?
 
     file = fs.readFileSync 'spec/protocol.hbs.md', 'utf8'
-    result = hbs.compile(file) {schemas: descriptions getSchemas()}
+    result = hbs.compile(file) {schemas: getDescriptions()}
     fs.writeFileSync 'spec/protocol.md', result, 'utf8'
+
+  @registerTask 'u', ->
 

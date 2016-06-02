@@ -111,7 +111,6 @@
     "clear": {
       "id": "input/clear",
       "description": "Initialize an empty graph.",
-      "_doc": "Graphs registered in this way should also be available for use as subgraphs in other graphs. Therefore a graph registration and later changes to it may cause `component` messages of the [Component protocol](#component) to be sent back to the client informing of possible changes in the ports of the subgraph component.",
       "allOf": [
         {
           "$ref": "/shared/message"
