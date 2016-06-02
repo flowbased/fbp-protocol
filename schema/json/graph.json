@@ -148,6 +148,18 @@
                 "main": {
                   "type": "boolean",
                   "description": "(optional) Identifies the graph as a main graph of a project that should not be registered as a component\nGraphs registered in this way should also be available for use as subgraphs in other graphs. Therefore a graph registration and later changes to it may cause component messages of the Component protocol to be sent back to the client informing of possible changes in the ports of the subgraph component."
+                },
+                "icon": {
+                  "type": "string",
+                  "description": "(optional) Icon to use for the graph when used as a component"
+                },
+                "description": {
+                  "type": "string",
+                  "description": "(optional) Description to use for the graph when used as a component"
+                },
+                "secret": {
+                  "type": "string",
+                  "description": "access token to authorize user"
                 }
               }
             }
@@ -197,6 +209,10 @@
                 "graph": {
                   "type": "string",
                   "description": "graph the action targets"
+                },
+                "secret": {
+                  "type": "string",
+                  "description": "access token to authorize user"
                 }
               }
             }
@@ -237,6 +253,10 @@
                 "graph": {
                   "type": "string",
                   "description": "graph the action targets"
+                },
+                "secret": {
+                  "type": "string",
+                  "description": "access token to authorize user"
                 }
               }
             }
@@ -282,6 +302,10 @@
                 "graph": {
                   "type": "string",
                   "description": "graph the action targets"
+                },
+                "secret": {
+                  "type": "string",
+                  "description": "access token to authorize user"
                 }
               }
             }
@@ -327,6 +351,10 @@
                 "graph": {
                   "type": "string",
                   "description": "graph the action targets"
+                },
+                "secret": {
+                  "type": "string",
+                  "description": "access token to authorize user"
                 }
               }
             }
@@ -375,6 +403,10 @@
                 },
                 "graph": {
                   "description": "graph the action targets"
+                },
+                "secret": {
+                  "type": "string",
+                  "description": "access token to authorize user"
                 }
               }
             }
@@ -403,6 +435,11 @@
             },
             "payload": {
               "additionalProperties": false,
+              "required": [
+                "graph",
+                "src",
+                "tgt"
+              ],
               "properties": {
                 "graph": {
                   "type": "string",
@@ -415,6 +452,10 @@
                 "tgt": {
                   "description": "target node for the edge",
                   "$ref": "/shared/port"
+                },
+                "secret": {
+                  "type": "string",
+                  "description": "access token to authorize user"
                 }
               }
             }
@@ -459,6 +500,10 @@
                 "tgt": {
                   "description": "target node for the edge",
                   "$ref": "/shared/port"
+                },
+                "secret": {
+                  "type": "string",
+                  "description": "access token to authorize user"
                 }
               }
             }
@@ -502,6 +547,10 @@
                 "tgt": {
                   "description": "target node for the edge",
                   "$ref": "/shared/port"
+                },
+                "secret": {
+                  "type": "string",
+                  "description": "access token to authorize user"
                 }
               }
             }
@@ -542,6 +591,10 @@
                 "graph": {
                   "type": "string",
                   "description": "graph the action targets"
+                },
+                "secret": {
+                  "type": "string",
+                  "description": "access token to authorize user"
                 }
               }
             }
@@ -596,6 +649,10 @@
                 "graph": {
                   "type": "string",
                   "description": "graph the action targets"
+                },
+                "secret": {
+                  "type": "string",
+                  "description": "access token to authorize user"
                 }
               }
             }
@@ -632,6 +689,10 @@
                 "graph": {
                   "type": "string",
                   "description": "graph the action targets"
+                },
+                "secret": {
+                  "type": "string",
+                  "description": "access token to authorize user"
                 }
               }
             }
@@ -672,6 +733,10 @@
                 "graph": {
                   "type": "string",
                   "description": "graph the action targets"
+                },
+                "secret": {
+                  "type": "string",
+                  "description": "access token to authorize user"
                 }
               }
             }
@@ -726,6 +791,10 @@
                 "graph": {
                   "type": "string",
                   "description": "graph the action targets"
+                },
+                "secret": {
+                  "type": "string",
+                  "description": "access token to authorize user"
                 }
               }
             }
@@ -765,6 +834,10 @@
                 "graph": {
                   "type": "string",
                   "description": "graph the action targets"
+                },
+                "secret": {
+                  "type": "string",
+                  "description": "access token to authorize user"
                 }
               }
             }
@@ -810,6 +883,10 @@
                 "graph": {
                   "type": "string",
                   "description": "graph the action targets"
+                },
+                "secret": {
+                  "type": "string",
+                  "description": "access token to authorize user"
                 }
               }
             }
@@ -859,6 +936,10 @@
                 "graph": {
                   "type": "string",
                   "description": "graph the action targets"
+                },
+                "secret": {
+                  "type": "string",
+                  "description": "access token to authorize user"
                 }
               }
             }
@@ -899,6 +980,10 @@
                 "graph": {
                   "type": "string",
                   "description": "graph the action targets"
+                },
+                "secret": {
+                  "type": "string",
+                  "description": "access token to authorize user"
                 }
               }
             }
@@ -938,6 +1023,10 @@
                 "graph": {
                   "type": "string",
                   "description": "graph the action targets"
+                },
+                "secret": {
+                  "type": "string",
+                  "description": "access token to authorize user"
                 }
               }
             }
@@ -983,6 +1072,10 @@
                 "graph": {
                   "type": "string",
                   "description": "graph the action targets"
+                },
+                "secret": {
+                  "type": "string",
+                  "description": "access token to authorize user"
                 }
               }
             }

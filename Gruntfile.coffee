@@ -76,12 +76,18 @@ module.exports = ->
   # For deploying
   @loadNpmTasks 'grunt-gh-pages'
 
+  # Create json schemas from yaml
   @loadNpmTasks 'grunt-convert'
 
   # Our local tasks
   @registerTask 'build', ['coffee', 'convert', 'json-to-js', 'handlebars', 'exec:spechtml']
   @registerTask 'test', ['build', 'mochaTest', 'exec:fbp_test']
   @registerTask 'default', ['test']
+
+  @registerTask 'json-to-js', ->
+    schemaJs = "module.exports = #{JSON.stringify getSchemas()}"
+    fs.writeFileSync './schema/schemas.js', schemaJs, 'utf8'
+
 
   schemas = null
   getSchemas = ->
@@ -149,11 +155,6 @@ module.exports = ->
 
     return desc
 
-  @registerTask 'json-to-js', ->
-    schemaJs = "module.exports = #{JSON.stringify getSchemas()}"
-    fs.writeFileSync './schema/schemas.js', schemaJs, 'utf8'
-
-  @registerTask 'hbs', ['handlebars']
   @registerTask 'handlebars', ->
     hbs.registerHelper 'eachKey', (obj, options) ->
       out = ''
@@ -171,6 +172,4 @@ module.exports = ->
     file = fs.readFileSync 'spec/protocol.hbs.md', 'utf8'
     result = hbs.compile(file) {schemas: getDescriptions()}
     fs.writeFileSync 'spec/protocol.md', result, 'utf8'
-
-  @registerTask 'u', ->
 

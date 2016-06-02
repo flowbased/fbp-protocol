@@ -84,15 +84,21 @@ output:
             required: ['running', 'graph', 'uptime']
             additionalProperties: false
             properties:
-              running:
-                type: boolean
-                description: 'boolean tells whether the network is running or not'
               graph:
                 type: string
                 description: 'graph the action targets'
               uptime:
                 type: number
                 description: '(optional) time the network has been running, in seconds'
+              started:
+                type: "boolean"
+                description: 'whether or not network has started running'
+              running:
+                type: boolean
+                description: 'boolean tells whether the network is running or not'
+              debug:
+                type: "boolean"
+                description: 'whether or not network is in debug mode'
 
   output:
     id: 'output/output'
@@ -141,6 +147,31 @@ output:
             properties:
               message:
                 description: 'contents of the error message'
+
+  processerror:
+    id: 'output/processerror'
+    description: >-
+      When in debug mode, a network can signal an error happening inside a process.
+    allOf:
+      - $ref: '/shared/message'
+      - properties:
+          protocol:
+            enum: ['network']
+          command:
+            enum: ['processerror']
+          payload:
+            required: ['id', 'error', 'graph']
+            additionalProperties: false
+            properties:
+              id:
+                type: string
+                description: identifier of the node
+              error:
+                type: string
+                description: error from the component
+              graph:
+                type: string
+                description: graph the action targets
 
   icon:
     id: 'output/icon'
@@ -305,6 +336,9 @@ input:
               graph:
                 type: "string"
                 description: 'graph the action targets'
+              secret:
+                type: string
+                description: access token to authorize user
 
   getstatus:
     id: 'input/getstatus'
@@ -325,6 +359,9 @@ input:
               graph:
                 type: "string"
                 description: 'graph the action targets'
+              secret:
+                type: string
+                description: access token to authorize user
 
   stop:
     id: 'input/stop'
@@ -343,6 +380,53 @@ input:
               graph:
                 type: "string"
                 description: 'graph the action targets'
+              secret:
+                type: string
+                description: access token to authorize user
+
+  persist:
+    id: 'input/persist'
+    description: >-
+      Tells the runtime to persist the current state of graphs and components
+      so that they are available between restarts. Requires the network:persist
+      capability.
+    allOf:
+      - $ref: '/shared/message'
+      - properties:
+          protocol:
+            enum: ['network']
+          command:
+            enum: ['persist']
+          payload:
+            additionalProperties: false
+            properties:
+              secret:
+                type: string
+                description: access token to authorize user
+
+  debug:
+    id: 'input/debug'
+    description: Set a network into debug mode
+    allOf:
+      - $ref: '/shared/message'
+      - properties:
+          protocol:
+            enum: ['network']
+          command:
+            enum: ['debug']
+          payload:
+            additionalProperties: false
+            required: ['enable', 'graph']
+            properties:
+              enable:
+                description: tells whether to put the network in debug mode
+                type: boolean
+              graph:
+                description: graph the action targets
+                type: string
+              secret:
+                description: access token to authorize the user
+                type: string
 
   edges:
     id: 'input/edges'
@@ -374,4 +458,7 @@ input:
                     tgt:
                       description: 'target node for the edge'
                       $ref: '/shared/port'
+              secret:
+                type: string
+                description: access token to authorize user
 

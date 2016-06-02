@@ -135,6 +135,17 @@ input:
               main:
                 type: boolean
                 description: "(optional) Identifies the graph as a main graph of a project that should not be registered as a component\nGraphs registered in this way should also be available for use as subgraphs in other graphs. Therefore a graph registration and later changes to it may cause component messages of the Component protocol to be sent back to the client informing of possible changes in the ports of the subgraph component."
+              icon:
+                type: string
+                description: >-
+                  (optional) Icon to use for the graph when used as a component
+              description:
+                type: string
+                description: >-
+                  (optional) Description to use for the graph when used as a component
+              secret:
+                type: string
+                description: access token to authorize user
 
   addnode:
     id: 'input/addnode'
@@ -162,6 +173,9 @@ input:
               graph:
                 type: string
                 description: 'graph the action targets'
+              secret:
+                type: string
+                description: access token to authorize user
 
   removenode:
     id: 'input/removenode'
@@ -183,6 +197,9 @@ input:
               graph:
                 type: string
                 description: 'graph the action targets'
+              secret:
+                type: string
+                description: access token to authorize user
 
   renamenode:
     id: 'input/renamenode'
@@ -207,6 +224,9 @@ input:
               graph:
                 type: string
                 description: 'graph the action targets'
+              secret:
+                type: string
+                description: access token to authorize user
 
   changenode:
     id: 'input/changenode'
@@ -231,6 +251,9 @@ input:
               graph:
                 type: string
                 description: 'graph the action targets'
+              secret:
+                type: string
+                description: access token to authorize user
 
   addedge:
     id: 'input/addedge'
@@ -257,6 +280,9 @@ input:
                 description: '(optional): structure of key-value pairs for edge metadata'
               graph:
                 description: 'graph the action targets'
+              secret:
+                type: string
+                description: access token to authorize user
 
   removeedge:
     id: 'input/removeedge'
@@ -270,6 +296,7 @@ input:
             enum: ['removeedge']
           payload:
             additionalProperties: false
+            required: ['graph', 'src', 'tgt']
             properties:
               graph:
                 type: string
@@ -280,6 +307,9 @@ input:
               tgt:
                 description: 'target node for the edge'
                 $ref: '/shared/port'
+              secret:
+                type: string
+                description: access token to authorize user
 
   changeedge:
     id: 'input/changeedge'
@@ -306,6 +336,9 @@ input:
               tgt:
                 description: 'target node for the edge'
                 $ref: '/shared/port'
+              secret:
+                type: string
+                description: access token to authorize user
 
   addinitial:
     id: 'input/addinitial'
@@ -331,6 +364,9 @@ input:
               tgt:
                 description: 'target node for the edge'
                 $ref: '/shared/port'
+              secret:
+                type: string
+                description: access token to authorize user
 
   removeinitial:
     id: 'input/removeinitial'
@@ -352,6 +388,9 @@ input:
               graph:
                 type: string
                 description: 'graph the action targets'
+              secret:
+                type: string
+                description: access token to authorize user
 
   addinport:
     id: 'input/addinport'
@@ -382,6 +421,9 @@ input:
               graph:
                 type: string
                 description: 'graph the action targets'
+              secret:
+                type: string
+                description: access token to authorize user
 
   removeinport:
     id: 'input/removeinport'
@@ -402,6 +444,9 @@ input:
               graph:
                 type: string
                 description: 'graph the action targets'
+              secret:
+                type: string
+                description: access token to authorize user
 
   renameinport:
     id: 'input/renameinport'
@@ -425,6 +470,9 @@ input:
               graph:
                 type: string
                 description: 'graph the action targets'
+              secret:
+                type: string
+                description: access token to authorize user
 
   addoutport:
     id: 'input/addoutport'
@@ -455,6 +503,9 @@ input:
               graph:
                 type: string
                 description: 'graph the action targets'
+              secret:
+                type: string
+                description: access token to authorize user
 
   removeoutport:
     id: 'input/removeoutport'
@@ -476,6 +527,9 @@ input:
               graph:
                 type: string
                 description: 'graph the action targets'
+              secret:
+                type: string
+                description: access token to authorize user
 
   renameoutport:
     id: 'input/renameoutport'
@@ -500,6 +554,9 @@ input:
               graph:
                 type: string
                 description: 'graph the action targets'
+              secret:
+                type: string
+                description: access token to authorize user
 
   addgroup:
     id: 'input/addgroup'
@@ -527,6 +584,9 @@ input:
               graph:
                 type: string
                 description: 'graph the action targets'
+              secret:
+                type: string
+                description: access token to authorize user
 
   removegroup:
     id: 'input/removegroup'
@@ -548,6 +608,9 @@ input:
               graph:
                 type: string
                 description: 'graph the action targets'
+              secret:
+                type: string
+                description: access token to authorize user
 
   renamegroup:
     id: 'input/renamegroup'
@@ -570,6 +633,9 @@ input:
               graph:
                 type: string
                 description: 'graph the action targets'
+              secret:
+                type: string
+                description: access token to authorize user
 
   changegroup:
     id: 'input/changegroup'
@@ -594,4 +660,7 @@ input:
               graph:
                 type: string
                 description: 'graph the action targets'
+              secret:
+                type: string
+                description: access token to authorize user
 

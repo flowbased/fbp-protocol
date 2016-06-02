@@ -115,6 +115,9 @@ Initialize an empty graph.
 * `library`: (optional) Component library identifier
 * `main`: (optional) Identifies the graph as a main graph of a project that should not be registered as a component
 Graphs registered in this way should also be available for use as subgraphs in other graphs. Therefore a graph registration and later changes to it may cause component messages of the Component protocol to be sent back to the client informing of possible changes in the ports of the subgraph component.
+* `icon`: (optional) Icon to use for the graph when used as a component
+* `description`: (optional) Description to use for the graph when used as a component
+* `secret`: access token to authorize user
 
 
 ### `addnode`
@@ -125,6 +128,7 @@ Add node to a graph.
 * `component`: component name used for the node
 * `metadata`: (optional): structure of key-value pairs for node metadata
 * `graph`: graph the action targets
+* `secret`: access token to authorize user
 
 
 ### `removenode`
@@ -133,6 +137,7 @@ Remove a node from a graph.
 
 * `id`: identifier for the node
 * `graph`: graph the action targets
+* `secret`: access token to authorize user
 
 
 ### `renamenode`
@@ -142,6 +147,7 @@ Change the ID of a node in the graph
 * `from`: original identifier for the node
 * `to`: new identifier for the node
 * `graph`: graph the action targets
+* `secret`: access token to authorize user
 
 
 ### `changenode`
@@ -151,6 +157,7 @@ Change the metadata associated to a node in the graph
 * `id`: identifier for the node
 * `metadata`: structure of key-value pairs for node metadata
 * `graph`: graph the action targets
+* `secret`: access token to authorize user
 
 
 ### `addedge`
@@ -167,6 +174,7 @@ Add an edge to the graph
   - `index`: connection index (optional, for addressable ports)
 * `metadata`: (optional): structure of key-value pairs for edge metadata
 * `graph`: graph the action targets
+* `secret`: access token to authorize user
 
 
 ### `removeedge`
@@ -182,6 +190,7 @@ Remove an edge from the graph
   - `node`: node identifier
   - `port`: port name
   - `index`: connection index (optional, for addressable ports)
+* `secret`: access token to authorize user
 
 
 ### `changeedge`
@@ -198,6 +207,7 @@ Change an edge&#x27;s metadata
   - `node`: node identifier
   - `port`: port name
   - `index`: connection index (optional, for addressable ports)
+* `secret`: access token to authorize user
 
 
 ### `addinitial`
@@ -212,6 +222,7 @@ Add an IIP to the graph
   - `node`: node identifier
   - `port`: port name
   - `index`: connection index (optional, for addressable ports)
+* `secret`: access token to authorize user
 
 
 ### `removeinitial`
@@ -223,6 +234,7 @@ Remove an IIP from the graph
   - `port`: port name
   - `index`: connection index (optional, for addressable ports)
 * `graph`: graph the action targets
+* `secret`: access token to authorize user
 
 
 ### `addinport`
@@ -234,6 +246,7 @@ Add an exported inport to the graph.
 * `port`: internal port name
 * `metadata`: (optional): structure of key-value pairs for node metadata
 * `graph`: graph the action targets
+* `secret`: access token to authorize user
 
 
 ### `removeinport`
@@ -242,6 +255,7 @@ Remove an exported port from the graph
 
 * `public`: the exported name of the port to remove
 * `graph`: graph the action targets
+* `secret`: access token to authorize user
 
 
 ### `renameinport`
@@ -251,6 +265,7 @@ Rename an exported port in the graph
 * `from`: original exported port name
 * `to`: new exported port name
 * `graph`: graph the action targets
+* `secret`: access token to authorize user
 
 
 ### `addoutport`
@@ -262,6 +277,7 @@ Add an exported outport to the graph.
 * `port`: internal port name
 * `metadata`: (optional): structure of key-value pairs for port metadata
 * `graph`: graph the action targets
+* `secret`: access token to authorize user
 
 
 ### `removeoutport`
@@ -270,6 +286,7 @@ Remove an exported port from the graph
 
 * `public`: the exported name of the port to remove
 * `graph`: graph the action targets
+* `secret`: access token to authorize user
 
 
 ### `renameoutport`
@@ -279,6 +296,7 @@ Rename an exported port in the graph
 * `from`: original exported port name
 * `to`: new exported port name
 * `graph`: graph the action targets
+* `secret`: access token to authorize user
 
 
 ### `addgroup`
@@ -289,6 +307,7 @@ Add a group to the graph
 * `nodes`: an array of node ids part of the group
 * `metadata`: (optional): structure of key-value pairs for group metadata
 * `graph`: graph the action targets
+* `secret`: access token to authorize user
 
 
 ### `removegroup`
@@ -297,6 +316,7 @@ Remove a group from the graph
 
 * `name`: the group name
 * `graph`: graph the action targets
+* `secret`: access token to authorize user
 
 
 ### `renamegroup`
@@ -306,6 +326,7 @@ Rename a group in the graph.
 * `from`: original group name
 * `to`: new group name
 * `graph`: graph the action targets
+* `secret`: access token to authorize user
 
 
 ### `changegroup`
@@ -315,6 +336,7 @@ Change a group&#x27;s metadata
 * `name`: the group name
 * `metadata`: structure of key-value pairs for group metadata
 * `graph`: graph the action targets
+* `secret`: access token to authorize user
 
 
 
@@ -337,6 +359,7 @@ An error from a running network, roughly similar to STDERR output of a Unix proc
 Start execution of a FBP network based on a given graph.
 
 * `graph`: graph the action targets
+* `secret`: access token to authorize user
 
 
 ### `getstatus`
@@ -344,6 +367,7 @@ Start execution of a FBP network based on a given graph.
 Get the current status of the runtime. The runtime should respond with a status message.
 
 * `graph`: graph the action targets
+* `secret`: access token to authorize user
 
 
 ### `stop`
@@ -351,6 +375,23 @@ Get the current status of the runtime. The runtime should respond with a status 
 Stop execution of a FBP network based on a given graph.
 
 * `graph`: graph the action targets
+* `secret`: access token to authorize user
+
+
+### `persist`
+
+Tells the runtime to persist the current state of graphs and components so that they are available between restarts. Requires the network:persist capability.
+
+* `secret`: access token to authorize user
+
+
+### `debug`
+
+Set a network into debug mode
+
+* `enable`: tells whether to put the network in debug mode
+* `graph`: graph the action targets
+* `secret`: access token to authorize the user
 
 
 ### `edges`
@@ -367,6 +408,7 @@ List of edges user has selected for inspection in a user interface or debugger, 
     - `port`: port name
     - `index`: connection index (optional, for addressable ports)
 
+* `secret`: access token to authorize user
 
 
 ### `stopped`
@@ -396,9 +438,11 @@ Inform that a given network has been started.
 
 Response to a getstatus message.
 
-* `running`: boolean tells whether the network is running or not
 * `graph`: graph the action targets
 * `uptime`: (optional) time the network has been running, in seconds
+* `started`: whether or not network has started running
+* `running`: boolean tells whether the network is running or not
+* `debug`: whether or not network is in debug mode
 
 
 ### `output`
@@ -408,6 +452,15 @@ An output message from a running network, roughly similar to STDOUT output of a 
 * `message`: contents of the output line
 * `type`: (optional) type of output, either message or previewurl
 * `url`: (optional) URL for an image generated by the runtime
+
+
+### `processerror`
+
+When in debug mode, a network can signal an error happening inside a process.
+
+* `id`: identifier of the node
+* `error`: error from the component
+* `graph`: graph the action targets
 
 
 ### `icon`
@@ -489,6 +542,7 @@ Runtime error
 
 Request the information about the runtime. When receiving this message the runtime should response with a runtime message.
 
+* `secret`: access token to authorize user
 
 
 ### `packet`
@@ -500,6 +554,7 @@ These packets can be send from the client to the runtimes input ports, or from r
 * `event`: packet event
 * `graph`: graph the action targets
 * `payload`: (optional) payload for the packet. Used only with begingroup (for group names) and data packets
+* `secret`: access token to authorize user
 
 
 ### `ports`
@@ -530,6 +585,14 @@ Response from the runtime to the getruntime request.
 * `id`: (optional) runtime ID used with Flowhub Registry
 * `label`: (optional) Human-readable description of the runtime
 * `version`: version of the runtime protocol that the runtime supports, for example 0.4
+* `allCapabilities`: array of capability strings for things the runtime is able to do. May include things not permitted for the user Options include: 
+  - `protocol:network`: the runtime is able to control and introspect its running networks using the Network protocol
+  - `protocol:component`: the runtime is able to list and modify its components using the Component protocol
+  - `protocol:runtime`: the runtime is able to expose the ports of its main graph using the Runtime protocol and transmit packet information to/from them
+  - `component:getsource`: runtime is able to read and send component source code back to client
+  - `network:persist`: runtime is able to *flash* a running graph setup into itself, making it persistent across reboots
+  - `protocol:graph`: the runtime is able to modify its graphs using the Graph protocol
+  - `component:setsource`: runtime is able to compile and run custom components sent as source code strings
 * `capabilities`: array of capability strings for things the runtime is able to do. 
 If the runtime is currently running a graph and it is able to speak the full Runtime protocol, it should follow up with a ports message. Options include: 
   - `protocol:network`: the runtime is able to control and introspect its running networks using the Network protocol
@@ -561,6 +624,7 @@ Component error
 
 Request a list of currently available components. Will be responded with a set of &#x60;component&#x60; messages.
 
+* `secret`: access token to authorize user
 
 
 ### `getsource`
@@ -568,6 +632,7 @@ Request a list of currently available components. Will be responded with a set o
 Request for the source code of a given component. Will be responded with a &#x60;source&#x60; message.
 
 * `name`: Name of the component to for which to get source code
+* `secret`: access token to authorize user
 
 
 ### `source`
