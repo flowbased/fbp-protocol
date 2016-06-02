@@ -1,5 +1,6 @@
 fs = require 'fs'
 path = require 'path'
+hbs = require 'handlebars'
 
 module.exports = ->
   # Project configuration
@@ -74,6 +75,7 @@ module.exports = ->
 
   # For deploying
   @loadNpmTasks 'grunt-gh-pages'
+
   @loadNpmTasks 'grunt-convert'
 
   # Our local tasks
@@ -81,16 +83,88 @@ module.exports = ->
   @registerTask 'test', ['build', 'mochaTest', 'exec:fbp_test']
   @registerTask 'default', ['test']
 
-  @registerTask 'json-to-js', ->
-    schemas = {}
-    dir = './schema/json/'
-    for jsonFile in fs.readdirSync dir
-      if jsonFile not in ['.', '..']
-        name = jsonFile.split('.')[0]
-        filename = path.join dir, jsonFile
-        schema = JSON.parse fs.readFileSync filename
-        schemas[name] = schema
+  schemas = null
+  getSchemas = () ->
+    unless schemas
+      schemas = {}
+      dir = './schema/json/'
+      for jsonFile in fs.readdirSync dir
+        if jsonFile not in ['.', '..']
+          name = jsonFile.split('.')[0]
+          filename = path.join dir, jsonFile
+          schema = JSON.parse fs.readFileSync filename
+          schemas[name] = schema
 
-    schemaJs = "module.exports = #{JSON.stringify schemas}"
+    return schemas
+
+  @registerTask 'json-to-js', ->
+    schemaJs = "module.exports = #{JSON.stringify getSchemas()}"
     fs.writeFileSync './schema/schemas.js', schemaJs, 'utf8'
+
+  @registerTask 'handlebars', ->
+    tv4 = require './schema/index.js'
+    schemas = getSchemas()
+
+    fillRefs = (obj) ->
+      if typeof obj isnt 'object'
+        return obj
+
+      else if (typeof obj) is 'object' and obj.length?
+        return obj.map (item) -> fillRefs item
+
+      newObj = {}
+      for own key, value of obj
+        if key is '$ref'
+          refObj = fillRefs tv4.getSchema(value)
+          for own refKey, refValue of refObj
+            newObj[refKey] = refValue
+
+        else
+          newObj[key] = fillRefs value
+
+      return newObj
+
+    descriptions = (obj) ->
+      desc = {}
+      protocols =
+        graph: ['input']
+        network: ['input', 'output']
+        runtime: ['input', 'output']
+        component: ['input', 'output']
+
+      for protocol, categories of protocols
+        messages = {}
+        desc[protocol] =
+          title: schemas[protocol].title
+          description: schemas[protocol].description
+          messages: messages
+
+        for category in categories
+          for event, schema of schemas[protocol][category]
+            schema = fillRefs schema
+            message =
+              id: schema.id
+              description: schema.description
+
+            if schema.allOf?
+              for key, value of schema.allOf[1].properties.payload
+                message[key] = value
+
+            messages[event] = message
+
+      return desc
+
+    hbs.registerHelper 'eachKey', (obj, options) ->
+      out = ''
+      for own key, value of obj
+        out += options.fn {key, value}
+
+      out
+
+    hbs.registerHelper 'isObject', (obj) ->
+      return obj?.type is 'object'
+
+    file = fs.readFileSync 'spec/protocol.hbs.md', 'utf8'
+    result = hbs.compile(file) {schemas: descriptions getSchemas()}
+    fs.writeFileSync 'spec/protocol.md', result, 'utf8'
 

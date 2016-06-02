@@ -6,7 +6,9 @@ description: >-
 
 output:
   error:
+    id: 'output/error'
     description: 'Graph error'
+    $ref: '/shared/message'
 
   addnode:
     id: 'output/addnode'
@@ -110,21 +112,29 @@ input:
   clear:
     id: 'input/clear'
     description: 'Initialize an empty graph.'
-    required: ['id']
-    additionalProperties: false
-    properties:
-      id:
-        type: string
-        description: 'identifier for the graph being created. Used for all subsequent messages related to the graph instance'
-      name:
-        type: string
-        description: '(optional) Human-readable label for the graph'
-      library:
-        type: string
-        description: '(optional) Component library identifier'
-      main:
-        type: boolean
-        description: "(optional) Identifies the graph as a main graph of a project that should not be registered as a component\nGraphs registered in this way should also be available for use as subgraphs in other graphs. Therefore a graph registration and later changes to it may cause component messages of the Component protocol to be sent back to the client informing of possible changes in the ports of the subgraph component."
+    allOf:
+      - $ref: '/shared/message'
+      - properties:
+          protocol:
+            enum: ['graph']
+          command:
+            enum: ['addnode']
+          payload:
+            required: ['id']
+            additionalProperties: false
+            properties:
+              id:
+                type: string
+                description: 'identifier for the graph being created. Used for all subsequent messages related to the graph instance'
+              name:
+                type: string
+                description: '(optional) Human-readable label for the graph'
+              library:
+                type: string
+                description: '(optional) Component library identifier'
+              main:
+                type: boolean
+                description: "(optional) Identifies the graph as a main graph of a project that should not be registered as a component\nGraphs registered in this way should also be available for use as subgraphs in other graphs. Therefore a graph registration and later changes to it may cause component messages of the Component protocol to be sent back to the client informing of possible changes in the ports of the subgraph component."
 
   addnode:
     id: 'input/addnode'
