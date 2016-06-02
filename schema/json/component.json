@@ -179,6 +179,14 @@
               "enum": [
                 "list"
               ]
+            },
+            "payload": {
+              "properties": {
+                "secret": {
+                  "type": "string",
+                  "description": "access token to authorize user"
+                }
+              }
             }
           }
         }
@@ -212,6 +220,10 @@
                 "name": {
                   "type": "string",
                   "description": "Name of the component to for which to get source code"
+                },
+                "secret": {
+                  "type": "string",
+                  "description": "access token to authorize user"
                 }
               }
             }
@@ -265,6 +277,10 @@
                 "tests": {
                   "type": "string",
                   "description": "(optional) unit tests for the component"
+                },
+                "secret": {
+                  "type": "string",
+                  "description": "access token to authorize user"
                 }
               }
             }

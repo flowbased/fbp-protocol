@@ -135,6 +135,24 @@ describe 'Test network protocol schema on events', ->
         res = tv4.validate event, schema
         chai.expect(res).to.be.true
 
+    describe 'processerror', ->
+      schema = '/network/output/processerror'
+
+      it 'should have schema', ->
+        chai.expect(tv4.getSchema schema).to.exist
+
+      it 'should validate event with required fields', ->
+        event =
+          protocol: 'network'
+          command: 'processerror'
+          payload:
+            id: 'node1'
+            error: 'BigError'
+            graph: 'mygraph'
+
+        res = tv4.validate event, schema
+        chai.expect(res).to.be.true
+
     describe 'icon', ->
       schema = '/network/output/icon'
 
@@ -383,6 +401,38 @@ describe 'Test network protocol schema on events', ->
           protocol: 'network'
           command: 'stop'
           payload:
+            graph: 'mygraph'
+
+        res = tv4.validate event, schema
+        chai.expect(res).to.be.true
+
+    describe 'persist', ->
+      schema = '/network/input/persist'
+
+      it 'should have schema', ->
+        chai.expect(tv4.getSchema schema).to.exist
+
+      it 'should validate event with required fields', ->
+        event =
+          protocol: 'network'
+          command: 'persist'
+          payload: {}
+
+        res = tv4.validate event, schema
+        chai.expect(res).to.be.true
+
+    describe 'debug', ->
+      schema = '/network/input/debug'
+
+      it 'should have schema', ->
+        chai.expect(tv4.getSchema schema).to.exist
+
+      it 'should validate event with required fields', ->
+        event =
+          protocol: 'network'
+          command: 'debug'
+          payload:
+            enable: true
             graph: 'mygraph'
 
         res = tv4.validate event, schema

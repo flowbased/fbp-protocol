@@ -108,6 +108,11 @@ input:
             enum: ['component']
           command:
             enum: ['list']
+          payload:
+            properties:
+              secret:
+                type: string
+                description: access token to authorize user
 
   getsource:
     id: 'input/getsource'
@@ -128,6 +133,9 @@ input:
               name:
                 type: string
                 description: 'Name of the component to for which to get source code'
+              secret:
+                type: string
+                description: access token to authorize user
 
   source:
     id: 'input/source'
@@ -163,4 +171,7 @@ input:
               tests:
                 type: string
                 description: '(optional) unit tests for the component'
+              secret:
+                type: string
+                description: access token to authorize user
 
