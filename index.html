@@ -183,112 +183,130 @@ changegroup commands to the graph protocol</li></ul>
 
 <p>When a client connects to a FBP procotol it may choose to discover the capabilities and other information about the runtime.</p>
 
-<h3 id="getruntime"><code>getruntime</code></h3>
+<h3 id="error">`error</h3>
 
-<p>Request the information about the runtime. When receiving this message the runtime should response with a <code>runtime</code> message.</p>
+<p>Runtime error</p>
+
+<h3 id="getruntime">`getruntime</h3>
+
+<p>Request the information about the runtime. When receiving this message the runtime should response with a runtime message.</p>
 
 <ul>
-<li><code>secret</code>: access token to authorize the user</li>
+<li><code>secret</code>: access token to authorize user</li>
 </ul>
 
-<p>Runtimes can handle access control by limiting capabilities based on the received token.</p>
+<h3 id="packet">`packet</h3>
 
-<h3 id="runtime"><code>runtime</code></h3>
-
-<p>Response from the runtime to the <code>getruntime</code> request.</p>
-
-<ul>
-<li><code>type</code>: type of the runtime, for example <code>noflo-nodejs</code> or <code>microflo</code></li>
-
-<li><code>version</code>: version of the runtime protocol that the runtime supports, for example <code>0.5</code></li>
-
-<li><code>capabilities</code>: array of capability strings for things the runtime allows the user to do</li>
-
-<li><code>allCapabilities</code>: array of capability strings for things the runtime is able to do. May include things not permitted for the user</li>
-
-<li><code>id</code>: (optional) runtime ID used with <a href="http://flowhub.io">Flowhub Registry</a></li>
-
-<li><code>label</code>: (optional) Human-readable description of the runtime</li>
-
-<li><code>graph</code>: (optional) ID of the currently configured main graph running on the runtime, if any</li>
-</ul>
-
-<p>Current list of capabilities understood by runtimes and clients include:</p>
-
-<ul>
-<li><code>protocol:runtime</code>: the runtime is able to expose the ports of its main graph using the <a href="#runtime">Runtime protocol</a> and transmit packet information to/from them</li>
-
-<li><code>protocol:graph</code>: the runtime is able to modify its graphs using the <a href="#graph">Graph protocol</a></li>
-
-<li><code>protocol:component</code>: the runtime is able to list and modify its components using the <a href="#component">Component protocol</a></li>
-
-<li><code>protocol:network</code>: the runtime is able to control and introspect its running networks using the <a href="#network">Network protocol</a></li>
-
-<li><code>protocol:trace</code>: the runtime is able to trace its running networks using the <a href="#trace">Trace protocol</a></li>
-
-<li><code>component:setsource</code>: runtime is able to compile and run custom components sent as source code strings</li>
-
-<li><code>component:getsource</code>: runtime is able to read and send component source code back to client</li>
-
-<li><code>network:persist</code>: runtime is able to "flash" a running graph setup into itself, making it persistent across reboots</li>
-</ul>
-
-<p>If the runtime is currently running a graph and it is able to speak the full <a href="#runtime">Runtime protocol</a>, it should follow up with a <code>ports</code> message.</p>
-
-<h3 id="ports"><code>ports</code></h3>
-
-<p>Message sent by the runtime to signal the exported ports. The runtime is responsible for sending the up-to-date list of available ports back to client whenever it changes. Should be sent for all started networks.</p>
-
-<ul>
-<li><code>graph</code>: ID of graph these ports belong to</li>
-
-<li><code>inPorts</code>: list of input ports, each containing:
-
-
-<ul>
-<li><code>id</code>: port name</li>
-
-<li><code>type</code>: port datatype, for example <code>boolean</code></li>
-
-<li><code>description</code>: textual description of the port</li>
-
-<li><code>addressable</code>: boolean telling whether the port is an ArrayPort</li>
-
-<li><code>required</code>: boolean telling whether the port needs to be connected for the component to work</li></ul>
-</li>
-
-<li><code>outPorts</code>: list of output ports, each containing:
-
-
-<ul>
-<li><code>id</code>: port name</li>
-
-<li><code>type</code>: port datatype, for example <code>boolean</code></li>
-
-<li><code>description</code>: textual description of the port</li>
-
-<li><code>addressable</code>: boolean telling whether the port is an ArrayPort</li>
-
-<li><code>required</code>: boolean telling whether the port needs to be connected for the component to work</li></ul>
-</li>
-</ul>
-
-<h3 id="packet"><code>packet</code></h3>
-
-<p>Runtimes that can be used as remote subgraphs (i.e. ones that have reported supporting the <code>protocol:runtime</code> capability) need to be able to receive and transmit information packets at their exposed ports.</p>
-
-<p>These packets can be send from the client to the runtime's input ports, or from runtime's output ports to the client.</p>
+<p>Runtimes that can be used as remote subgraphs (i.e. ones that have reported supporting the protocol:runtime capability) need to be able to receive and transmit information packets at their exposed ports. 
+These packets can be send from the client to the runtimes input ports, or from runtimes output ports to the client.</p>
 
 <ul>
 <li><code>port</code>: port name for the input or output port</li>
 
-<li><code>event</code>: packet event, one of <code>connect</code>, <code>begingroup</code>, <code>data</code>, <code>endgroup</code>, and <code>disconnect</code></li>
-
-<li><code>payload</code>: (optional) payload for the packet. Used only with <code>begingroup</code> (for group names) and <code>data</code> packets</li>
+<li><code>event</code>: packet event</li>
 
 <li><code>graph</code>: graph the action targets</li>
 
-<li><code>secret</code>: access token to authorize the user</li>
+<li><code>payload</code>: (optional) payload for the packet. Used only with begingroup (for group names) and data packets</li>
+
+<li><code>secret</code>: access token to authorize user</li>
+</ul>
+
+<h3 id="ports">`ports</h3>
+
+<p>Message sent by the runtime to signal its available ports. The runtime is responsible for sending the up-to-date list of available ports back to client whenever it changes.</p>
+
+<ul>
+<li><code>graph</code>: ID of the currently configured main graph running on the runtime</li>
+
+<li><code>inPorts</code>: list of input ports, each containing
+
+
+<ul>
+<li><code>addressable</code>: boolean telling whether the port is an ArrayPort</li>
+
+<li><code>id</code>: port name</li>
+
+<li><code>type</code>: port datatype, for example boolean</li>
+
+<li><code>required</code>: boolean telling whether the port needs to be connected for the component to work</li>
+
+<li><code>description</code>: textual description of the port</li></ul>
+</li>
+
+<li><code>inPorts</code>: list of input ports, each containing</li>
+
+<li><code>outPorts</code>: list of output ports, each containing
+
+
+<ul>
+<li><code>addressable</code>: boolean telling whether the port is an ArrayPort</li>
+
+<li><code>id</code>: port name</li>
+
+<li><code>type</code>: port datatype, for example boolean</li>
+
+<li><code>required</code>: boolean telling whether the port needs to be connected for the component to work</li>
+
+<li><code>description</code>: textual description of the port</li></ul>
+</li>
+
+<li><code>outPorts</code>: list of output ports, each containing</li>
+</ul>
+
+<h3 id="runtime">`runtime</h3>
+
+<p>Response from the runtime to the getruntime request.</p>
+
+<ul>
+<li><code>id</code>: (optional) runtime ID used with Flowhub Registry</li>
+
+<li><code>label</code>: (optional) Human-readable description of the runtime</li>
+
+<li><code>version</code>: version of the runtime protocol that the runtime supports, for example 0.4</li>
+
+<li><code>allCapabilities</code>: array of capability strings for things the runtime is able to do. May include things not permitted for the user. Options include:
+
+
+<ul>
+<li><code>protocol:network</code>: the runtime is able to control and introspect its running networks using the Network protocol</li>
+
+<li><code>protocol:component</code>: the runtime is able to list and modify its components using the Component protocol</li>
+
+<li><code>protocol:runtime</code>: the runtime is able to expose the ports of its main graph using the Runtime protocol and transmit packet information to/from them</li>
+
+<li><code>component:getsource</code>: runtime is able to read and send component source code back to client</li>
+
+<li><code>network:persist</code>: runtime is able to <em>flash</em> a running graph setup into itself, making it persistent across reboots</li>
+
+<li><code>protocol:graph</code>: the runtime is able to modify its graphs using the Graph protocol</li>
+
+<li><code>component:setsource</code>: runtime is able to compile and run custom components sent as source code strings</li></ul>
+</li>
+
+<li><code>capabilities</code>: array of capability strings for things the runtime is able to do. 
+If the runtime is currently running a graph and it is able to speak the full Runtime protocol, it should follow up with a ports message. Options include:
+
+
+<ul>
+<li><code>protocol:network</code>: the runtime is able to control and introspect its running networks using the Network protocol</li>
+
+<li><code>protocol:component</code>: the runtime is able to list and modify its components using the Component protocol</li>
+
+<li><code>protocol:runtime</code>: the runtime is able to expose the ports of its main graph using the Runtime protocol and transmit packet information to/from them</li>
+
+<li><code>component:getsource</code>: runtime is able to read and send component source code back to client</li>
+
+<li><code>network:persist</code>: runtime is able to <em>flash</em> a running graph setup into itself, making it persistent across reboots</li>
+
+<li><code>protocol:graph</code>: the runtime is able to modify its graphs using the Graph protocol</li>
+
+<li><code>component:setsource</code>: runtime is able to compile and run custom components sent as source code strings</li></ul>
+</li>
+
+<li><code>graph</code>: (optional) ID of the currently configured main graph running on the runtime, if any</li>
+
+<li><code>type</code>: type of the runtime, for example noflo-nodejs or microflo</li>
 </ul>
 
 <p><a id="graph"></a></p>
@@ -297,7 +315,11 @@ changegroup commands to the graph protocol</li></ul>
 
 <p>This protocol is utilized for communicating about graph changes in both directions.</p>
 
-<h3 id="clear"><code>clear</code></h3>
+<h3 id="error-1">`error</h3>
+
+<p>Graph error</p>
+
+<h3 id="clear">`clear</h3>
 
 <p>Initialize an empty graph.</p>
 
@@ -308,18 +330,17 @@ changegroup commands to the graph protocol</li></ul>
 
 <li><code>library</code>: (optional) Component library identifier</li>
 
-<li><code>main</code>: (optional) Identifies the graph as a main graph of a project that should not be registered as a component</li>
+<li><code>main</code>: (optional) Identifies the graph as a main graph of a project that should not be registered as a component
+Graphs registered in this way should also be available for use as subgraphs in other graphs. Therefore a graph registration and later changes to it may cause component messages of the Component protocol to be sent back to the client informing of possible changes in the ports of the subgraph component.</li>
 
 <li><code>icon</code>: (optional) Icon to use for the graph when used as a component</li>
 
 <li><code>description</code>: (optional) Description to use for the graph when used as a component</li>
 
-<li><code>secret</code>: access token to authorize the user</li>
+<li><code>secret</code>: access token to authorize user</li>
 </ul>
 
-<p>Graphs registered in this way should also be available for use as subgraphs in other graphs. Therefore a graph registration and later changes to it may cause <code>component</code> messages of the <a href="#component">Component protocol</a> to be sent back to the client informing of possible changes in the ports of the subgraph component.</p>
-
-<h3 id="addnode"><code>addnode</code></h3>
+<h3 id="addnode">`addnode</h3>
 
 <p>Add node to a graph.</p>
 
@@ -328,14 +349,14 @@ changegroup commands to the graph protocol</li></ul>
 
 <li><code>component</code>: component name used for the node</li>
 
-<li><code>metadata</code> (optional): structure of key-value pairs for node metadata</li>
+<li><code>metadata</code>: (optional): structure of key-value pairs for node metadata</li>
 
 <li><code>graph</code>: graph the action targets</li>
 
-<li><code>secret</code>: access token to authorize the user</li>
+<li><code>secret</code>: access token to authorize user</li>
 </ul>
 
-<h3 id="removenode"><code>removenode</code></h3>
+<h3 id="removenode">`removenode</h3>
 
 <p>Remove a node from a graph.</p>
 
@@ -344,10 +365,10 @@ changegroup commands to the graph protocol</li></ul>
 
 <li><code>graph</code>: graph the action targets</li>
 
-<li><code>secret</code>: access token to authorize the user</li>
+<li><code>secret</code>: access token to authorize user</li>
 </ul>
 
-<h3 id="renamenode"><code>renamenode</code></h3>
+<h3 id="renamenode">`renamenode</h3>
 
 <p>Change the ID of a node in the graph</p>
 
@@ -358,10 +379,10 @@ changegroup commands to the graph protocol</li></ul>
 
 <li><code>graph</code>: graph the action targets</li>
 
-<li><code>secret</code>: access token to authorize the user</li>
+<li><code>secret</code>: access token to authorize user</li>
 </ul>
 
-<h3 id="changenode"><code>changenode</code></h3>
+<h3 id="changenode">`changenode</h3>
 
 <p>Change the metadata associated to a node in the graph</p>
 
@@ -372,169 +393,102 @@ changegroup commands to the graph protocol</li></ul>
 
 <li><code>graph</code>: graph the action targets</li>
 
-<li><code>secret</code>: access token to authorize the user</li>
+<li><code>secret</code>: access token to authorize user</li>
 </ul>
 
-<h3 id="addedge"><code>addedge</code></h3>
+<h3 id="addedge">`addedge</h3>
 
 <p>Add an edge to the graph</p>
 
 <ul>
-<li><code>src</code>: source node for the edge
+<li><code>src</code>: source node for the edge</li>
 
+<li><code>tgt</code>: target node for the edge</li>
 
-<ul>
-<li><code>node</code>: node identifier</li>
-
-<li><code>port</code>: port name</li>
-
-<li><code>index</code>: connection index (optional, for addressable ports)</li></ul>
-</li>
-
-<li><code>tgt</code>: target node for the edge
-
-
-<ul>
-<li><code>node</code>: node identifier</li>
-
-<li><code>port</code>: port name</li>
-
-<li><code>index</code>: connection index (optional, for addressable ports)</li></ul>
-</li>
-
-<li><code>metadata</code> (optional): structure of key-value pairs for edge metadata</li>
+<li><code>metadata</code>: (optional): structure of key-value pairs for edge metadata</li>
 
 <li><code>graph</code>: graph the action targets</li>
 
-<li><code>secret</code>: access token to authorize the user</li>
+<li><code>secret</code>: access token to authorize user</li>
 </ul>
 
-<h3 id="removeedge"><code>removeedge</code></h3>
+<h3 id="removeedge">`removeedge</h3>
 
 <p>Remove an edge from the graph</p>
 
 <ul>
-<li><code>src</code>: source node for the edge
-
-
-<ul>
-<li><code>node</code>: node identifier</li>
-
-<li><code>port</code>: port name</li></ul>
-</li>
-
-<li><code>tgt</code>: target node for the edge
-
-
-<ul>
-<li><code>node</code>: node identifier</li>
-
-<li><code>port</code>: port name</li></ul>
-</li>
-
 <li><code>graph</code>: graph the action targets</li>
 
-<li><code>secret</code>: access token to authorize the user</li>
+<li><code>src</code>: source node for the edge</li>
+
+<li><code>tgt</code>: target node for the edge</li>
+
+<li><code>secret</code>: access token to authorize user</li>
 </ul>
 
-<h3 id="changeedge"><code>changeedge</code></h3>
+<h3 id="changeedge">`changeedge</h3>
 
 <p>Change an edge's metadata</p>
 
 <ul>
-<li><code>src</code>: source node for the edge
-
-
-<ul>
-<li><code>node</code>: node identifier</li>
-
-<li><code>port</code>: port name</li></ul>
-</li>
-
-<li><code>tgt</code>: target node for the edge
-
-
-<ul>
-<li><code>node</code>: node identifier</li>
-
-<li><code>port</code>: port name</li></ul>
-</li>
+<li><code>graph</code>: graph the action targets</li>
 
 <li><code>metadata</code>: struct of key-value pairs for edge metadata</li>
 
-<li><code>graph</code>: graph the action targets</li>
+<li><code>src</code>: source node for the edge</li>
 
-<li><code>secret</code>: access token to authorize the user</li>
+<li><code>tgt</code>: target node for the edge</li>
+
+<li><code>secret</code>: access token to authorize user</li>
 </ul>
 
-<h3 id="addinitial"><code>addinitial</code></h3>
+<h3 id="addinitial">`addinitial</h3>
 
 <p>Add an IIP to the graph</p>
 
 <ul>
-<li><code>src</code>:
-
-
-<ul>
-<li><code>data</code>: IIP value in its actual data type</li></ul>
-</li>
-
-<li><code>tgt</code>: target node for the edge
-
-
-<ul>
-<li><code>node</code>: node identifier</li>
-
-<li><code>port</code>: port name</li>
-
-<li><code>index</code>: connection index (optional, for addressable ports)</li></ul>
-</li>
-
-<li><code>metadata</code> (optional): structure of key-value pairs for edge metadata</li>
-
 <li><code>graph</code>: graph the action targets</li>
 
-<li><code>secret</code>: access token to authorize the user</li>
+<li><code>metadata</code>: (optional): structure of key-value pairs for edge metadata</li>
+
+<li><code>src</code>: undefined</li>
+
+<li><code>tgt</code>: target node for the edge</li>
+
+<li><code>secret</code>: access token to authorize user</li>
 </ul>
 
-<h3 id="removeinitial"><code>removeinitial</code></h3>
+<h3 id="removeinitial">`removeinitial</h3>
 
 <p>Remove an IIP from the graph</p>
 
 <ul>
-<li><code>tgt</code>: target node for the edge
-
-
-<ul>
-<li><code>node</code>: node identifier</li>
-
-<li><code>port</code>: port name</li></ul>
-</li>
+<li><code>tgt</code>: target node for the edge</li>
 
 <li><code>graph</code>: graph the action targets</li>
 
-<li><code>secret</code>: access token to authorize the user</li>
+<li><code>secret</code>: access token to authorize user</li>
 </ul>
 
-<h3 id="addinport"><code>addinport</code></h3>
+<h3 id="addinport">`addinport</h3>
 
 <p>Add an exported inport to the graph.</p>
 
 <ul>
 <li><code>public</code>: the exported name of the port</li>
 
-<li><code>node:</code>: node identifier</li>
+<li><code>node</code>: node identifier</li>
 
 <li><code>port</code>: internal port name</li>
 
-<li><code>metadata</code> (optional): structure of key-value pairs for node metadata</li>
+<li><code>metadata</code>: (optional): structure of key-value pairs for node metadata</li>
 
 <li><code>graph</code>: graph the action targets</li>
 
-<li><code>secret</code>: access token to authorize the user</li>
+<li><code>secret</code>: access token to authorize user</li>
 </ul>
 
-<h3 id="removeinport"><code>removeinport</code></h3>
+<h3 id="removeinport">`removeinport</h3>
 
 <p>Remove an exported port from the graph</p>
 
@@ -543,10 +497,10 @@ changegroup commands to the graph protocol</li></ul>
 
 <li><code>graph</code>: graph the action targets</li>
 
-<li><code>secret</code>: access token to authorize the user</li>
+<li><code>secret</code>: access token to authorize user</li>
 </ul>
 
-<h3 id="renameinport"><code>renameinport</code></h3>
+<h3 id="renameinport">`renameinport</h3>
 
 <p>Rename an exported port in the graph</p>
 
@@ -557,28 +511,28 @@ changegroup commands to the graph protocol</li></ul>
 
 <li><code>graph</code>: graph the action targets</li>
 
-<li><code>secret</code>: access token to authorize the user</li>
+<li><code>secret</code>: access token to authorize user</li>
 </ul>
 
-<h3 id="addoutport"><code>addoutport</code></h3>
+<h3 id="addoutport">`addoutport</h3>
 
 <p>Add an exported outport to the graph.</p>
 
 <ul>
 <li><code>public</code>: the exported name of the port</li>
 
-<li><code>node:</code>: node identifier</li>
+<li><code>node</code>: node identifier</li>
 
 <li><code>port</code>: internal port name</li>
 
-<li><code>metadata</code> (optional): structure of key-value pairs for port metadata</li>
+<li><code>metadata</code>: (optional): structure of key-value pairs for port metadata</li>
 
 <li><code>graph</code>: graph the action targets</li>
 
-<li><code>secret</code>: access token to authorize the user</li>
+<li><code>secret</code>: access token to authorize user</li>
 </ul>
 
-<h3 id="removeoutport"><code>removeoutport</code></h3>
+<h3 id="removeoutport">`removeoutport</h3>
 
 <p>Remove an exported port from the graph</p>
 
@@ -587,10 +541,10 @@ changegroup commands to the graph protocol</li></ul>
 
 <li><code>graph</code>: graph the action targets</li>
 
-<li><code>secret</code>: access token to authorize the user</li>
+<li><code>secret</code>: access token to authorize user</li>
 </ul>
 
-<h3 id="renameoutport"><code>renameoutport</code></h3>
+<h3 id="renameoutport">`renameoutport</h3>
 
 <p>Rename an exported port in the graph</p>
 
@@ -601,10 +555,10 @@ changegroup commands to the graph protocol</li></ul>
 
 <li><code>graph</code>: graph the action targets</li>
 
-<li><code>secret</code>: access token to authorize the user</li>
+<li><code>secret</code>: access token to authorize user</li>
 </ul>
 
-<h3 id="addgroup"><code>addgroup</code></h3>
+<h3 id="addgroup">`addgroup</h3>
 
 <p>Add a group to the graph</p>
 
@@ -613,14 +567,14 @@ changegroup commands to the graph protocol</li></ul>
 
 <li><code>nodes</code>: an array of node ids part of the group</li>
 
-<li><code>metadata</code> (optional): structure of key-value pairs for group metadata</li>
+<li><code>metadata</code>: (optional): structure of key-value pairs for group metadata</li>
 
 <li><code>graph</code>: graph the action targets</li>
 
-<li><code>secret</code>: access token to authorize the user</li>
+<li><code>secret</code>: access token to authorize user</li>
 </ul>
 
-<h3 id="removegroup"><code>removegroup</code></h3>
+<h3 id="removegroup">`removegroup</h3>
 
 <p>Remove a group from the graph</p>
 
@@ -629,10 +583,10 @@ changegroup commands to the graph protocol</li></ul>
 
 <li><code>graph</code>: graph the action targets</li>
 
-<li><code>secret</code>: access token to authorize the user</li>
+<li><code>secret</code>: access token to authorize user</li>
 </ul>
 
-<h3 id="renamegroup"><code>renamegroup</code></h3>
+<h3 id="renamegroup">`renamegroup</h3>
 
 <p>Rename a group in the graph.</p>
 
@@ -643,10 +597,10 @@ changegroup commands to the graph protocol</li></ul>
 
 <li><code>graph</code>: graph the action targets</li>
 
-<li><code>secret</code>: access token to authorize the user</li>
+<li><code>secret</code>: access token to authorize user</li>
 </ul>
 
-<h3 id="changegroup"><code>changegroup</code></h3>
+<h3 id="changegroup">`changegroup</h3>
 
 <p>Change a group's metadata</p>
 
@@ -657,7 +611,7 @@ changegroup commands to the graph protocol</li></ul>
 
 <li><code>graph</code>: graph the action targets</li>
 
-<li><code>secret</code>: access token to authorize the user</li>
+<li><code>secret</code>: access token to authorize user</li>
 </ul>
 
 <p><a id="component"></a></p>
@@ -666,77 +620,29 @@ changegroup commands to the graph protocol</li></ul>
 
 <p>Protocol for handling the component registry.</p>
 
-<h3 id="list"><code>list</code></h3>
+<h3 id="error-2">`error</h3>
+
+<p>Component error</p>
+
+<h3 id="list">`list</h3>
 
 <p>Request a list of currently available components. Will be responded with a set of <code>component</code> messages.</p>
 
 <ul>
-<li><code>secret</code>: access token to authorize the user</li>
+<li><code>secret</code>: access token to authorize user</li>
 </ul>
 
-<h3 id="component"><code>component</code></h3>
-
-<p>Transmit the metadata about a component instance.</p>
-
-<ul>
-<li><code>name</code>: component name in format that can be used in graphs</li>
-
-<li><code>description</code> (optional): textual description on what the component does</li>
-
-<li><code>icon</code> (optional): visual icon for the component, matching icon names in <a href="http://fortawesome.github.io/Font-Awesome/icons/">Font Awesome</a></li>
-
-<li><code>subgraph</code>: boolean telling whether the component is a subgraph</li>
-
-<li><code>inPorts</code>: list of input ports, each containing:
-
-
-<ul>
-<li><code>id</code>: port name</li>
-
-<li><code>type</code>: port datatype, for example <code>boolean</code></li>
-
-<li><code>description</code>: textual description of the port</li>
-
-<li><code>addressable</code>: boolean telling whether the port is an ArrayPort</li>
-
-<li><code>required</code>: boolean telling whether the port needs to be connected for the component to work</li>
-
-<li><code>values</code>: (optional) array of the values that the port accepts for enum ports</li>
-
-<li><code>default</code>: (optional) the default value received by the port</li></ul>
-</li>
-
-<li><code>outPorts</code>: list of output ports, each containing:
-
-
-<ul>
-<li><code>id</code>: port name</li>
-
-<li><code>type</code>: port datatype, for example <code>boolean</code></li>
-
-<li><code>description</code>: textual description of the port</li>
-
-<li><code>addressable</code>: boolean telling whether the port is an ArrayPort</li>
-
-<li><code>required</code>: boolean telling whether the port needs to be connected for the component to work</li></ul>
-</li>
-</ul>
-
-<h3 id="componentsready"><code>componentsready</code></h3>
-
-<p>Answer to the <code>list</code> command, sent when all available components have been sent via <code>component</code> messages. Payload contains the number of components on the runtime.</p>
-
-<h3 id="getsource"><code>getsource</code></h3>
+<h3 id="getsource">`getsource</h3>
 
 <p>Request for the source code of a given component. Will be responded with a <code>source</code> message.</p>
 
 <ul>
-<li><code>name</code>: Name of the component to get source code for</li>
+<li><code>name</code>: Name of the component to for which to get source code</li>
 
-<li><code>secret</code>: access token to authorize the user</li>
+<li><code>secret</code>: access token to authorize user</li>
 </ul>
 
-<h3 id="source"><code>source</code></h3>
+<h3 id="source">`source</h3>
 
 <p>Source code for a component. In cases where a runtime receives a <code>source</code> message, it should do whatever operations are needed for making that component available for graphs, including possible compilation.</p>
 
@@ -750,8 +656,54 @@ changegroup commands to the graph protocol</li></ul>
 <li><code>code</code>: Component source code</li>
 
 <li><code>tests</code>: (optional) unit tests for the component</li>
+</ul>
 
-<li><code>secret</code>: access token to authorize the user</li>
+<h3 id="component">`component</h3>
+
+<p>Transmit the metadata about a component instance.</p>
+
+<ul>
+<li><code>name</code>: component name in format that can be used in graphs</li>
+
+<li><code>description</code>: (optional) textual description on what the component does</li>
+
+<li><code>icon</code>: (optional): visual icon for the component, matching icon names in <a href="http://fortawesome.github.io/Font-Awesome/icons/">Font Awesome</a></li>
+
+<li><code>subgraph</code>: boolean telling whether the component is a subgraph</li>
+
+<li><code>inPorts</code>: list of input ports, each containing:, each containing
+
+
+<ul>
+<li><code>addressable</code>: boolean telling whether the port is an ArrayPort</li>
+
+<li><code>id</code>: port name</li>
+
+<li><code>type</code>: port datatype, for example boolean</li>
+
+<li><code>required</code>: boolean telling whether the port needs to be connected for the component to work</li>
+
+<li><code>description</code>: textual description of the port</li></ul>
+</li>
+
+<li><code>inPorts</code>: list of input ports, each containing:, each containing</li>
+
+<li><code>outPorts</code>: list of output ports, each containing
+
+
+<ul>
+<li><code>addressable</code>: boolean telling whether the port is an ArrayPort</li>
+
+<li><code>id</code>: port name</li>
+
+<li><code>type</code>: port datatype, for example boolean</li>
+
+<li><code>required</code>: boolean telling whether the port needs to be connected for the component to work</li>
+
+<li><code>description</code>: textual description of the port</li></ul>
+</li>
+
+<li><code>outPorts</code>: list of output ports, each containing</li>
 </ul>
 
 <p><a id="network"></a></p>
@@ -760,305 +712,65 @@ changegroup commands to the graph protocol</li></ul>
 
 <p>Protocol for starting and stopping FBP networks, and finding out about their state.</p>
 
-<h3 id="start"><code>start</code></h3>
+<h3 id="error-3">`error</h3>
+
+<p>An error from a running network, roughly similar to STDERR output of a Unix process, or a line of console.error in JavaScript.'</p>
+
+<ul>
+<li><code>message</code>: contents of the error message</li>
+</ul>
+
+<h3 id="start">`start</h3>
 
 <p>Start execution of a FBP network based on a given graph.</p>
 
 <ul>
 <li><code>graph</code>: graph the action targets</li>
 
-<li><code>secret</code>: access token to authorize the user</li>
+<li><code>secret</code>: access token to authorize user</li>
 </ul>
 
-<h3 id="getstatus"><code>getstatus</code></h3>
+<h3 id="getstatus">`getstatus</h3>
 
-<p>Get the current status of the runtime. The runtime should respond with a <code>status</code> message.</p>
+<p>Get the current status of the runtime. The runtime should respond with a status message.</p>
 
 <ul>
 <li><code>graph</code>: graph the action targets</li>
 
-<li><code>secret</code>: access token to authorize the user</li>
+<li><code>secret</code>: access token to authorize user</li>
 </ul>
 
-<h3 id="stop"><code>stop</code></h3>
+<h3 id="stop">`stop</h3>
 
 <p>Stop execution of a FBP network based on a given graph.</p>
 
 <ul>
 <li><code>graph</code>: graph the action targets</li>
 
-<li><code>secret</code>: access token to authorize the user</li>
+<li><code>secret</code>: access token to authorize user</li>
 </ul>
 
-<h3 id="persist"><code>persist</code></h3>
+<h3 id="persist">`persist</h3>
 
-<p>Tells the runtime to persist the current state of graphs and components so that they are available between restarts. Requires the <code>network:persist</code> capability.</p>
+<p>Tells the runtime to persist the current state of graphs and components so that they are available between restarts. Requires the network:persist capability.</p>
 
 <ul>
-<li><code>secret</code>: access token to authorize the user</li>
+<li><code>secret</code>: access token to authorize user</li>
 </ul>
 
-<h3 id="started"><code>started</code></h3>
-
-<p>Inform that a given network has been started.</p>
-
-<ul>
-<li><code>graph</code>: graph the action targets</li>
-
-<li><code>time</code>: time when the network was started</li>
-
-<li><code>running</code>: boolean telling whether the network has live connections</li>
-
-<li><code>started</code>: boolean telling whether the network has been started. Must be <code>true</code> here</li>
-
-<li><code>uptime</code>: (optional) time the network has been running, in seconds</li>
-</ul>
-
-<h3 id="status"><code>status</code></h3>
-
-<p>Response to a <code>getstatus</code> message.</p>
-
-<ul>
-<li><code>graph</code>: graph the action targets</li>
-
-<li><code>running</code>: boolean telling whether the network has live connections</li>
-
-<li><code>started</code>: boolean telling whether the network has been started</li>
-
-<li><code>uptime</code>: (optional) time the network has been running, in seconds</li>
-
-<li><code>debug</code>: (optional) boolean, tells whether the network is in debug mode</li>
-</ul>
-
-<h3 id="stopped"><code>stopped</code></h3>
-
-<p>Inform that a given network has stopped.</p>
-
-<ul>
-<li><code>graph</code>: graph the action targets</li>
-
-<li><code>time</code>: time when the network was stopped</li>
-
-<li><code>running</code>: boolean telling whether the network has live connections. Must be <code>false</code> here</li>
-
-<li><code>started</code>: boolean telling whether the network has been started. May be <code>false</code> or <code>true</code> depending whether the network was stopped by user or just ran to the finish</li>
-
-<li><code>uptime</code>: (optional) time the network was running, in seconds</li>
-</ul>
-
-<h3 id="debug"><code>debug</code></h3>
+<h3 id="debug">`debug</h3>
 
 <p>Set a network into debug mode</p>
 
 <ul>
-<li><code>enable</code>: boolean, tells whether to put the network in debug mode</li>
+<li><code>enable</code>: tells whether to put the network in debug mode</li>
 
-<li><code>graph</code>:  graph the action targets</li>
+<li><code>graph</code>: graph the action targets</li>
 
 <li><code>secret</code>: access token to authorize the user</li>
 </ul>
 
-<h3 id="icon"><code>icon</code></h3>
-
-<p>Icon of a component instance has changed.</p>
-
-<ul>
-<li><code>id</code>: identifier of the node</li>
-
-<li><code>icon</code>: new icon for the component instance</li>
-
-<li><code>graph</code>: graph the action targets</li>
-</ul>
-
-<h3 id="output"><code>output</code></h3>
-
-<p>An output message from a running network, roughly similar to <code>STDOUT</code> output of a Unix process, or a line of <code>console.log</code> in JavaScript. Output can also be used for passing images from the runtime to the UI.</p>
-
-<ul>
-<li><code>message</code>: contents of the output line</li>
-
-<li><code>type</code>: (optional) type of output, either <code>message</code> or <code>previewurl</code></li>
-
-<li><code>url</code>: (optional) URL for an image generated by the runtime</li>
-</ul>
-
-<h3 id="error"><code>error</code></h3>
-
-<p>An error from a running network, roughly similar to <code>STDERR</code> output of a Unix process, or a line of <code>console.error</code> in JavaScript.</p>
-
-<ul>
-<li><code>message</code>: contents of the error message</li>
-</ul>
-
-<h3 id="processerror"><code>processerror</code></h3>
-
-<p>When in debug mode, a network can signal an error happening inside a process.</p>
-
-<ul>
-<li><code>id</code>: identifier of the node</li>
-
-<li><code>error</code>: error from the component</li>
-
-<li><code>graph</code>: graph the action targets</li>
-</ul>
-
-<h3 id="connect"><code>connect</code></h3>
-
-<p>Beginning of transmission on an edge.</p>
-
-<ul>
-<li><code>id</code>: textual edge identifier, usually in form of a <a href="http://noflojs.org/documentation/fbp/">FBP language line</a></li>
-
-<li><code>src</code>: source node for the edge
-
-
-<ul>
-<li><code>node</code>: node identifier</li>
-
-<li><code>port</code>: port name</li></ul>
-</li>
-
-<li><code>tgt</code>: target node for the edge
-
-
-<ul>
-<li><code>node</code>: node identifier</li>
-
-<li><code>port</code>: port name</li></ul>
-</li>
-
-<li><code>graph</code>: graph the action targets</li>
-
-<li><code>subgraph</code> (optional): subgraph identifier for the event. An array of node IDs</li>
-</ul>
-
-<h3 id="begingroup"><code>begingroup</code></h3>
-
-<p>Beginning of a group (bracket IP) on an edge.</p>
-
-<ul>
-<li><code>id</code>: textual edge identifier, usually in form of a <a href="http://noflojs.org/documentation/fbp/">FBP language line</a></li>
-
-<li><code>src</code>: source node for the edge
-
-
-<ul>
-<li><code>node</code>: node identifier</li>
-
-<li><code>port</code>: port name</li></ul>
-</li>
-
-<li><code>tgt</code>: target node for the edge
-
-
-<ul>
-<li><code>node</code>: node identifier</li>
-
-<li><code>port</code>: port name</li></ul>
-</li>
-
-<li><code>group</code>: group name</li>
-
-<li><code>graph</code>: graph the action targets</li>
-
-<li><code>subgraph</code> (optional): subgraph identifier for the event. An array of node IDs</li>
-</ul>
-
-<h3 id="data"><code>data</code></h3>
-
-<p>Data transmission on an edge.</p>
-
-<ul>
-<li><code>id</code>: textual edge identifier, usually in form of a <a href="http://noflojs.org/documentation/fbp/">FBP language line</a></li>
-
-<li><code>src</code>: source node for the edge
-
-
-<ul>
-<li><code>node</code>: node identifier</li>
-
-<li><code>port</code>: port name</li></ul>
-</li>
-
-<li><code>tgt</code>: target node for the edge
-
-
-<ul>
-<li><code>node</code>: node identifier</li>
-
-<li><code>port</code>: port name</li></ul>
-</li>
-
-<li><code>data</code>: actual data being transmitted, encoded in a way that can be carried over the protocol transport</li>
-
-<li><code>graph</code>: graph the action targets</li>
-
-<li><code>subgraph</code> (optional): subgraph identifier for the event. An array of node IDs</li>
-</ul>
-
-<h3 id="endgroup"><code>endgroup</code></h3>
-
-<p>Ending of a group (bracket IP) on an edge.</p>
-
-<ul>
-<li><code>id</code>: textual edge identifier, usually in form of a <a href="http://noflojs.org/documentation/fbp/">FBP language line</a></li>
-
-<li><code>src</code>: source node for the edge
-
-
-<ul>
-<li><code>node</code>: node identifier</li>
-
-<li><code>port</code>: port name</li></ul>
-</li>
-
-<li><code>tgt</code>: target node for the edge
-
-
-<ul>
-<li><code>node</code>: node identifier</li>
-
-<li><code>port</code>: port name</li></ul>
-</li>
-
-<li><code>group</code>: group name</li>
-
-<li><code>graph</code>: graph the action targets</li>
-
-<li><code>subgraph</code> (optional): subgraph identifier for the event. An array of node IDs</li>
-</ul>
-
-<h3 id="disconnect"><code>disconnect</code></h3>
-
-<p>End of transmission on an edge.</p>
-
-<ul>
-<li><code>id</code>: textual edge identifier, usually in form of a <a href="http://noflojs.org/documentation/fbp/">FBP language line</a></li>
-
-<li><code>src</code>: source node for the edge
-
-
-<ul>
-<li><code>node</code>: node identifier</li>
-
-<li><code>port</code>: port name</li></ul>
-</li>
-
-<li><code>tgt</code>: target node for the edge
-
-
-<ul>
-<li><code>node</code>: node identifier</li>
-
-<li><code>port</code>: port name</li></ul>
-</li>
-
-<li><code>graph</code>: graph the action targets</li>
-
-<li><code>subgraph</code> (optional): subgraph identifier for the event. An array of node IDs</li>
-</ul>
-
-<h3 id="edges"><code>edges</code></h3>
+<h3 id="edges">`edges</h3>
 
 <p>List of edges user has selected for inspection in a user interface or debugger, sent from UI to a runtime.</p>
 
@@ -1073,16 +785,150 @@ changegroup commands to the graph protocol</li></ul>
 
 <li><code>port</code>: port name</li>
 
+<li><code>index</code>: connection index (optional, for addressable ports)</li>
+
 <li><code>tgt</code>: target node for the edge</li>
 
 <li><code>node</code>: node identifier</li>
 
-<li><code>port</code>: port name</li></ul>
+<li><code>port</code>: port name</li>
+
+<li><code>index</code>: connection index (optional, for addressable ports)</li></ul>
 </li>
+
+<li><code>edges</code>: list of selected edges, each containing</li>
+
+<li><code>secret</code>: access token to authorize user</li>
+</ul>
+
+<h3 id="stopped">`stopped</h3>
+
+<p>Inform that a given network has stopped.</p>
+
+<ul>
+<li><code>time</code>: time when the network was stopped</li>
+
+<li><code>uptime</code>: time the network was running, in seconds</li>
 
 <li><code>graph</code>: graph the action targets</li>
 
-<li><code>secret</code>: access token to authorize the user</li>
+<li><code>running</code>: whether or not network is currently running</li>
+
+<li><code>started</code>: whether or not network has been started</li>
+
+<li><code>debug</code>: whether or not network is in debug mode</li>
+</ul>
+
+<h3 id="started">`started</h3>
+
+<p>Inform that a given network has been started.</p>
+
+<ul>
+<li><code>time</code>: time when the network was started</li>
+
+<li><code>graph</code>: graph the action targets</li>
+
+<li><code>started</code>: whether or not network has started running</li>
+
+<li><code>running</code>: whether or not network is currently running</li>
+
+<li><code>debug</code>: whether or not network is in debug mode</li>
+</ul>
+
+<h3 id="status">`status</h3>
+
+<p>Response to a getstatus message.</p>
+
+<ul>
+<li><code>graph</code>: graph the action targets</li>
+
+<li><code>uptime</code>: (optional) time the network has been running, in seconds</li>
+
+<li><code>started</code>: whether or not network has started running</li>
+
+<li><code>running</code>: boolean tells whether the network is running or not</li>
+
+<li><code>debug</code>: whether or not network is in debug mode</li>
+</ul>
+
+<h3 id="output">`output</h3>
+
+<p>An output message from a running network, roughly similar to STDOUT output of a Unix process, or a line of console.log in JavaScript. Output can also be used for passing images from the runtime to the UI.'</p>
+
+<ul>
+<li><code>message</code>: contents of the output line</li>
+
+<li><code>type</code>: (optional) type of output, either message or previewurl</li>
+
+<li><code>url</code>: (optional) URL for an image generated by the runtime</li>
+</ul>
+
+<h3 id="processerror">`processerror</h3>
+
+<p>When in debug mode, a network can signal an error happening inside a process.</p>
+
+<ul>
+<li><code>id</code>: identifier of the node</li>
+
+<li><code>error</code>: error from the component</li>
+
+<li><code>graph</code>: graph the action targets</li>
+</ul>
+
+<h3 id="icon">`icon</h3>
+
+<p>Icon of a component instance has changed.</p>
+
+<ul>
+<li><code>id</code>: identifier of the node</li>
+
+<li><code>icon</code>: new icon for the component instance</li>
+
+<li><code>graph</code>: graph the action targets</li>
+</ul>
+
+<h3 id="connect">`connect</h3>
+
+<p>Beginning of transmission on an edge.</p>
+
+<ul>
+<li><code>id</code>: textual edge identifier, usually in form of a FBP language line</li>
+
+<li><code>src</code>: source node for the edge</li>
+
+<li><code>tgt</code>: target node for the edge</li>
+
+<li><code>graph</code>: graph the action targets</li>
+
+<li><code>subgraph</code>: (optional): subgraph identifier for the event. An array of node IDs</li>
+</ul>
+
+<h3 id="begingroup">`begingroup</h3>
+
+<p>Beginning of a group (bracket IP) on an edge.</p>
+
+<h3 id="data">`data</h3>
+
+<p>Data transmission on an edge.</p>
+
+<h3 id="endgroup">`endgroup</h3>
+
+<p>Ending of a group (bracket IP) on an edge.</p>
+
+<h3 id="disconnect">`disconnect</h3>
+
+<p>End of transmission on an edge.</p>
+
+<ul>
+<li><code>id</code>: textual edge identifier, usually in form of a FBP language line</li>
+
+<li><code>src</code>: source node for the edge</li>
+
+<li><code>tgt</code>: target node for the edge</li>
+
+<li><code>graph</code>: graph the action targets</li>
+
+<li><code>subgraph</code>: (optional): subgraph identifier for the event. An array of node IDs</li>
 </ul>
 
 <p><a id="trace"></a></p>
