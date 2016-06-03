@@ -162,6 +162,27 @@
           return chai.expect(res).to.be["true"];
         });
       });
+      describe('processerror', function() {
+        var schema;
+        schema = '/network/output/processerror';
+        it('should have schema', function() {
+          return chai.expect(tv4.getSchema(schema)).to.exist;
+        });
+        return it('should validate event with required fields', function() {
+          var event, res;
+          event = {
+            protocol: 'network',
+            command: 'processerror',
+            payload: {
+              id: 'node1',
+              error: 'BigError',
+              graph: 'mygraph'
+            }
+          };
+          res = tv4.validate(event, schema);
+          return chai.expect(res).to.be["true"];
+        });
+      });
       describe('icon', function() {
         var schema;
         schema = '/network/output/icon';
@@ -458,6 +479,43 @@
             protocol: 'network',
             command: 'stop',
             payload: {
+              graph: 'mygraph'
+            }
+          };
+          res = tv4.validate(event, schema);
+          return chai.expect(res).to.be["true"];
+        });
+      });
+      describe('persist', function() {
+        var schema;
+        schema = '/network/input/persist';
+        it('should have schema', function() {
+          return chai.expect(tv4.getSchema(schema)).to.exist;
+        });
+        return it('should validate event with required fields', function() {
+          var event, res;
+          event = {
+            protocol: 'network',
+            command: 'persist',
+            payload: {}
+          };
+          res = tv4.validate(event, schema);
+          return chai.expect(res).to.be["true"];
+        });
+      });
+      describe('debug', function() {
+        var schema;
+        schema = '/network/input/debug';
+        it('should have schema', function() {
+          return chai.expect(tv4.getSchema(schema)).to.exist;
+        });
+        return it('should validate event with required fields', function() {
+          var event, res;
+          event = {
+            protocol: 'network',
+            command: 'debug',
+            payload: {
+              enable: true,
               graph: 'mygraph'
             }
           };

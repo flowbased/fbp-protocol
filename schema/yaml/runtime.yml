@@ -26,6 +26,11 @@ input:
             enum: ['runtime']
           command:
             enum: ['getruntime']
+          payload:
+            properties:
+              secret:
+                type: string
+                description: access token to authorize user
 
   packet:
     id: 'input/packet'
@@ -67,6 +72,9 @@ input:
                 description: >-
                   (optional) payload for the packet. Used only with begingroup
                   (for group names) and data packets
+              secret:
+                type: string
+                description: access token to authorize user
 
 output:
   error:
@@ -134,6 +142,11 @@ output:
                   version of the runtime protocol that the runtime supports,
                   for example 0.4
                 type: string
+              allCapabilities:
+                description: >-
+                  array of capability strings for things the runtime is able to do.
+                  May include things not permitted for the user.
+                $ref: '/shared/capabilities'
               capabilities:
                 description: >-
                   array of capability strings for things the runtime is able to do.
@@ -141,46 +154,7 @@ output:
                   If the runtime is currently running a graph and it is
                   able to speak the full Runtime protocol, it should follow up
                   with a ports message.
-                type: array
-                items:
-                  type: string
-                  enums:
-                    - 'protocol:network'
-                    - 'protocol:component'
-                    - 'protocol:runtime'
-                    - 'component:getsource'
-                    - 'network:persist'
-                    - 'protocol:graph'
-                    - 'component:setsource'
-                  _enumDescriptions: # Documentation
-                    - name: 'protocol:network'
-                      description: >-
-                        the runtime is able to control and introspect its
-                        running networks using the Network protocol
-                    - name: 'protocol:component'
-                      description: >-
-                        the runtime is able to list and modify its components
-                        using the Component protocol
-                    - name: 'protocol:runtime'
-                      description: >-
-                        the runtime is able to expose the ports of its main
-                        graph using the Runtime protocol and transmit packet information to/from them
-                    - name: 'component:getsource'
-                      description: >-
-                        runtime is able to read and send component source code
-                        back to client
-                    - name: 'network:persist'
-                      description: >-
-                        runtime is able to *flash* a running graph setup into
-                        itself, making it persistent across reboots
-                    - name: 'protocol:graph'
-                      description: >-
-                        the runtime is able to modify its graphs using the
-                        Graph protocol
-                    - name: 'component:setsource'
-                      description: >-
-                        runtime is able to compile and run custom components
-                        sent as source code strings
+                $ref: '/shared/capabilities'
               graph:
                 description: >-
                   (optional) ID of the currently configured main graph running

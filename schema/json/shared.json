@@ -129,5 +129,51 @@
         "description": "(optional): subgraph identifier for the event. An array of node IDs"
       }
     }
+  },
+  "capabilities": {
+    "id": "capabilities",
+    "type": "array",
+    "items": {
+      "type": "string",
+      "enums": [
+        "protocol:network",
+        "protocol:component",
+        "protocol:runtime",
+        "component:getsource",
+        "network:persist",
+        "protocol:graph",
+        "component:setsource"
+      ],
+      "_enumDescriptions": [
+        {
+          "name": "protocol:network",
+          "description": "the runtime is able to control and introspect its running networks using the Network protocol"
+        },
+        {
+          "name": "protocol:component",
+          "description": "the runtime is able to list and modify its components using the Component protocol"
+        },
+        {
+          "name": "protocol:runtime",
+          "description": "the runtime is able to expose the ports of its main graph using the Runtime protocol and transmit packet information to/from them"
+        },
+        {
+          "name": "component:getsource",
+          "description": "runtime is able to read and send component source code back to client"
+        },
+        {
+          "name": "network:persist",
+          "description": "runtime is able to *flash* a running graph setup into itself, making it persistent across reboots"
+        },
+        {
+          "name": "protocol:graph",
+          "description": "the runtime is able to modify its graphs using the Graph protocol"
+        },
+        {
+          "name": "component:setsource",
+          "description": "runtime is able to compile and run custom components sent as source code strings"
+        }
+      ]
+    }
   }
 }
