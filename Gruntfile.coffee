@@ -1,6 +1,5 @@
 fs = require 'fs'
 path = require 'path'
-hbs = require 'handlebars'
 
 module.exports = ->
   # Project configuration
@@ -80,14 +79,13 @@ module.exports = ->
   @loadNpmTasks 'grunt-convert'
 
   # Our local tasks
-  @registerTask 'build', ['coffee', 'convert', 'json-to-js', 'handlebars', 'exec:spechtml']
+  @registerTask 'build', ['coffee', 'convert', 'json-to-js', 'build-markdown', 'exec:spechtml']
   @registerTask 'test', ['build', 'mochaTest', 'exec:fbp_test']
   @registerTask 'default', ['test']
 
   @registerTask 'json-to-js', ->
     schemaJs = "module.exports = #{JSON.stringify getSchemas()}"
     fs.writeFileSync './schema/schemas.js', schemaJs, 'utf8'
-
 
   schemas = null
   getSchemas = ->
@@ -103,6 +101,7 @@ module.exports = ->
 
     return schemas
 
+  # transforms schemas into format better suited to be added to docs
   getDescriptions = ->
     tv4 = require './schema/index.js'
     schemas = getSchemas()
@@ -155,21 +154,51 @@ module.exports = ->
 
     return desc
 
-  @registerTask 'handlebars', ->
-    hbs.registerHelper 'eachKey', (obj, options) ->
-      out = ''
-      for own key, value of obj
-        out += options.fn {key, value}
+  @registerTask 'build-markdown', ->
+    lines = []
+    p = (line) -> lines.push line
 
-      out
+    for protocol, protocolProps of getDescriptions()
+      p "<a id=\"#{protocol}\"></a>"
+      p "## #{protocolProps.title}\n"
+      p "#{protocolProps.description}\n"
 
-    hbs.registerHelper 'isObject', (obj) ->
-      return (obj?.type is 'object') and obj.properties?
+      for messageType, message of protocolProps.messages
+        p "### `#{messageType}\n"
+        p "#{message.description}"
 
-    hbs.registerHelper 'isStringEnum', (obj) ->
-      return (obj?.type is 'string') and obj?.enums?
+        for messagePropName, messageProp of message.properties
+          line = "* `#{messagePropName}`: #{messageProp.description}"
+          items = messageProp.items
 
-    file = fs.readFileSync 'spec/protocol.hbs.md', 'utf8'
-    result = hbs.compile(file) {schemas: getDescriptions()}
-    fs.writeFileSync 'spec/protocol.md', result, 'utf8'
+          if items?.type is 'object'
+            line += ", each containing"
+            p line
+
+            for itemPropName, itemProp of items.properties
+              if itemProp.type is 'object'
+                p "  * `#{itemPropName}`: #{itemProp.description}"
+
+                for itemSubPropName, itemSubProp of itemProp.properties
+                  p "    - `#{itemSubPropName}`: #{itemSubProp.description}"
+
+              else
+                p "  - `#{itemPropName}`: #{itemProp.description}"
+
+          if items?.type is 'string' and items?._enumDescriptions
+            line += " Options include:"
+            p line
+
+            for enumDescription in items._enumDescriptions
+              p "  - `#{enumDescription.name}`: #{enumDescription.description}"
+
+          else
+            p line
+
+        p '\n'
+
+    marker = "<%= descriptions %>\n"
+    file = fs.readFileSync 'spec/protocol.js.md', 'utf8'
+    file = file.replace marker, lines.join('\n')
+    fs.writeFileSync 'spec/protocol.md', file, 'utf8'
 

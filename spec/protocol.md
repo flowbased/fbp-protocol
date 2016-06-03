@@ -93,8 +93,8 @@ All messages consist of three parts:
 The keys listed in specific messages are for the message payloads. The values are strings unless stated differently.
 
 
-<a id="runtime"></a>
 
+<a id="runtime"></a>
 ## Runtime protocol
 
 When a client connects to a FBP procotol it may choose to discover the capabilities and other information about the runtime.
@@ -105,13 +105,11 @@ When a client connects to a FBP procotol it may choose to discover the capabilit
 Runtime error
 
 
-
 ### `getruntime`
 
 Request the information about the runtime. When receiving this message the runtime should response with a runtime message.
 
 * `secret`: access token to authorize user
-
 
 ### `packet`
 
@@ -124,27 +122,13 @@ These packets can be send from the client to the runtimes input ports, or from r
 * `payload`: (optional) payload for the packet. Used only with begingroup (for group names) and data packets
 * `secret`: access token to authorize user
 
-
 ### `ports`
 
 Message sent by the runtime to signal its available ports. The runtime is responsible for sending the up-to-date list of available ports back to client whenever it changes.
 
 * `graph`: ID of the currently configured main graph running on the runtime
 * `inPorts`: list of input ports, each containing:
-  - `addressable`: boolean telling whether the port is an ArrayPort
-  - `id`: port name
-  - `type`: port datatype, for example boolean
-  - `required`: boolean telling whether the port needs to be connected for the component to work
-  - `description`: textual description of the port
-
 * `outPorts`: list of output ports, each containing:
-  - `addressable`: boolean telling whether the port is an ArrayPort
-  - `id`: port name
-  - `type`: port datatype, for example boolean
-  - `required`: boolean telling whether the port needs to be connected for the component to work
-  - `description`: textual description of the port
-
-
 
 ### `runtime`
 
@@ -153,30 +137,15 @@ Response from the runtime to the getruntime request.
 * `id`: (optional) runtime ID used with Flowhub Registry
 * `label`: (optional) Human-readable description of the runtime
 * `version`: version of the runtime protocol that the runtime supports, for example 0.4
-* `allCapabilities`: array of capability strings for things the runtime is able to do. May include things not permitted for the user Options include: 
-  - `protocol:network`: the runtime is able to control and introspect its running networks using the Network protocol
-  - `protocol:component`: the runtime is able to list and modify its components using the Component protocol
-  - `protocol:runtime`: the runtime is able to expose the ports of its main graph using the Runtime protocol and transmit packet information to/from them
-  - `component:getsource`: runtime is able to read and send component source code back to client
-  - `network:persist`: runtime is able to *flash* a running graph setup into itself, making it persistent across reboots
-  - `protocol:graph`: the runtime is able to modify its graphs using the Graph protocol
-  - `component:setsource`: runtime is able to compile and run custom components sent as source code strings
+* `allCapabilities`: array of capability strings for things the runtime is able to do. May include things not permitted for the user, each containing:
 * `capabilities`: array of capability strings for things the runtime is able to do. 
-If the runtime is currently running a graph and it is able to speak the full Runtime protocol, it should follow up with a ports message. Options include: 
-  - `protocol:network`: the runtime is able to control and introspect its running networks using the Network protocol
-  - `protocol:component`: the runtime is able to list and modify its components using the Component protocol
-  - `protocol:runtime`: the runtime is able to expose the ports of its main graph using the Runtime protocol and transmit packet information to/from them
-  - `component:getsource`: runtime is able to read and send component source code back to client
-  - `network:persist`: runtime is able to *flash* a running graph setup into itself, making it persistent across reboots
-  - `protocol:graph`: the runtime is able to modify its graphs using the Graph protocol
-  - `component:setsource`: runtime is able to compile and run custom components sent as source code strings
+If the runtime is currently running a graph and it is able to speak the full Runtime protocol, it should follow up with a ports message., each containing:
 * `graph`: (optional) ID of the currently configured main graph running on the runtime, if any
 * `type`: type of the runtime, for example noflo-nodejs or microflo
 
 
 
 <a id="graph"></a>
-
 ## Graph protocol
 
 This protocol is utilized for communicating about graph changes in both directions.
@@ -185,7 +154,6 @@ This protocol is utilized for communicating about graph changes in both directio
 ### `error`
 
 Graph error
-
 
 
 ### `clear`
@@ -201,7 +169,6 @@ Graphs registered in this way should also be available for use as subgraphs in o
 * `description`: (optional) Description to use for the graph when used as a component
 * `secret`: access token to authorize user
 
-
 ### `addnode`
 
 Add node to a graph.
@@ -212,7 +179,6 @@ Add node to a graph.
 * `graph`: graph the action targets
 * `secret`: access token to authorize user
 
-
 ### `removenode`
 
 Remove a node from a graph.
@@ -220,7 +186,6 @@ Remove a node from a graph.
 * `id`: identifier for the node
 * `graph`: graph the action targets
 * `secret`: access token to authorize user
-
 
 ### `renamenode`
 
@@ -231,7 +196,6 @@ Change the ID of a node in the graph
 * `graph`: graph the action targets
 * `secret`: access token to authorize user
 
-
 ### `changenode`
 
 Change the metadata associated to a node in the graph
@@ -241,23 +205,15 @@ Change the metadata associated to a node in the graph
 * `graph`: graph the action targets
 * `secret`: access token to authorize user
 
-
 ### `addedge`
 
 Add an edge to the graph
 
 * `src`: source node for the edge
-  - `node`: node identifier
-  - `port`: port name
-  - `index`: connection index (optional, for addressable ports)
 * `tgt`: target node for the edge
-  - `node`: node identifier
-  - `port`: port name
-  - `index`: connection index (optional, for addressable ports)
 * `metadata`: (optional): structure of key-value pairs for edge metadata
 * `graph`: graph the action targets
 * `secret`: access token to authorize user
-
 
 ### `removeedge`
 
@@ -265,32 +221,18 @@ Remove an edge from the graph
 
 * `graph`: graph the action targets
 * `src`: source node for the edge
-  - `node`: node identifier
-  - `port`: port name
-  - `index`: connection index (optional, for addressable ports)
 * `tgt`: target node for the edge
-  - `node`: node identifier
-  - `port`: port name
-  - `index`: connection index (optional, for addressable ports)
 * `secret`: access token to authorize user
-
 
 ### `changeedge`
 
-Change an edge&#x27;s metadata
+Change an edge's metadata
 
 * `graph`: graph the action targets
 * `metadata`: struct of key-value pairs for edge metadata
 * `src`: source node for the edge
-  - `node`: node identifier
-  - `port`: port name
-  - `index`: connection index (optional, for addressable ports)
 * `tgt`: target node for the edge
-  - `node`: node identifier
-  - `port`: port name
-  - `index`: connection index (optional, for addressable ports)
 * `secret`: access token to authorize user
-
 
 ### `addinitial`
 
@@ -299,25 +241,16 @@ Add an IIP to the graph
 * `graph`: graph the action targets
 * `metadata`: (optional): structure of key-value pairs for edge metadata
 * `src`: 
-  - `data`: IIP value in its actual data type
 * `tgt`: target node for the edge
-  - `node`: node identifier
-  - `port`: port name
-  - `index`: connection index (optional, for addressable ports)
 * `secret`: access token to authorize user
-
 
 ### `removeinitial`
 
 Remove an IIP from the graph
 
 * `tgt`: target node for the edge
-  - `node`: node identifier
-  - `port`: port name
-  - `index`: connection index (optional, for addressable ports)
 * `graph`: graph the action targets
 * `secret`: access token to authorize user
-
 
 ### `addinport`
 
@@ -330,7 +263,6 @@ Add an exported inport to the graph.
 * `graph`: graph the action targets
 * `secret`: access token to authorize user
 
-
 ### `removeinport`
 
 Remove an exported port from the graph
@@ -338,7 +270,6 @@ Remove an exported port from the graph
 * `public`: the exported name of the port to remove
 * `graph`: graph the action targets
 * `secret`: access token to authorize user
-
 
 ### `renameinport`
 
@@ -348,7 +279,6 @@ Rename an exported port in the graph
 * `to`: new exported port name
 * `graph`: graph the action targets
 * `secret`: access token to authorize user
-
 
 ### `addoutport`
 
@@ -361,7 +291,6 @@ Add an exported outport to the graph.
 * `graph`: graph the action targets
 * `secret`: access token to authorize user
 
-
 ### `removeoutport`
 
 Remove an exported port from the graph
@@ -369,7 +298,6 @@ Remove an exported port from the graph
 * `public`: the exported name of the port to remove
 * `graph`: graph the action targets
 * `secret`: access token to authorize user
-
 
 ### `renameoutport`
 
@@ -379,7 +307,6 @@ Rename an exported port in the graph
 * `to`: new exported port name
 * `graph`: graph the action targets
 * `secret`: access token to authorize user
-
 
 ### `addgroup`
 
@@ -391,7 +318,6 @@ Add a group to the graph
 * `graph`: graph the action targets
 * `secret`: access token to authorize user
 
-
 ### `removegroup`
 
 Remove a group from the graph
@@ -399,7 +325,6 @@ Remove a group from the graph
 * `name`: the group name
 * `graph`: graph the action targets
 * `secret`: access token to authorize user
-
 
 ### `renamegroup`
 
@@ -410,10 +335,9 @@ Rename a group in the graph.
 * `graph`: graph the action targets
 * `secret`: access token to authorize user
 
-
 ### `changegroup`
 
-Change a group&#x27;s metadata
+Change a group's metadata
 
 * `name`: the group name
 * `metadata`: structure of key-value pairs for group metadata
@@ -423,7 +347,6 @@ Change a group&#x27;s metadata
 
 
 <a id="component"></a>
-
 ## Component protocol
 
 Protocol for handling the component registry.
@@ -434,32 +357,28 @@ Protocol for handling the component registry.
 Component error
 
 
-
 ### `list`
 
-Request a list of currently available components. Will be responded with a set of &#x60;component&#x60; messages.
+Request a list of currently available components. Will be responded with a set of `component` messages.
 
 * `secret`: access token to authorize user
 
-
 ### `getsource`
 
-Request for the source code of a given component. Will be responded with a &#x60;source&#x60; message.
+Request for the source code of a given component. Will be responded with a `source` message.
 
 * `name`: Name of the component to for which to get source code
 * `secret`: access token to authorize user
 
-
 ### `source`
 
-Source code for a component. In cases where a runtime receives a &#x60;source&#x60; message, it should do whatever operations are needed for making that component available for graphs, including possible compilation.
+Source code for a component. In cases where a runtime receives a `source` message, it should do whatever operations are needed for making that component available for graphs, including possible compilation.
 
 * `name`: Name of the component
-* `language`: The programming language used for the component code, for example &#x60;coffeescript&#x60;
+* `language`: The programming language used for the component code, for example `coffeescript`
 * `library`: (optional) Component library identifier
 * `code`: Component source code
 * `tests`: (optional) unit tests for the component
-
 
 ### `component`
 
@@ -470,24 +389,11 @@ Transmit the metadata about a component instance.
 * `icon`: (optional): visual icon for the component, matching icon names in [Font Awesome](http://fortawesome.github.io/Font-Awesome/icons/)
 * `subgraph`: boolean telling whether the component is a subgraph
 * `inPorts`: list of input ports, each containing:, each containing:
-  - `addressable`: boolean telling whether the port is an ArrayPort
-  - `id`: port name
-  - `type`: port datatype, for example boolean
-  - `required`: boolean telling whether the port needs to be connected for the component to work
-  - `description`: textual description of the port
-
 * `outPorts`: list of output ports, each containing:
-  - `addressable`: boolean telling whether the port is an ArrayPort
-  - `id`: port name
-  - `type`: port datatype, for example boolean
-  - `required`: boolean telling whether the port needs to be connected for the component to work
-  - `description`: textual description of the port
-
 
 
 
 <a id="network"></a>
-
 ## Network protocol
 
 Protocol for starting and stopping FBP networks, and finding out about their state.
@@ -495,10 +401,9 @@ Protocol for starting and stopping FBP networks, and finding out about their sta
 
 ### `error`
 
-An error from a running network, roughly similar to STDERR output of a Unix process, or a line of console.error in JavaScript.&#x27;
+An error from a running network, roughly similar to STDERR output of a Unix process, or a line of console.error in JavaScript.'
 
 * `message`: contents of the error message
-
 
 ### `start`
 
@@ -507,14 +412,12 @@ Start execution of a FBP network based on a given graph.
 * `graph`: graph the action targets
 * `secret`: access token to authorize user
 
-
 ### `getstatus`
 
 Get the current status of the runtime. The runtime should respond with a status message.
 
 * `graph`: graph the action targets
 * `secret`: access token to authorize user
-
 
 ### `stop`
 
@@ -523,13 +426,11 @@ Stop execution of a FBP network based on a given graph.
 * `graph`: graph the action targets
 * `secret`: access token to authorize user
 
-
 ### `persist`
 
 Tells the runtime to persist the current state of graphs and components so that they are available between restarts. Requires the network:persist capability.
 
 * `secret`: access token to authorize user
-
 
 ### `debug`
 
@@ -539,23 +440,12 @@ Set a network into debug mode
 * `graph`: graph the action targets
 * `secret`: access token to authorize the user
 
-
 ### `edges`
 
 List of edges user has selected for inspection in a user interface or debugger, sent from UI to a runtime.
 
 * `edges`: list of selected edges, each containing, each containing:
-  * `src`: source node for the edge
-    - `node`: node identifier
-    - `port`: port name
-    - `index`: connection index (optional, for addressable ports)
-  * `tgt`: target node for the edge
-    - `node`: node identifier
-    - `port`: port name
-    - `index`: connection index (optional, for addressable ports)
-
 * `secret`: access token to authorize user
-
 
 ### `stopped`
 
@@ -568,7 +458,6 @@ Inform that a given network has stopped.
 * `started`: whether or not network has been started
 * `debug`: whether or not network is in debug mode
 
-
 ### `started`
 
 Inform that a given network has been started.
@@ -578,7 +467,6 @@ Inform that a given network has been started.
 * `started`: whether or not network has started running
 * `running`: whether or not network is currently running
 * `debug`: whether or not network is in debug mode
-
 
 ### `status`
 
@@ -590,15 +478,13 @@ Response to a getstatus message.
 * `running`: boolean tells whether the network is running or not
 * `debug`: whether or not network is in debug mode
 
-
 ### `output`
 
-An output message from a running network, roughly similar to STDOUT output of a Unix process, or a line of console.log in JavaScript. Output can also be used for passing images from the runtime to the UI.&#x27;
+An output message from a running network, roughly similar to STDOUT output of a Unix process, or a line of console.log in JavaScript. Output can also be used for passing images from the runtime to the UI.'
 
 * `message`: contents of the output line
 * `type`: (optional) type of output, either message or previewurl
 * `url`: (optional) URL for an image generated by the runtime
-
 
 ### `processerror`
 
@@ -608,7 +494,6 @@ When in debug mode, a network can signal an error happening inside a process.
 * `error`: error from the component
 * `graph`: graph the action targets
 
-
 ### `icon`
 
 Icon of a component instance has changed.
@@ -617,28 +502,19 @@ Icon of a component instance has changed.
 * `icon`: new icon for the component instance
 * `graph`: graph the action targets
 
-
 ### `connect`
 
 Beginning of transmission on an edge.
 
 * `id`: textual edge identifier, usually in form of a FBP language line
 * `src`: source node for the edge
-  - `node`: node identifier
-  - `port`: port name
-  - `index`: connection index (optional, for addressable ports)
 * `tgt`: target node for the edge
-  - `node`: node identifier
-  - `port`: port name
-  - `index`: connection index (optional, for addressable ports)
 * `graph`: graph the action targets
 * `subgraph`: (optional): subgraph identifier for the event. An array of node IDs
-
 
 ### `begingroup`
 
 Beginning of a group (bracket IP) on an edge.
-
 
 
 ### `data`
@@ -646,11 +522,9 @@ Beginning of a group (bracket IP) on an edge.
 Data transmission on an edge.
 
 
-
 ### `endgroup`
 
 Ending of a group (bracket IP) on an edge.
-
 
 
 ### `disconnect`
@@ -659,16 +533,9 @@ End of transmission on an edge.
 
 * `id`: textual edge identifier, usually in form of a FBP language line
 * `src`: source node for the edge
-  - `node`: node identifier
-  - `port`: port name
-  - `index`: connection index (optional, for addressable ports)
 * `tgt`: target node for the edge
-  - `node`: node identifier
-  - `port`: port name
-  - `index`: connection index (optional, for addressable ports)
 * `graph`: graph the action targets
 * `subgraph`: (optional): subgraph identifier for the event. An array of node IDs
-
 
 
 

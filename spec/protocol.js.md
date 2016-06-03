@@ -92,41 +92,7 @@ All messages consist of three parts:
 
 The keys listed in specific messages are for the message payloads. The values are strings unless stated differently.
 
-{{#eachKey schemas}}
-
-<a id="{{key}}"></a>
-
-## {{value.title}}
-
-{{value.description}}
-
-{{#eachKey value.messages}}
-
-### `{{key}}`
-
-{{value.description}}
-
-{{#eachKey value.properties}}
-* `{{key}}`: {{value.description}}{{#if value.items}}{{#if (isObject value.items)}}, each containing:
-{{#eachKey value.items.properties}}
-{{#if (isObject value)}}
-  * `{{key}}`: {{value.description}}
-{{#eachKey value.properties}}
-    - `{{key}}`: {{value.description}}
-{{/eachKey}}
-{{else}}
-  - `{{key}}`: {{value.description}}
-{{/if}}
-{{/eachKey}}{{/if}}{{!-- if: payload property items are objects
---}}{{#if (isStringEnum value.items)}} Options include: {{#each value.items._enumDescriptions}}
-  - `{{name}}`: {{description}}{{/each}}{{!-- each: enum description
---}}{{/if}}{{!--  if: payload property items are enums
---}}{{/if}}{{!-- if: payload property is array
---}}{{#if (isObject value)}}{{#eachKey value.properties}}
-  - `{{key}}`: {{value.description}}{{/eachKey}}{{/if}}{{!-- if: payload property is object --}}
-{{/eachKey}}{{!-- eachKey:  payload properties --}}
-{{/eachKey}}{{!-- eachKey: messages --}}
-{{/eachKey}}{{!-- eachKey: schemas --}}
+<%= descriptions %>
 
 <a id="trace"></a>
 ## Tracing protocol

@@ -145,7 +145,7 @@ output:
               allCapabilities:
                 description: >-
                   array of capability strings for things the runtime is able to do.
-                  May include things not permitted for the user
+                  May include things not permitted for the user.
                 $ref: '/shared/capabilities'
               capabilities:
                 description: >-

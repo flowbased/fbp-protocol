@@ -446,7 +446,7 @@ input:
             properties:
               edges:
                 type: array
-                description: 'list of selected edges, each containing'
+                description: 'list of selected edges'
                 items:
                   type: object
                   required: ['src', 'tgt']
