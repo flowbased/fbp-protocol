@@ -183,11 +183,11 @@ changegroup commands to the graph protocol</li></ul>
 
 <p>When a client connects to a FBP procotol it may choose to discover the capabilities and other information about the runtime.</p>
 
-<h3 id="error">`error</h3>
+<h3 id="error"><code>error</code></h3>
 
 <p>Runtime error</p>
 
-<h3 id="getruntime">`getruntime</h3>
+<h3 id="getruntime"><code>getruntime</code></h3>
 
 <p>Request the information about the runtime. When receiving this message the runtime should response with a runtime message.</p>
 
@@ -195,7 +195,7 @@ changegroup commands to the graph protocol</li></ul>
 <li><code>secret</code>: access token to authorize user</li>
 </ul>
 
-<h3 id="packet">`packet</h3>
+<h3 id="packet"><code>packet</code></h3>
 
 <p>Runtimes that can be used as remote subgraphs (i.e. ones that have reported supporting the protocol:runtime capability) need to be able to receive and transmit information packets at their exposed ports. 
 These packets can be send from the client to the runtimes input ports, or from runtimes output ports to the client.</p>
@@ -212,7 +212,7 @@ These packets can be send from the client to the runtimes input ports, or from r
 <li><code>secret</code>: access token to authorize user</li>
 </ul>
 
-<h3 id="ports">`ports</h3>
+<h3 id="ports"><code>ports</code></h3>
 
 <p>Message sent by the runtime to signal its available ports. The runtime is responsible for sending the up-to-date list of available ports back to client whenever it changes.</p>
 
@@ -254,7 +254,7 @@ These packets can be send from the client to the runtimes input ports, or from r
 <li><code>outPorts</code>: list of output ports, each containing</li>
 </ul>
 
-<h3 id="runtime">`runtime</h3>
+<h3 id="runtime"><code>runtime</code></h3>
 
 <p>Response from the runtime to the getruntime request.</p>
 
@@ -315,11 +315,11 @@ If the runtime is currently running a graph and it is able to speak the full Run
 
 <p>This protocol is utilized for communicating about graph changes in both directions.</p>
 
-<h3 id="error-1">`error</h3>
+<h3 id="error-1"><code>error</code></h3>
 
 <p>Graph error</p>
 
-<h3 id="clear">`clear</h3>
+<h3 id="clear"><code>clear</code></h3>
 
 <p>Initialize an empty graph.</p>
 
@@ -340,7 +340,7 @@ Graphs registered in this way should also be available for use as subgraphs in o
 <li><code>secret</code>: access token to authorize user</li>
 </ul>
 
-<h3 id="addnode">`addnode</h3>
+<h3 id="addnode"><code>addnode</code></h3>
 
 <p>Add node to a graph.</p>
 
@@ -356,7 +356,7 @@ Graphs registered in this way should also be available for use as subgraphs in o
 <li><code>secret</code>: access token to authorize user</li>
 </ul>
 
-<h3 id="removenode">`removenode</h3>
+<h3 id="removenode"><code>removenode</code></h3>
 
 <p>Remove a node from a graph.</p>
 
@@ -368,7 +368,7 @@ Graphs registered in this way should also be available for use as subgraphs in o
 <li><code>secret</code>: access token to authorize user</li>
 </ul>
 
-<h3 id="renamenode">`renamenode</h3>
+<h3 id="renamenode"><code>renamenode</code></h3>
 
 <p>Change the ID of a node in the graph</p>
 
@@ -382,7 +382,7 @@ Graphs registered in this way should also be available for use as subgraphs in o
 <li><code>secret</code>: access token to authorize user</li>
 </ul>
 
-<h3 id="changenode">`changenode</h3>
+<h3 id="changenode"><code>changenode</code></h3>
 
 <p>Change the metadata associated to a node in the graph</p>
 
@@ -396,12 +396,34 @@ Graphs registered in this way should also be available for use as subgraphs in o
 <li><code>secret</code>: access token to authorize user</li>
 </ul>
 
-<h3 id="addedge">`addedge</h3>
+<h3 id="addedge"><code>addedge</code></h3>
 
 <p>Add an edge to the graph</p>
 
 <ul>
+<li><code>src</code>: source node for the edge
+
+
+<ul>
+<li><code>node</code>: node identifier</li>
+
+<li><code>port</code>: port name</li>
+
+<li><code>index</code>: connection index (optional, for addressable ports)</li></ul>
+</li>
+
 <li><code>src</code>: source node for the edge</li>
+
+<li><code>tgt</code>: target node for the edge
+
+
+<ul>
+<li><code>node</code>: node identifier</li>
+
+<li><code>port</code>: port name</li>
+
+<li><code>index</code>: connection index (optional, for addressable ports)</li></ul>
+</li>
 
 <li><code>tgt</code>: target node for the edge</li>
 
@@ -412,21 +434,43 @@ Graphs registered in this way should also be available for use as subgraphs in o
 <li><code>secret</code>: access token to authorize user</li>
 </ul>
 
-<h3 id="removeedge">`removeedge</h3>
+<h3 id="removeedge"><code>removeedge</code></h3>
 
 <p>Remove an edge from the graph</p>
 
 <ul>
 <li><code>graph</code>: graph the action targets</li>
 
+<li><code>src</code>: source node for the edge
+
+
+<ul>
+<li><code>node</code>: node identifier</li>
+
+<li><code>port</code>: port name</li>
+
+<li><code>index</code>: connection index (optional, for addressable ports)</li></ul>
+</li>
+
 <li><code>src</code>: source node for the edge</li>
+
+<li><code>tgt</code>: target node for the edge
+
+
+<ul>
+<li><code>node</code>: node identifier</li>
+
+<li><code>port</code>: port name</li>
+
+<li><code>index</code>: connection index (optional, for addressable ports)</li></ul>
+</li>
 
 <li><code>tgt</code>: target node for the edge</li>
 
 <li><code>secret</code>: access token to authorize user</li>
 </ul>
 
-<h3 id="changeedge">`changeedge</h3>
+<h3 id="changeedge"><code>changeedge</code></h3>
 
 <p>Change an edge's metadata</p>
 
@@ -435,14 +479,36 @@ Graphs registered in this way should also be available for use as subgraphs in o
 
 <li><code>metadata</code>: struct of key-value pairs for edge metadata</li>
 
+<li><code>src</code>: source node for the edge
+
+
+<ul>
+<li><code>node</code>: node identifier</li>
+
+<li><code>port</code>: port name</li>
+
+<li><code>index</code>: connection index (optional, for addressable ports)</li></ul>
+</li>
+
 <li><code>src</code>: source node for the edge</li>
+
+<li><code>tgt</code>: target node for the edge
+
+
+<ul>
+<li><code>node</code>: node identifier</li>
+
+<li><code>port</code>: port name</li>
+
+<li><code>index</code>: connection index (optional, for addressable ports)</li></ul>
+</li>
 
 <li><code>tgt</code>: target node for the edge</li>
 
 <li><code>secret</code>: access token to authorize user</li>
 </ul>
 
-<h3 id="addinitial">`addinitial</h3>
+<h3 id="addinitial"><code>addinitial</code></h3>
 
 <p>Add an IIP to the graph</p>
 
@@ -451,18 +517,47 @@ Graphs registered in this way should also be available for use as subgraphs in o
 
 <li><code>metadata</code>: (optional): structure of key-value pairs for edge metadata</li>
 
+<li><code>src</code>: undefined
+
+
+<ul>
+<li><code>data</code>: IIP value in its actual data type</li></ul>
+</li>
+
 <li><code>src</code>: undefined</li>
+
+<li><code>tgt</code>: target node for the edge
+
+
+<ul>
+<li><code>node</code>: node identifier</li>
+
+<li><code>port</code>: port name</li>
+
+<li><code>index</code>: connection index (optional, for addressable ports)</li></ul>
+</li>
 
 <li><code>tgt</code>: target node for the edge</li>
 
 <li><code>secret</code>: access token to authorize user</li>
 </ul>
 
-<h3 id="removeinitial">`removeinitial</h3>
+<h3 id="removeinitial"><code>removeinitial</code></h3>
 
 <p>Remove an IIP from the graph</p>
 
 <ul>
+<li><code>tgt</code>: target node for the edge
+
+
+<ul>
+<li><code>node</code>: node identifier</li>
+
+<li><code>port</code>: port name</li>
+
+<li><code>index</code>: connection index (optional, for addressable ports)</li></ul>
+</li>
+
 <li><code>tgt</code>: target node for the edge</li>
 
 <li><code>graph</code>: graph the action targets</li>
@@ -470,7 +565,7 @@ Graphs registered in this way should also be available for use as subgraphs in o
 <li><code>secret</code>: access token to authorize user</li>
 </ul>
 
-<h3 id="addinport">`addinport</h3>
+<h3 id="addinport"><code>addinport</code></h3>
 
 <p>Add an exported inport to the graph.</p>
 
@@ -488,7 +583,7 @@ Graphs registered in this way should also be available for use as subgraphs in o
 <li><code>secret</code>: access token to authorize user</li>
 </ul>
 
-<h3 id="removeinport">`removeinport</h3>
+<h3 id="removeinport"><code>removeinport</code></h3>
 
 <p>Remove an exported port from the graph</p>
 
@@ -500,7 +595,7 @@ Graphs registered in this way should also be available for use as subgraphs in o
 <li><code>secret</code>: access token to authorize user</li>
 </ul>
 
-<h3 id="renameinport">`renameinport</h3>
+<h3 id="renameinport"><code>renameinport</code></h3>
 
 <p>Rename an exported port in the graph</p>
 
@@ -514,7 +609,7 @@ Graphs registered in this way should also be available for use as subgraphs in o
 <li><code>secret</code>: access token to authorize user</li>
 </ul>
 
-<h3 id="addoutport">`addoutport</h3>
+<h3 id="addoutport"><code>addoutport</code></h3>
 
 <p>Add an exported outport to the graph.</p>
 
@@ -532,7 +627,7 @@ Graphs registered in this way should also be available for use as subgraphs in o
 <li><code>secret</code>: access token to authorize user</li>
 </ul>
 
-<h3 id="removeoutport">`removeoutport</h3>
+<h3 id="removeoutport"><code>removeoutport</code></h3>
 
 <p>Remove an exported port from the graph</p>
 
@@ -544,7 +639,7 @@ Graphs registered in this way should also be available for use as subgraphs in o
 <li><code>secret</code>: access token to authorize user</li>
 </ul>
 
-<h3 id="renameoutport">`renameoutport</h3>
+<h3 id="renameoutport"><code>renameoutport</code></h3>
 
 <p>Rename an exported port in the graph</p>
 
@@ -558,7 +653,7 @@ Graphs registered in this way should also be available for use as subgraphs in o
 <li><code>secret</code>: access token to authorize user</li>
 </ul>
 
-<h3 id="addgroup">`addgroup</h3>
+<h3 id="addgroup"><code>addgroup</code></h3>
 
 <p>Add a group to the graph</p>
 
@@ -574,7 +669,7 @@ Graphs registered in this way should also be available for use as subgraphs in o
 <li><code>secret</code>: access token to authorize user</li>
 </ul>
 
-<h3 id="removegroup">`removegroup</h3>
+<h3 id="removegroup"><code>removegroup</code></h3>
 
 <p>Remove a group from the graph</p>
 
@@ -586,7 +681,7 @@ Graphs registered in this way should also be available for use as subgraphs in o
 <li><code>secret</code>: access token to authorize user</li>
 </ul>
 
-<h3 id="renamegroup">`renamegroup</h3>
+<h3 id="renamegroup"><code>renamegroup</code></h3>
 
 <p>Rename a group in the graph.</p>
 
@@ -600,7 +695,7 @@ Graphs registered in this way should also be available for use as subgraphs in o
 <li><code>secret</code>: access token to authorize user</li>
 </ul>
 
-<h3 id="changegroup">`changegroup</h3>
+<h3 id="changegroup"><code>changegroup</code></h3>
 
 <p>Change a group's metadata</p>
 
@@ -620,11 +715,11 @@ Graphs registered in this way should also be available for use as subgraphs in o
 
 <p>Protocol for handling the component registry.</p>
 
-<h3 id="error-2">`error</h3>
+<h3 id="error-2"><code>error</code></h3>
 
 <p>Component error</p>
 
-<h3 id="list">`list</h3>
+<h3 id="list"><code>list</code></h3>
 
 <p>Request a list of currently available components. Will be responded with a set of <code>component</code> messages.</p>
 
@@ -632,7 +727,7 @@ Graphs registered in this way should also be available for use as subgraphs in o
 <li><code>secret</code>: access token to authorize user</li>
 </ul>
 
-<h3 id="getsource">`getsource</h3>
+<h3 id="getsource"><code>getsource</code></h3>
 
 <p>Request for the source code of a given component. Will be responded with a <code>source</code> message.</p>
 
@@ -642,7 +737,7 @@ Graphs registered in this way should also be available for use as subgraphs in o
 <li><code>secret</code>: access token to authorize user</li>
 </ul>
 
-<h3 id="source">`source</h3>
+<h3 id="source"><code>source</code></h3>
 
 <p>Source code for a component. In cases where a runtime receives a <code>source</code> message, it should do whatever operations are needed for making that component available for graphs, including possible compilation.</p>
 
@@ -658,7 +753,7 @@ Graphs registered in this way should also be available for use as subgraphs in o
 <li><code>tests</code>: (optional) unit tests for the component</li>
 </ul>
 
-<h3 id="component">`component</h3>
+<h3 id="component"><code>component</code></h3>
 
 <p>Transmit the metadata about a component instance.</p>
 
@@ -671,7 +766,7 @@ Graphs registered in this way should also be available for use as subgraphs in o
 
 <li><code>subgraph</code>: boolean telling whether the component is a subgraph</li>
 
-<li><code>inPorts</code>: list of input ports, each containing:, each containing
+<li><code>inPorts</code>: list of input ports, each containing
 
 
 <ul>
@@ -686,7 +781,7 @@ Graphs registered in this way should also be available for use as subgraphs in o
 <li><code>description</code>: textual description of the port</li></ul>
 </li>
 
-<li><code>inPorts</code>: list of input ports, each containing:, each containing</li>
+<li><code>inPorts</code>: list of input ports, each containing</li>
 
 <li><code>outPorts</code>: list of output ports, each containing
 
@@ -712,7 +807,7 @@ Graphs registered in this way should also be available for use as subgraphs in o
 
 <p>Protocol for starting and stopping FBP networks, and finding out about their state.</p>
 
-<h3 id="error-3">`error</h3>
+<h3 id="error-3"><code>error</code></h3>
 
 <p>An error from a running network, roughly similar to STDERR output of a Unix process, or a line of console.error in JavaScript.'</p>
 
@@ -720,7 +815,7 @@ Graphs registered in this way should also be available for use as subgraphs in o
 <li><code>message</code>: contents of the error message</li>
 </ul>
 
-<h3 id="start">`start</h3>
+<h3 id="start"><code>start</code></h3>
 
 <p>Start execution of a FBP network based on a given graph.</p>
 
@@ -730,7 +825,7 @@ Graphs registered in this way should also be available for use as subgraphs in o
 <li><code>secret</code>: access token to authorize user</li>
 </ul>
 
-<h3 id="getstatus">`getstatus</h3>
+<h3 id="getstatus"><code>getstatus</code></h3>
 
 <p>Get the current status of the runtime. The runtime should respond with a status message.</p>
 
@@ -740,7 +835,7 @@ Graphs registered in this way should also be available for use as subgraphs in o
 <li><code>secret</code>: access token to authorize user</li>
 </ul>
 
-<h3 id="stop">`stop</h3>
+<h3 id="stop"><code>stop</code></h3>
 
 <p>Stop execution of a FBP network based on a given graph.</p>
 
@@ -750,7 +845,7 @@ Graphs registered in this way should also be available for use as subgraphs in o
 <li><code>secret</code>: access token to authorize user</li>
 </ul>
 
-<h3 id="persist">`persist</h3>
+<h3 id="persist"><code>persist</code></h3>
 
 <p>Tells the runtime to persist the current state of graphs and components so that they are available between restarts. Requires the network:persist capability.</p>
 
@@ -758,7 +853,7 @@ Graphs registered in this way should also be available for use as subgraphs in o
 <li><code>secret</code>: access token to authorize user</li>
 </ul>
 
-<h3 id="debug">`debug</h3>
+<h3 id="debug"><code>debug</code></h3>
 
 <p>Set a network into debug mode</p>
 
@@ -770,7 +865,7 @@ Graphs registered in this way should also be available for use as subgraphs in o
 <li><code>secret</code>: access token to authorize the user</li>
 </ul>
 
-<h3 id="edges">`edges</h3>
+<h3 id="edges"><code>edges</code></h3>
 
 <p>List of edges user has selected for inspection in a user interface or debugger, sent from UI to a runtime.</p>
 
@@ -801,7 +896,7 @@ Graphs registered in this way should also be available for use as subgraphs in o
 <li><code>secret</code>: access token to authorize user</li>
 </ul>
 
-<h3 id="stopped">`stopped</h3>
+<h3 id="stopped"><code>stopped</code></h3>
 
 <p>Inform that a given network has stopped.</p>
 
@@ -819,7 +914,7 @@ Graphs registered in this way should also be available for use as subgraphs in o
 <li><code>debug</code>: whether or not network is in debug mode</li>
 </ul>
 
-<h3 id="started">`started</h3>
+<h3 id="started"><code>started</code></h3>
 
 <p>Inform that a given network has been started.</p>
 
@@ -835,7 +930,7 @@ Graphs registered in this way should also be available for use as subgraphs in o
 <li><code>debug</code>: whether or not network is in debug mode</li>
 </ul>
 
-<h3 id="status">`status</h3>
+<h3 id="status"><code>status</code></h3>
 
 <p>Response to a getstatus message.</p>
 
@@ -851,7 +946,7 @@ Graphs registered in this way should also be available for use as subgraphs in o
 <li><code>debug</code>: whether or not network is in debug mode</li>
 </ul>
 
-<h3 id="output">`output</h3>
+<h3 id="output"><code>output</code></h3>
 
 <p>An output message from a running network, roughly similar to STDOUT output of a Unix process, or a line of console.log in JavaScript. Output can also be used for passing images from the runtime to the UI.'</p>
 
@@ -863,7 +958,7 @@ Graphs registered in this way should also be available for use as subgraphs in o
 <li><code>url</code>: (optional) URL for an image generated by the runtime</li>
 </ul>
 
-<h3 id="processerror">`processerror</h3>
+<h3 id="processerror"><code>processerror</code></h3>
 
 <p>When in debug mode, a network can signal an error happening inside a process.</p>
 
@@ -875,7 +970,7 @@ Graphs registered in this way should also be available for use as subgraphs in o
 <li><code>graph</code>: graph the action targets</li>
 </ul>
 
-<h3 id="icon">`icon</h3>
+<h3 id="icon"><code>icon</code></h3>
 
 <p>Icon of a component instance has changed.</p>
 
@@ -887,14 +982,36 @@ Graphs registered in this way should also be available for use as subgraphs in o
 <li><code>graph</code>: graph the action targets</li>
 </ul>
 
-<h3 id="connect">`connect</h3>
+<h3 id="connect"><code>connect</code></h3>
 
 <p>Beginning of transmission on an edge.</p>
 
 <ul>
 <li><code>id</code>: textual edge identifier, usually in form of a FBP language line</li>
 
+<li><code>src</code>: source node for the edge
+
+
+<ul>
+<li><code>node</code>: node identifier</li>
+
+<li><code>port</code>: port name</li>
+
+<li><code>index</code>: connection index (optional, for addressable ports)</li></ul>
+</li>
+
 <li><code>src</code>: source node for the edge</li>
+
+<li><code>tgt</code>: target node for the edge
+
+
+<ul>
+<li><code>node</code>: node identifier</li>
+
+<li><code>port</code>: port name</li>
+
+<li><code>index</code>: connection index (optional, for addressable ports)</li></ul>
+</li>
 
 <li><code>tgt</code>: target node for the edge</li>
 
@@ -903,26 +1020,150 @@ Graphs registered in this way should also be available for use as subgraphs in o
 <li><code>subgraph</code>: (optional): subgraph identifier for the event. An array of node IDs</li>
 </ul>
 
-<h3 id="begingroup">`begingroup</h3>
+<h3 id="begingroup"><code>begingroup</code></h3>
 
 <p>Beginning of a group (bracket IP) on an edge.</p>
 
-<h3 id="data">`data</h3>
+<ul>
+<li><code>id</code>: textual edge identifier, usually in form of a FBP language line</li>
+
+<li><code>src</code>: source node for the edge
+
+
+<ul>
+<li><code>node</code>: node identifier</li>
+
+<li><code>port</code>: port name</li>
+
+<li><code>index</code>: connection index (optional, for addressable ports)</li></ul>
+</li>
+
+<li><code>src</code>: source node for the edge</li>
+
+<li><code>tgt</code>: target node for the edge
+
+
+<ul>
+<li><code>node</code>: node identifier</li>
+
+<li><code>port</code>: port name</li>
+
+<li><code>index</code>: connection index (optional, for addressable ports)</li></ul>
+</li>
+
+<li><code>tgt</code>: target node for the edge</li>
+
+<li><code>graph</code>: graph the action targets</li>
+
+<li><code>subgraph</code>: (optional): subgraph identifier for the event. An array of node IDs</li>
+</ul>
+
+<h3 id="data"><code>data</code></h3>
 
 <p>Data transmission on an edge.</p>
 
-<h3 id="endgroup">`endgroup</h3>
+<ul>
+<li><code>id</code>: textual edge identifier, usually in form of a FBP language line</li>
+
+<li><code>src</code>: source node for the edge
+
+
+<ul>
+<li><code>node</code>: node identifier</li>
+
+<li><code>port</code>: port name</li>
+
+<li><code>index</code>: connection index (optional, for addressable ports)</li></ul>
+</li>
+
+<li><code>src</code>: source node for the edge</li>
+
+<li><code>tgt</code>: target node for the edge
+
+
+<ul>
+<li><code>node</code>: node identifier</li>
+
+<li><code>port</code>: port name</li>
+
+<li><code>index</code>: connection index (optional, for addressable ports)</li></ul>
+</li>
+
+<li><code>tgt</code>: target node for the edge</li>
+
+<li><code>graph</code>: graph the action targets</li>
+
+<li><code>subgraph</code>: (optional): subgraph identifier for the event. An array of node IDs</li>
+</ul>
+
+<h3 id="endgroup"><code>endgroup</code></h3>
 
 <p>Ending of a group (bracket IP) on an edge.</p>
 
-<h3 id="disconnect">`disconnect</h3>
+<ul>
+<li><code>id</code>: textual edge identifier, usually in form of a FBP language line</li>
+
+<li><code>src</code>: source node for the edge
+
+
+<ul>
+<li><code>node</code>: node identifier</li>
+
+<li><code>port</code>: port name</li>
+
+<li><code>index</code>: connection index (optional, for addressable ports)</li></ul>
+</li>
+
+<li><code>src</code>: source node for the edge</li>
+
+<li><code>tgt</code>: target node for the edge
+
+
+<ul>
+<li><code>node</code>: node identifier</li>
+
+<li><code>port</code>: port name</li>
+
+<li><code>index</code>: connection index (optional, for addressable ports)</li></ul>
+</li>
+
+<li><code>tgt</code>: target node for the edge</li>
+
+<li><code>graph</code>: graph the action targets</li>
+
+<li><code>subgraph</code>: (optional): subgraph identifier for the event. An array of node IDs</li>
+</ul>
+
+<h3 id="disconnect"><code>disconnect</code></h3>
 
 <p>End of transmission on an edge.</p>
 
 <ul>
 <li><code>id</code>: textual edge identifier, usually in form of a FBP language line</li>
 
+<li><code>src</code>: source node for the edge
+
+
+<ul>
+<li><code>node</code>: node identifier</li>
+
+<li><code>port</code>: port name</li>
+
+<li><code>index</code>: connection index (optional, for addressable ports)</li></ul>
+</li>
+
 <li><code>src</code>: source node for the edge</li>
+
+<li><code>tgt</code>: target node for the edge
+
+
+<ul>
+<li><code>node</code>: node identifier</li>
+
+<li><code>port</code>: port name</li>
+
+<li><code>index</code>: connection index (optional, for addressable ports)</li></ul>
+</li>
 
 <li><code>tgt</code>: target node for the edge</li>
 
