@@ -360,6 +360,7 @@ input:
                 type: object
                 description: '(optional): structure of key-value pairs for edge metadata'
               src:
+                description: 'source data for the edge'
                 $ref: '/shared/iip'
               tgt:
                 description: 'target node for the edge'
