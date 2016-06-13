@@ -125,6 +125,25 @@ module.exports = ->
 
       return newObj
 
+    mergeAllOf = (obj) ->
+      unless typeof obj is "object" and not obj.length?
+        return obj
+
+      newObj = {}
+      for key, value of obj
+        if key is 'allOf'
+          for mergeObj in obj[key]
+            for propName, prop of mergeObj
+              newObj[propName] ?= prop
+
+        else if typeof value is "object" and not value.length?
+          newObj[key] = mergeAllOf value
+
+        else
+          newObj[key] = value
+
+      return newObj
+
     desc = {}
     protocols =
       runtime: ['input', 'output']
@@ -150,7 +169,7 @@ module.exports = ->
             for key, value of schema.allOf[1].properties.payload
               message[key] = value
 
-          messages[event] = message
+          messages[event] = mergeAllOf message
 
     return desc
 
@@ -164,12 +183,17 @@ module.exports = ->
       p "#{protocolProps.description}\n"
 
       for messageType, message of protocolProps.messages
-        p "### `#{messageType}\n"
+        p "### `#{messageType}`\n"
         p "#{message.description}"
 
         for messagePropName, messageProp of message.properties
           line = "* `#{messagePropName}`: #{messageProp.description}"
           items = messageProp.items
+
+          if messageProp.type is 'object' and messageProp.properties?
+            p line
+            for subPropName, subProp of messageProp.properties
+              p "  - `#{subPropName}`: #{subProp.description}"
 
           if items?.type is 'object'
             line += ", each containing"

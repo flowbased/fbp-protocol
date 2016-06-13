@@ -42,7 +42,7 @@ output:
                 type: boolean
                 description: 'boolean telling whether the component is a subgraph'
               inPorts:
-                description: 'list of input ports, each containing:'
+                description: 'list of input ports'
                 $ref: '/shared/port_definition'
               outPorts:
                 description: 'list of output ports'
