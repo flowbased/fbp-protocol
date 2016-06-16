@@ -5,6 +5,28 @@ description: >-
   directions.
 
 output:
+  graph:
+    id: 'output/graph'
+    description: 'Data about graph instance'
+    allOf:
+      - $ref: '/shared/message'
+      - properties:
+          protocol:
+            enum: ['graph']
+          command:
+            enum: ['graph']
+          payload:
+            allOf:
+              - $ref: '/shared/graph_definition'
+              - additionalProperties: false
+                properties:
+                  id: true
+                  name: true
+                  library: true
+                  main: true
+                  icon: true
+                  description: true
+
   error:
     id: 'output/error'
     description: 'Graph error'
@@ -109,6 +131,48 @@ input:
   error:
     description: 'Graph error'
 
+  list:
+    id: 'input/list'
+    description: >-
+      Request a list of currently available graphs. Responses will be a set of
+      `graph` messages.
+    allOf:
+      - $ref: '/shared/message'
+      - properties:
+          protocol:
+            enum: ['graph']
+          command:
+            enum: ['list']
+          payload:
+            additionalProperties: false
+            properties:
+              secret:
+                type: string
+                description: access token to authorize user
+
+  getgraph:
+    id: 'input/getgraph'
+    description: >-
+      Request graph nodes, edges, etc. Runtime should respond with graph:clear
+      followed by graph:addnode, graph:addedge, etc. to build graph on receiver.
+    allOf:
+      - $ref: '/shared/message'
+      - properties:
+          protocol:
+            enum: ['graph']
+          command:
+            enum: ['getgraph']
+          payload:
+            required: ['id']
+            additionalProperties: false
+            properties:
+              id:
+                type: string
+                description: 'identifier for the graph'
+              secret:
+                type: string
+                description: access token to authorize user
+
   clear:
     id: 'input/clear'
     description: 'Initialize an empty graph.'
@@ -118,34 +182,23 @@ input:
           protocol:
             enum: ['graph']
           command:
-            enum: ['addnode']
+            enum: ['clear']
           payload:
-            required: ['id']
-            additionalProperties: false
-            properties:
-              id:
-                type: string
-                description: 'identifier for the graph being created. Used for all subsequent messages related to the graph instance'
-              name:
-                type: string
-                description: '(optional) Human-readable label for the graph'
-              library:
-                type: string
-                description: '(optional) Component library identifier'
-              main:
-                type: boolean
-                description: "(optional) Identifies the graph as a main graph of a project that should not be registered as a component\nGraphs registered in this way should also be available for use as subgraphs in other graphs. Therefore a graph registration and later changes to it may cause component messages of the Component protocol to be sent back to the client informing of possible changes in the ports of the subgraph component."
-              icon:
-                type: string
-                description: >-
-                  (optional) Icon to use for the graph when used as a component
-              description:
-                type: string
-                description: >-
-                  (optional) Description to use for the graph when used as a component
-              secret:
-                type: string
-                description: access token to authorize user
+            allOf:
+              - $ref: '/shared/graph_definition'
+              - properties:
+                  secret:
+                    type: string
+                    description: access token to authorize user
+              - additionalProperties: false
+                properties:
+                  id: true
+                  name: true
+                  library: true
+                  main: true
+                  icon: true
+                  description: true
+                  secret: true
 
   addnode:
     id: 'input/addnode'

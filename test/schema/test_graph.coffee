@@ -9,6 +9,68 @@ describe 'Test graph protocol schema on event', ->
     tv4.addSchema '/shared/', sharedSchema
     tv4.addSchema '/graph/', graphSchema
 
+  describe 'list', ->
+    schema = '/graph/input/list'
+
+    it 'should have input schema', ->
+      chai.expect(tv4.getSchema schema).to.exist
+
+    it 'should validate event with required fields', ->
+      event =
+        protocol: 'graph'
+        command: 'list'
+        payload:
+          secret: 'abcdefg'
+
+      chai.expect(tv4.validate event, schema).to.be.true
+
+  describe 'graph', ->
+    schema = '/graph/output/graph'
+
+    it 'should have output schema', ->
+      chai.expect(tv4.getSchema schema).to.exist
+
+    it 'should validate event with required fields', ->
+      event =
+        protocol: 'graph'
+        command: 'graph'
+        payload:
+          id: 'graph1'
+
+      chai.expect(tv4.validate event, schema).to.be.true
+
+  describe 'getgraph', ->
+    schema = '/graph/input/getgraph'
+
+    it 'should have output schema', ->
+      chai.expect(tv4.getSchema schema).to.exist
+
+    it 'should validate event with required fields', ->
+      event =
+        protocol: 'graph'
+        command: 'getgraph'
+        payload:
+          id: 'graph1'
+          secret: 'abcdefg'
+
+      chai.expect(tv4.validate event, schema).to.be.true
+
+  describe 'clear', ->
+    schema = '/graph/input/clear'
+
+    it 'should have input schema', ->
+      chai.expect(tv4.getSchema schema).to.exist
+
+    it 'should validate event with required fields', ->
+      event =
+        protocol: 'graph'
+        command: 'clear'
+        payload:
+          id: 'graph1'
+          secret: 'abcdefg'
+
+      chai.expect(tv4.validate event, schema).to.be.true
+
   describe 'addnode', ->
     schema = '/graph/input/addnode'
 

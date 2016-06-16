@@ -18,6 +18,31 @@ message:
       type: object
       description: 'content of message'
 
+graph_definition:
+  id: 'graph_definition'
+  required: ['id']
+  properties:
+    id:
+      type: string
+      description: 'identifier for the graph being created. Used for all subsequent messages related to the graph instance'
+    name:
+      type: string
+      description: '(optional) Human-readable label for the graph'
+    library:
+      type: string
+      description: '(optional) Component library identifier'
+    main:
+      type: boolean
+      description: "(optional) Identifies the graph as a main graph of a project that should not be registered as a component\nGraphs registered in this way should also be available for use as subgraphs in other graphs. Therefore a graph registration and later changes to it may cause component messages of the Component protocol to be sent back to the client informing of possible changes in the ports of the subgraph component."
+    icon:
+      type: string
+      description: >-
+        (optional) Icon to use for the graph when used as a component
+    description:
+      type: string
+      description: >-
+        (optional) Description to use for the graph when used as a component
+
 port:
   id: 'port'
   type: object
@@ -106,6 +131,7 @@ capabilities:
       - 'network:persist'
       - 'protocol:graph'
       - 'component:setsource'
+      - 'graph:getgraph'
     _enumDescriptions: # Documentation
       - name: 'protocol:network'
         description: >-
@@ -135,3 +161,7 @@ capabilities:
         description: >-
           runtime is able to compile and run custom components
           sent as source code strings
+      - name: 'graph:getgraph'
+        description: >-
+          runtime is able to serialize itself into graph messages and build
+          a graph on the receiving end
