@@ -1,712 +1,667 @@
+$schema: 'http://json-schema.org/draft-04/schema#'
 title: 'Graph protocol'
-description: 'This protocol is utilized for communicating about graph changes in both directions.'
+description: >-
+  This protocol is utilized for communicating about graph changes in both
+  directions.
 
 output:
   error:
+    id: 'output/error'
     description: 'Graph error'
+    $ref: '/shared/message'
 
   addnode:
+    id: 'output/addnode'
     description: 'Add node to a graph.'
-    properties:
-      id:
-        type: string
-        description: 'identifier for the node'
-        required: true
-      component:
-        type: string
-        description: 'component name used for the node'
-        required: true
-      metadata:
-        type: object
-        description: '(optional): structure of key-value pairs for node metadata'
-      graph:
-        type: string
-        description: 'graph the action targets'
-        required: true
+    $ref: '../input/addnode'
 
   removenode:
+    id: 'output/removenode'
     description: 'Remove a node from a graph.'
-    properties:
-      id:
-        type: string
-        description: 'identifier for the node'
-        required: true
-      graph:
-        type: string
-        description: 'graph the action targets'
-        required: true
+    $ref: '../input/removenode'
 
   renamenode:
+    id: 'output/renamenode'
     description: 'Change the ID of a node in the graph'
-    properties:
-      from:
-        type: string
-        description: 'original identifier for the node'
-        required: true
-      to:
-        type: string
-        description: 'new identifier for the node'
-        required: true
-      graph:
-        type: string
-        description: 'graph the action targets'
-        required: true
+    $ref: '../input/renamenode'
 
   changenode:
+    id: 'output/changenode'
     description: 'Change the metadata associated to a node in the graph'
-    properties:
-      id:
-        type: string
-        description: 'identifier for the node'
-        required: true
-      metadata:
-        type: object
-        description: 'structure of key-value pairs for node metadata'
-        required: true
-      graph:
-        type: string
-        description: 'graph the action targets'
-        required: true
+    $ref: '../input/changenode'
 
   addedge:
+    id: 'output/addedge'
     description: 'Add an edge to the graph'
-    properties:
-      src:
-        type: object
-        description: 'source node for the edge'
-        required: true
-        properties:
-          node:
-            type: string
-            description: 'node identifier'
-            required: true
-          port:
-            type: string
-            description: 'port name'
-            required: true
-          index:
-            type: ["string", "number"]
-            description: 'connection index (optional, for addressable ports)'
-      tgt:
-        type: object
-        description: 'target node for the edge'
-        required: true
-        properties:
-          node:
-            type: string
-            description: 'node identifier'
-            required: true
-          port:
-            type: string
-            description: 'port name'
-            required: true
-          index:
-            type: string
-            description: 'connection index (optional, for addressable ports)'
-      metadata:
-        type: object
-        description: '(optional): structure of key-value pairs for edge metadata'
-      graph:
-        description: 'graph the action targets'
-        required: true
+    $ref: '../input/addedge'
 
   removeedge:
+    id: 'output/removeedge'
     description: 'Remove an edge from the graph'
-    properties:
-      graph:
-        type: string
-        description: 'graph the action targets'
-        required: true
-      src:
-        description: 'source node for the edge'
-        required: true
-        properties:
-          node:
-            type: string
-            description: 'node identifier'
-          port:
-            type: string
-            description: 'port name'
-      tgt:
-        description: 'target node for the edge'
-        required: true
-        properties:
-          node:
-            type: string
-            description: 'node identifier'
-          port:
-            type: string
-            description: 'port name'
+    $ref: '../input/removeedge'
 
   changeedge:
+    id: 'output/changeedge'
     description: 'Change an edge''s metadata'
-    properties:
-      graph:
-        type: string
-        description: 'graph the action targets'
-        required: true
-      metadata:
-        type: object
-        description: 'struct of key-value pairs for edge metadata'
-      src:
-        type: object
-        description: 'source node for the edge'
-        properties:
-          node:
-            type: string
-            description: 'node identifier'
-          port:
-            type: string
-            description: 'port name'
-      tgt:
-        type: object
-        description: 'target node for the edge'
-        properties:
-          node:
-            type: string
-            description: 'node identifier'
-          port:
-            type: string
-            description: 'port name'
+    $ref: '../input/changeedge'
 
   addinitial:
+    id: 'output/addinitial'
     description: 'Add an IIP to the graph'
-    properties:
-      graph:
-        type: string
-        description: 'graph the action targets'
-      metadata:
-        type: object
-        description: '(optional): structure of key-value pairs for edge metadata'
-      src:
-        type: object
-        properties:
-          data:
-            type: any
-            description: 'IIP value in its actual data type'
-      tgt:
-        type: object
-        description: 'target node for the edge'
-        properties:
-          node:
-            type: string
-            description: 'node identifier'
-          port:
-            type: string
-            description: 'port name'
-          index:
-            type: ["string", "number"]
-            description: 'connection index (optional, for addressable ports)'
+    $ref: '../input/addinitial'
 
   removeinitial:
+    id: 'output/removeinitial'
     description: 'Remove an IIP from the graph'
-    properties:
-      tgt:
-        type: object
-        properties:
-          node:
-            type: string
-            description: 'node identifier'
-          port:
-            type: string
-            description: 'port name'
-        description: 'target node for the edge'
-      graph:
-        type: string
-        description: 'graph the action targets'
+    $ref: '../input/removeinitial'
 
   addinport:
+    id: 'output/addinport'
     description: 'Add an exported inport to the graph.'
-    properties:
-      public:
-        type: string
-        description: 'the exported name of the port'
-      node:
-        type: string
-        description: 'node identifier'
-      port:
-        type: string
-        description: 'internal port name'
-      metadata:
-        type: object
-        description: '(optional): structure of key-value pairs for node metadata'
-      graph:
-        type: string
-        description: 'graph the action targets'
+    $ref: '../input/addinport'
 
   removeinport:
+    id: 'output/removeinport'
     description: 'Remove an exported port from the graph'
-    properties:
-      public:
-        type: string
-        description: 'the exported name of the port to remove'
-      graph:
-        type: string
-        description: 'graph the action targets'
+    $ref: '../input/removeinport'
 
   renameinport:
+    id: 'output/renameinport'
     description: 'Rename an exported port in the graph'
-    properties:
-      from:
-        type: string
-        description: 'original exported port name'
-      to:
-        type: string
-        description: 'new exported port name'
-      graph:
-        type: string
-        description: 'graph the action targets'
+    $ref: '../input/renameinport'
 
   addoutport:
+    id: 'output/addoutport'
     description: 'Add an exported outport to the graph.'
-    properties:
-      public:
-        type: string
-        description: 'the exported name of the port'
-      node:
-        type: string
-        description: 'node identifier'
-      port:
-        type: string
-        description: 'internal port name'
-      metadata:
-        type: object
-        description: '(optional): structure of key-value pairs for port metadata'
-      graph:
-        type: string
-        description: 'graph the action targets'
+    $ref: '../input/addoutport'
 
   removeoutport:
+    id: 'output/removeoutport'
     description: 'Remove an exported port from the graph'
-    properties:
-      public:
-        type: string
-        description: 'the exported name of the port to remove'
-      graph:
-        type: string
-        description: 'graph the action targets'
+    $ref: '../input/removeoutport'
 
   renameoutport:
+    id: 'output/renameoutport'
     description: 'Rename an exported port in the graph'
-    properties:
-      from:
-        type: string
-        description: 'original exported port name'
-      to:
-        type: string
-        description: 'new exported port name'
-      graph:
-        type: string
-        description: 'graph the action targets'
+    $ref: '../input/renameoutport'
 
   addgroup:
+    id: 'output/addgroup'
     description: 'Add a group to the graph'
-    properties:
-      name:
-        type: string
-        description: 'the group name'
-      nodes:
-        type: array
-        description: 'an array of node ids part of the group'
-      metadata:
-        type: object
-        description: '(optional): structure of key-value pairs for group metadata'
-      graph:
-        type: string
-        description: 'graph the action targets'
+    $ref: '../input/addgroup'
 
   removegroup:
+    id: 'output/removegroup'
     description: 'Remove a group from the graph'
-    properties:
-      name:
-        type: string
-        description: 'the group name'
-      graph:
-        type: string
-        description: 'graph the action targets'
+    $ref: '../input/removegroup'
 
   renamegroup:
+    id: 'output/renamegroup'
     description: 'Rename a group in the graph.'
-    properties:
-      from:
-        type: string
-        description: 'original group name'
-      to:
-        type: string
-        description: 'new group name'
-      graph:
-        type: string
-        description: 'graph the action targets'
+    $ref: '../input/renamegroup'
 
   changegroup:
+    id: 'output/changegroup'
     description: 'Change a group''s metadata'
-    properties:
-      name:
-        type: string
-        description: 'the group name'
-        required: true
-      metadata:
-        type: object
-        description: 'structure of key-value pairs for group metadata'
-      graph:
-        type: string
-        description: 'graph the action targets'
-        required: true
+    $ref: '../input/changegroup'
 
 input:
   error:
     description: 'Graph error'
 
   clear:
+    id: 'input/clear'
     description: 'Initialize an empty graph.'
-    properties:
-      id:
-        type: string
-        description: 'identifier for the graph being created. Used for all subsequent messages related to the graph instance'
-        required: true
-      name:
-        type: string
-        description: '(optional) Human-readable label for the graph'
-      library:
-        type: string
-        description: '(optional) Component library identifier'
-      main:
-        type: boolean
-        description: "(optional) Identifies the graph as a main graph of a project that should not be registered as a component\nGraphs registered in this way should also be available for use as subgraphs in other graphs. Therefore a graph registration and later changes to it may cause component messages of the Component protocol to be sent back to the client informing of possible changes in the ports of the subgraph component."
+    allOf:
+      - $ref: '/shared/message'
+      - properties:
+          protocol:
+            enum: ['graph']
+          command:
+            enum: ['addnode']
+          payload:
+            required: ['id']
+            additionalProperties: false
+            properties:
+              id:
+                type: string
+                description: 'identifier for the graph being created. Used for all subsequent messages related to the graph instance'
+              name:
+                type: string
+                description: '(optional) Human-readable label for the graph'
+              library:
+                type: string
+                description: '(optional) Component library identifier'
+              main:
+                type: boolean
+                description: "(optional) Identifies the graph as a main graph of a project that should not be registered as a component\nGraphs registered in this way should also be available for use as subgraphs in other graphs. Therefore a graph registration and later changes to it may cause component messages of the Component protocol to be sent back to the client informing of possible changes in the ports of the subgraph component."
+              icon:
+                type: string
+                description: >-
+                  (optional) Icon to use for the graph when used as a component
+              description:
+                type: string
+                description: >-
+                  (optional) Description to use for the graph when used as a component
+              secret:
+                type: string
+                description: access token to authorize user
 
   addnode:
+    id: 'input/addnode'
     description: 'Add node to a graph.'
-    properties:
-      id:
-        type: string
-        description: 'identifier for the node'
-        required: true
-      component:
-        type: string
-        description: 'component name used for the node'
-        required: true
-      metadata:
-        type: object
-        description: '(optional): structure of key-value pairs for node metadata'
-      graph:
-        type: string
-        description: 'graph the action targets'
-        required: true
+    allOf:
+      - $ref: '/shared/message'
+      - properties:
+          protocol:
+            enum: ['graph']
+          command:
+            enum: ['addnode']
+          payload:
+            required: ['id', 'component', 'graph']
+            additionalProperties: false
+            properties:
+              id:
+                type: string
+                description: 'identifier for the node'
+              component:
+                type: string
+                description: 'component name used for the node'
+              metadata:
+                type: object
+                description: '(optional): structure of key-value pairs for node metadata'
+              graph:
+                type: string
+                description: 'graph the action targets'
+              secret:
+                type: string
+                description: access token to authorize user
 
   removenode:
+    id: 'input/removenode'
     description: 'Remove a node from a graph.'
-    properties:
-      id:
-        type: string
-        description: 'identifier for the node'
-        required: true
-      graph:
-        type: string
-        description: 'graph the action targets'
-        required: true
+    allOf:
+      - $ref: '/shared/message'
+      - properties:
+          protocol:
+            enum: ['graph']
+          command:
+            enum: ['removenode']
+          payload:
+            required: ['id', 'graph']
+            additionalProperties: false
+            properties:
+              id:
+                type: string
+                description: 'identifier for the node'
+              graph:
+                type: string
+                description: 'graph the action targets'
+              secret:
+                type: string
+                description: access token to authorize user
 
   renamenode:
+    id: 'input/renamenode'
     description: 'Change the ID of a node in the graph'
-    properties:
-      from:
-        type: string
-        description: 'original identifier for the node'
-        required: true
-      to:
-        type: string
-        description: 'new identifier for the node'
-        required: true
-      graph:
-        type: string
-        description: 'graph the action targets'
-        required: true
+    allOf:
+      - $ref: '/shared/message'
+      - properties:
+          protocol:
+            enum: ['graph']
+          command:
+            enum: ['renamenode']
+          payload:
+            required: ['from', 'to', 'graph']
+            additionalProperties: false
+            properties:
+              from:
+                type: string
+                description: 'original identifier for the node'
+              to:
+                type: string
+                description: 'new identifier for the node'
+              graph:
+                type: string
+                description: 'graph the action targets'
+              secret:
+                type: string
+                description: access token to authorize user
 
   changenode:
+    id: 'input/changenode'
     description: 'Change the metadata associated to a node in the graph'
-    properties:
-      id:
-        type: string
-        description: 'identifier for the node'
-        required: true
-      metadata:
-        type: object
-        description: 'structure of key-value pairs for node metadata'
-        required: true
-      graph:
-        type: string
-        description: 'graph the action targets'
-        required: true
+    allOf:
+      - $ref: '/shared/message'
+      - properties:
+          protocol:
+            enum: ['graph']
+          command:
+            enum: ['changenode']
+          payload:
+            required: ['id', 'metadata', 'graph']
+            additionalProperties: false
+            properties:
+              id:
+                type: string
+                description: 'identifier for the node'
+              metadata:
+                type: object
+                description: 'structure of key-value pairs for node metadata'
+              graph:
+                type: string
+                description: 'graph the action targets'
+              secret:
+                type: string
+                description: access token to authorize user
 
   addedge:
+    id: 'input/addedge'
     description: 'Add an edge to the graph'
-    properties:
-      src:
-        type: object
-        description: 'source node for the edge'
-        properties:
-          node:
-            type: string
-            description: 'node identifier'
-          port:
-            type: string
-            description: 'port name'
-          index:
-            type: ["string", "number"]
-            description: 'connection index (optional, for addressable ports)'
-      tgt:
-        type: object
-        description: 'target node for the edge'
-        properties:
-          node:
-            type: string
-            description: 'node identifier'
-          port:
-            type: string
-            description: 'port name'
-          index:
-            type: ["string", "number"]
-            description: 'connection index (optional, for addressable ports)'
-      metadata:
-        type: object
-        description: '(optional): structure of key-value pairs for edge metadata'
-      graph:
-        description: 'graph the action targets'
+    allOf:
+      - $ref: '/shared/message'
+      - properties:
+          protocol:
+            enum: ['graph']
+          command:
+            enum: ['addedge']
+          payload:
+            required: ['src', 'tgt', 'graph']
+            additionalProperties: false
+            properties:
+              src:
+                $ref: '/shared/port'
+                description: 'source node for the edge'
+              tgt:
+                $ref: '/shared/port'
+                description: 'target node for the edge'
+              metadata:
+                type: object
+                description: '(optional): structure of key-value pairs for edge metadata'
+              graph:
+                description: 'graph the action targets'
+              secret:
+                type: string
+                description: access token to authorize user
 
   removeedge:
+    id: 'input/removeedge'
     description: 'Remove an edge from the graph'
-    properties:
-      graph:
-        type: string
-        description: 'graph the action targets'
-      src:
-        type: object
-        description: 'source node for the edge'
-        properties:
-          node:
-            type: string
-            description: 'node identifier'
-          port:
-            type: string
-            description: 'port name'
-      tgt:
-        type: object
-        description: 'target node for the edge'
-        properties:
-          node:
-            type: string
-            description: 'node identifier'
-          port:
-            type: string
-            description: 'port name'
+    allOf:
+      - $ref: '/shared/message'
+      - properties:
+          protocol:
+            enum: ['graph']
+          command:
+            enum: ['removeedge']
+          payload:
+            additionalProperties: false
+            required: ['graph', 'src', 'tgt']
+            properties:
+              graph:
+                type: string
+                description: 'graph the action targets'
+              src:
+                description: 'source node for the edge'
+                $ref: '/shared/port'
+              tgt:
+                description: 'target node for the edge'
+                $ref: '/shared/port'
+              secret:
+                type: string
+                description: access token to authorize user
 
   changeedge:
+    id: 'input/changeedge'
     description: 'Change an edge''s metadata'
-    properties:
-      graph:
-        type: string
-        description: 'graph the action targets'
-      metadata:
-        type: object
-        description: 'struct of key-value pairs for edge metadata'
-      src:
-        type: object
-        description: 'source node for the edge'
-        properties:
-          node:
-            type: string
-            description: 'node identifier'
-          port:
-            type: string
-            description: 'port name'
-      tgt:
-        type: object
-        description: 'target node for the edge'
-        properties:
-          node:
-            type: string
-            description: 'node identifier'
-          port:
-            type: string
-            description: 'port name'
+    allOf:
+      - $ref: '/shared/message'
+      - properties:
+          protocol:
+            enum: ['graph']
+          command:
+            enum: ['changeedge']
+          payload:
+            additionalProperties: false
+            properties:
+              graph:
+                type: string
+                description: 'graph the action targets'
+              metadata:
+                type: object
+                description: 'struct of key-value pairs for edge metadata'
+              src:
+                description: 'source node for the edge'
+                $ref: '/shared/port'
+              tgt:
+                description: 'target node for the edge'
+                $ref: '/shared/port'
+              secret:
+                type: string
+                description: access token to authorize user
 
   addinitial:
+    id: 'input/addinitial'
     description: 'Add an IIP to the graph'
-    properties:
-      graph:
-        type: string
-        description: 'graph the action targets'
-      metadata:
-        type: object
-        description: '(optional): structure of key-value pairs for edge metadata'
-      src:
-        type: object
-        properties:
-          data:
-            type: any
-            description: 'IIP value in its actual data type'
-      tgt:
-        type: object
-        description: 'target node for the edge'
-        properties:
-          node:
-            type: string
-            description: 'node identifier'
-          port:
-            type: string
-            description: 'port name'
-          index:
-            type: ["string", "number"]
-            description: 'connection index (optional, for addressable ports)'
+    allOf:
+      - $ref: '/shared/message'
+      - properties:
+          protocol:
+            enum: ['graph']
+          command:
+            enum: ['addinitial']
+          payload:
+            additionalProperties: false
+            properties:
+              graph:
+                type: string
+                description: 'graph the action targets'
+              metadata:
+                type: object
+                description: '(optional): structure of key-value pairs for edge metadata'
+              src:
+                description: 'source data for the edge'
+                $ref: '/shared/iip'
+              tgt:
+                description: 'target node for the edge'
+                $ref: '/shared/port'
+              secret:
+                type: string
+                description: access token to authorize user
 
   removeinitial:
+    id: 'input/removeinitial'
     description: 'Remove an IIP from the graph'
-    properties:
-      tgt:
-        type: object
-        properties:
-          node:
-            type: string
-            description: 'node identifier'
-          port:
-            type: string
-            description: 'port name'
-        description: 'target node for the edge'
-      graph:
-        type: string
-        description: 'graph the action targets'
+    allOf:
+      - $ref: '/shared/message'
+      - properties:
+          protocol:
+            enum: ['graph']
+          command:
+            enum: ['removeinitial']
+          payload:
+            required: ['tgt', 'graph']
+            additionalProperties: false
+            properties:
+              tgt:
+                $ref: '/shared/port'
+                description: 'target node for the edge'
+              graph:
+                type: string
+                description: 'graph the action targets'
+              secret:
+                type: string
+                description: access token to authorize user
 
   addinport:
+    id: 'input/addinport'
     description: 'Add an exported inport to the graph.'
-    properties:
-      public:
-        type: string
-        description: 'the exported name of the port'
-      node:
-        type: string
-        description: 'node identifier'
-      port:
-        type: string
-        description: 'internal port name'
-      metadata:
-        type: object
-        description: '(optional): structure of key-value pairs for node metadata'
-      graph:
-        type: string
-        description: 'graph the action targets'
+    allOf:
+      - $ref: '/shared/message'
+      - properties:
+          protocol:
+            enum: ['graph']
+          command:
+            enum: ['addinport']
+          payload:
+            additionalProperties: false
+            required: ['public', 'port', 'node', 'graph']
+            properties:
+              public:
+                type: string
+                description: 'the exported name of the port'
+              node:
+                type: string
+                description: 'node identifier'
+              port:
+                type: string
+                description: 'internal port name'
+              metadata:
+                type: object
+                description: '(optional): structure of key-value pairs for node metadata'
+              graph:
+                type: string
+                description: 'graph the action targets'
+              secret:
+                type: string
+                description: access token to authorize user
 
   removeinport:
+    id: 'input/removeinport'
     description: 'Remove an exported port from the graph'
-    properties:
-      public:
-        type: string
-        description: 'the exported name of the port to remove'
-      graph:
-        type: string
-        description: 'graph the action targets'
+    allOf:
+      - $ref: '/shared/message'
+      - properties:
+          protocol:
+            enum: ['graph']
+          command:
+            enum: ['removeinport']
+          payload:
+            additionalProperties: false
+            properties:
+              public:
+                type: string
+                description: 'the exported name of the port to remove'
+              graph:
+                type: string
+                description: 'graph the action targets'
+              secret:
+                type: string
+                description: access token to authorize user
 
   renameinport:
+    id: 'input/renameinport'
     description: 'Rename an exported port in the graph'
-    properties:
-      from:
-        type: string
-        description: 'original exported port name'
-      to:
-        type: string
-        description: 'new exported port name'
-      graph:
-        type: string
-        description: 'graph the action targets'
+    allOf:
+      - $ref: '/shared/message'
+      - properties:
+          protocol:
+            enum: ['graph']
+          command:
+            enum: ['renameinport']
+          payload:
+            additionalProperties: false
+            properties:
+              from:
+                type: string
+                description: 'original exported port name'
+              to:
+                type: string
+                description: 'new exported port name'
+              graph:
+                type: string
+                description: 'graph the action targets'
+              secret:
+                type: string
+                description: access token to authorize user
 
   addoutport:
+    id: 'input/addoutport'
     description: 'Add an exported outport to the graph.'
-    properties:
-      public:
-        type: string
-        description: 'the exported name of the port'
-      node:
-        type: string
-        description: 'node identifier'
-      port:
-        type: string
-        description: 'internal port name'
-      metadata:
-        type: object
-        description: '(optional): structure of key-value pairs for port metadata'
-      graph:
-        type: string
-        description: 'graph the action targets'
+    allOf:
+      - $ref: '/shared/message'
+      - properties:
+          protocol:
+            enum: ['graph']
+          command:
+            enum: ['addoutport']
+          payload:
+            required: ['public', 'node', 'port', 'graph']
+            additionalProperties: false
+            properties:
+              public:
+                type: string
+                description: 'the exported name of the port'
+              node:
+                type: string
+                description: 'node identifier'
+              port:
+                type: string
+                description: 'internal port name'
+              metadata:
+                type: object
+                description: '(optional): structure of key-value pairs for port metadata'
+              graph:
+                type: string
+                description: 'graph the action targets'
+              secret:
+                type: string
+                description: access token to authorize user
 
   removeoutport:
+    id: 'input/removeoutport'
     description: 'Remove an exported port from the graph'
-    properties:
-      public:
-        type: string
-        description: 'the exported name of the port to remove'
-      graph:
-        type: string
-        description: 'graph the action targets'
+    allOf:
+      - $ref: '/shared/message'
+      - properties:
+          protocol:
+            enum: ['graph']
+          command:
+            enum: ['removeoutport']
+          payload:
+            required: ['public']
+            additionalProperties: false
+            properties:
+              public:
+                type: string
+                description: 'the exported name of the port to remove'
+              graph:
+                type: string
+                description: 'graph the action targets'
+              secret:
+                type: string
+                description: access token to authorize user
 
   renameoutport:
+    id: 'input/renameoutport'
     description: 'Rename an exported port in the graph'
-    properties:
-      from:
-        type: string
-        description: 'original exported port name'
-      to:
-        type: string
-        description: 'new exported port name'
-      graph:
-        type: string
-        description: 'graph the action targets'
+    allOf:
+      - $ref: '/shared/message'
+      - properties:
+          protocol:
+            enum: ['graph']
+          command:
+            enum: ['renameoutport']
+          payload:
+            required: ['from', 'to', 'graph']
+            additionalProperties: false
+            properties:
+              from:
+                type: string
+                description: 'original exported port name'
+              to:
+                type: string
+                description: 'new exported port name'
+              graph:
+                type: string
+                description: 'graph the action targets'
+              secret:
+                type: string
+                description: access token to authorize user
 
   addgroup:
+    id: 'input/addgroup'
     description: 'Add a group to the graph'
-    properties:
-      name:
-        type: string
-        description: 'the group name'
-      nodes:
-        type: array
-        description: 'an array of node ids part of the group'
-      metadata:
-        type: object
-        description: '(optional): structure of key-value pairs for group metadata'
-      graph:
-        type: string
-        description: 'graph the action targets'
+    allOf:
+      - $ref: '/shared/message'
+      - properties:
+          protocol:
+            enum: ['graph']
+          command:
+            enum: ['addgroup']
+          payload:
+            required: ['name', 'nodes', 'graph']
+            additionalProperties: false
+            properties:
+              name:
+                type: string
+                description: 'the group name'
+              nodes:
+                type: array
+                description: 'an array of node ids part of the group'
+              metadata:
+                type: object
+                description: '(optional): structure of key-value pairs for group metadata'
+              graph:
+                type: string
+                description: 'graph the action targets'
+              secret:
+                type: string
+                description: access token to authorize user
 
   removegroup:
+    id: 'input/removegroup'
     description: 'Remove a group from the graph'
-    properties:
-      name:
-        type: string
-        description: 'the group name'
-      graph:
-        type: string
-        description: 'graph the action targets'
+    allOf:
+      - $ref: '/shared/message'
+      - properties:
+          protocol:
+            enum: ['graph']
+          command:
+            enum: ['removegroup']
+          payload:
+            required: ['name', 'graph']
+            additionalProperties: false
+            properties:
+              name:
+                type: string
+                description: 'the group name'
+              graph:
+                type: string
+                description: 'graph the action targets'
+              secret:
+                type: string
+                description: access token to authorize user
 
   renamegroup:
+    id: 'input/renamegroup'
     description: 'Rename a group in the graph.'
-    properties:
-      from:
-        type: string
-        description: 'original group name'
-      to:
-        type: string
-        description: 'new group name'
-      graph:
-        type: string
-        description: 'graph the action targets'
+    allOf:
+      - $ref: '/shared/message'
+      - properties:
+          protocol:
+            enum: ['graph']
+          command:
+            enum: ['renamegroup']
+          payload:
+            properties:
+              from:
+                type: string
+                description: 'original group name'
+              to:
+                type: string
+                description: 'new group name'
+              graph:
+                type: string
+                description: 'graph the action targets'
+              secret:
+                type: string
+                description: access token to authorize user
 
   changegroup:
+    id: 'input/changegroup'
     description: 'Change a group''s metadata'
-    properties:
-      name:
-        type: string
-        description: 'the group name'
-      metadata:
-        type: object
-        description: 'structure of key-value pairs for group metadata'
-      graph:
-        type: string
-        description: 'graph the action targets'
+    allOf:
+      - $ref: '/shared/message'
+      - properties:
+          protocol:
+            enum: ['graph']
+          command:
+            enum: ['changegroup']
+          payload:
+            required: ['name', 'metadata', 'graph']
+            additionalProperties: false
+            properties:
+              name:
+                type: string
+                description: 'the group name'
+              metadata:
+                type: object
+                description: 'structure of key-value pairs for group metadata'
+              graph:
+                type: string
+                description: 'graph the action targets'
+              secret:
+                type: string
+                description: access token to authorize user
+

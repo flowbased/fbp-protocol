@@ -2,117 +2,176 @@ title: Component protocol
 description: Protocol for handling the component registry.
 
 output:
-
   error:
+    id: 'output/error'
     description: 'Component error'
+    allOf:
+      - $ref: '/shared/message'
+      - properties:
+          protocol:
+            enum: ['component']
+          command:
+            enum: ['error']
 
   component:
+    id: 'output/component'
     description: Transmit the metadata about a component instance.
-    properties:
-      name:
-        type: string
-        description:  component name in format that can be used in graphs
-      description:
-        type: string
-        description: '(optional) textual description on what the component does'
-      icon:
-        type: string
-        description: '(optional): visual icon for the component, matching icon names in [Font Awesome](http://fortawesome.github.io/Font-Awesome/icons/)'
-      subgraph:
-        type: boolean
-        description: boolean telling whether the component is a subgraph
-      inPorts:
-        description: 'list of input ports, each containing:'
-        properties:
-          id:
-            type: string
-            description: port name
-          type:
-            type: string
-            description: port datatype, for example `boolean`
-          description:
-            type: string
-            description: textual description of the port
-          addressable:
-            type: boolean
-            description: boolean telling whether the port is an ArrayPort
-          required:
-            type: boolean
-            description: boolean telling whether the port needs to be connected for the component to work
-          values:
-            type: array
-            description: '(optional) array of the values that the port accepts for enum ports'
-          default:
-            type: any
-            description: '(optional) the default value received by the port'
-      outPorts:
-        description: list of output ports
-        properties:
-          id:
-            type: string
-            description: port name
-          type:
-            type: string
-            description: port datatype, for example `boolean`
-          description:
-            type: string
-            description: textual description of the port
-          addressable:
-            type: boolean
-            description: boolean telling whether the port is an ArrayPort
-          required:
-            type: boolean
-            description: boolean telling whether the port needs to be connected for the component to work
+    allOf:
+      - $ref: '/shared/message'
+      - properties:
+          protocol:
+            enum: ['component']
+          command:
+            enum: ['component']
+          payload:
+            required: ['name', 'subgraph', 'inPorts', 'outPorts']
+            additionalProperties: false
+            properties:
+              name:
+                type: string
+                description:  'component name in format that can be used in graphs'
+              description:
+                type: string
+                description: '(optional) textual description on what the component does'
+              icon:
+                type: string
+                description: >-
+                  (optional): visual icon for the component, matching icon
+                  names in [Font Awesome](http://fortawesome.github.io/Font-Awesome/icons/)
+              subgraph:
+                type: boolean
+                description: 'boolean telling whether the component is a subgraph'
+              inPorts:
+                description: 'list of input ports'
+                $ref: '/shared/port_definition'
+              outPorts:
+                description: 'list of output ports'
+                $ref: '/shared/port_definition'
 
   source:
-    description: Source code for a component. In cases where a runtime receives a `source` message, it should do whatever operations are needed for making that component available for graphs, including possible compilation.
-    properties:
-      name:
-        type: string
-        description: Name of the component
-      language:
-        type: string
-        description: The programming language used for the component code, for example `coffeescript`
-      library:
-        type: string
-        description: '(optional) Component library identifier'
-      code:
-        type: string
-        description: Component source code
-      tests:
-        type: string
-        description: '(optional) unit tests for the component'
+    id: 'output/source'
+    description: >-
+      Source code for a component. In cases where a runtime receives a `source`
+      message, it should do whatever operations are needed for making that
+      component available for graphs, including possible compilation.
+    allOf:
+      - $ref: '/shared/message'
+      - properties:
+          protocol:
+            enum: ['component']
+          command:
+            enum: ['source']
+          payload:
+            required: ['name', 'language', 'code']
+            additionalProperties: false
+            properties:
+              name:
+                type: string
+                description: 'Name of the component'
+              language:
+                type: string
+                description: >-
+                  The programming language used for the component code, for
+                  example `coffeescript`
+
+              library:
+                type: string
+                description: '(optional) Component library identifier'
+              code:
+                type: string
+                description: 'Component source code'
+              tests:
+                type: string
+                description: '(optional) unit tests for the component'
 
 input:
   error:
+    id: 'input/error'
     description: 'Component error'
+    allOf:
+      - $ref: '/shared/message'
+      - properties:
+          protocol:
+            enum: ['component']
+          command:
+            enum: ['error']
 
   list:
-    description: Request a list of currently available components. Will be responded with a set of `component` messages.
-
+    id: 'input/list'
+    description: >-
+      Request a list of currently available components. Will be responded with
+      a set of `component` messages.
+    allOf:
+      - $ref: '/shared/message'
+      - properties:
+          protocol:
+            enum: ['component']
+          command:
+            enum: ['list']
+          payload:
+            properties:
+              secret:
+                type: string
+                description: access token to authorize user
 
   getsource:
-    description: Request for the source code of a given component. Will be responded with a `source` message.
-    properties:
-      name:
-        type: string
-        description: Name of the component to get source code for
+    id: 'input/getsource'
+    description: >-
+      Request for the source code of a given component. Will be responded with
+      a `source` message.
+    allOf:
+      - $ref: '/shared/message'
+      - properties:
+          protocol:
+            enum: ['component']
+          command:
+            enum: ['getsource']
+          payload:
+            required: ['name']
+            additionalProperties: false
+            properties:
+              name:
+                type: string
+                description: 'Name of the component to for which to get source code'
+              secret:
+                type: string
+                description: access token to authorize user
 
   source:
-    description: Source code for a component. In cases where a runtime receives a `source` message, it should do whatever operations are needed for making that component available for graphs, including possible compilation.
-    properties:
-      name:
-        type: string
-        description: Name of the component
-      language:
-        type: string
-        description: The programming language used for the component code, for example `coffeescript`
-      library:
-        type: string
-        description: '(optional) Component library identifier'
-      code:
-        type: string
-        description: Component source code
-      tests:
-        type: string
-        description: '(optional) unit tests for the component'
+    id: 'input/source'
+    description: >-
+      Source code for a component. In cases where a runtime receives a `source`
+      message, it should do whatever operations are needed for making that
+      component available for graphs, including possible compilation.
+    allOf:
+      - $ref: '/shared/message'
+      - properties:
+          protocol:
+            enum: ['component']
+          command:
+            enum: ['source']
+          payload:
+            required: ['name', 'language', 'code']
+            additionalProperties: false
+            properties:
+              name:
+                type: string
+                description: 'Name of the component'
+              language:
+                type: string
+                description: >-
+                  The programming language used for the component code, for
+                  example `coffeescript`
+              library:
+                type: string
+                description: '(optional) Component library identifier'
+              code:
+                type: string
+                description: 'Component source code'
+              tests:
+                type: string
+                description: '(optional) unit tests for the component'
+              secret:
+                type: string
+                description: access token to authorize user
+

@@ -3,3 +3,9 @@ fbp-config.json
 node_modules
 npm-debug.log
 .grunt/
+schema/format.js
+schema/schemas.js
+schema/json/*json
+spec/protocol.md
+test/**/*.js
+src/WebSocket.js

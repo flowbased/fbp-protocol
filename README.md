@@ -62,6 +62,18 @@ Examples
 A Node.js package using grunt: https://github.com/chadrik/noflo-runtime-websocket/tree/fbp-protocol
 
 
+Contributing
+------------
+
+JSON schemas are built from YAML schemas in schema/yaml. Improvements and
+additions to the schemas should be added there. The JSON schemas use
+[json-schema](http://json-schema.org/) to validate protocol messages. To run tests,
+use grunt test, which will run unit tests for the schemas and fbp-test.
+To build the schemas after updating the YAML files, run grunt build, which will
+create the JSON schemas, put them together for easy usage in schema/schemas.js,
+and update the docs with the latest schema definitions.
+
+
 TODO
 ----
 - handle `fbp-test -h`

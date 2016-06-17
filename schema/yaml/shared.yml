@@ -1,0 +1,137 @@
+$schema: 'http://json-schema.org/draft-04/schema#'
+title: 'Shared'
+description: 'Shared schema fragments'
+
+message:
+  id: 'message'
+  description: 'protocol message'
+  additionalProperties: false
+  required: ['protocol', 'command', 'payload']
+  properties:
+    protocol:
+      type: string
+      description: 'type of protocol'
+    command:
+      type: string
+      description: 'command to be executed'
+    payload:
+      type: object
+      description: 'content of message'
+
+port:
+  id: 'port'
+  type: object
+  required: ['node', 'port']
+  additionalProperties: false
+  properties:
+    node:
+      type: string
+      description: 'node identifier'
+    port:
+      type: string
+      description: 'port name'
+    index:
+      type: ["string", "number"]
+      description: 'connection index (optional, for addressable ports)'
+
+port_definition:
+  id: 'port_definition'
+  type: array
+  items:
+    type: object
+    required: ['id', 'type']
+    additionalProperties: false
+    properties:
+      addressable:
+        type: boolean
+        description: 'boolean telling whether the port is an ArrayPort'
+      id:
+        type: string
+        description: 'port name'
+      type:
+        description: 'port datatype, for example boolean'
+        type: string
+      required:
+        description: >-
+          boolean telling whether the port needs to be
+          connected for the component to work
+        type: boolean
+      description:
+        type: string
+        description: 'textual description of the port'
+
+iip:
+  id: 'iip'
+  type: object
+  required: ['data']
+  additionalProperties: false
+  properties:
+    data:
+      description: 'IIP value in its actual data type'
+
+network_event:
+  id: 'network_event'
+  required: ['id', 'src', 'tgt', 'graph']
+  properties:
+    id:
+      type: 'string'
+      description: >-
+        textual edge identifier, usually in form of
+        a FBP language line
+    src:
+      description: 'source node for the edge'
+      $ref: '/shared/port'
+    tgt:
+      description: 'target node for the edge'
+      $ref: '/shared/port'
+    graph:
+      type: 'string'
+      description: 'graph the action targets'
+    subgraph:
+      type: 'string'
+      description: >-
+        (optional): subgraph identifier for the event.
+        An array of node IDs
+
+capabilities:
+  id: 'capabilities'
+  type: array
+  items:
+    type: string
+    enums:
+      - 'protocol:network'
+      - 'protocol:component'
+      - 'protocol:runtime'
+      - 'component:getsource'
+      - 'network:persist'
+      - 'protocol:graph'
+      - 'component:setsource'
+    _enumDescriptions: # Documentation
+      - name: 'protocol:network'
+        description: >-
+          the runtime is able to control and introspect its
+          running networks using the Network protocol
+      - name: 'protocol:component'
+        description: >-
+          the runtime is able to list and modify its components
+          using the Component protocol
+      - name: 'protocol:runtime'
+        description: >-
+          the runtime is able to expose the ports of its main
+          graph using the Runtime protocol and transmit packet information to/from them
+      - name: 'component:getsource'
+        description: >-
+          runtime is able to read and send component source code
+          back to client
+      - name: 'network:persist'
+        description: >-
+          runtime is able to *flash* a running graph setup into
+          itself, making it persistent across reboots
+      - name: 'protocol:graph'
+        description: >-
+          the runtime is able to modify its graphs using the
+          Graph protocol
+      - name: 'component:setsource'
+        description: >-
+          runtime is able to compile and run custom components
+          sent as source code strings
