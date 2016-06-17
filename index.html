@@ -281,9 +281,7 @@ These packets can be send from the client to the runtimes input ports, or from r
 
 <li><code>protocol:graph</code>: the runtime is able to modify its graphs using the Graph protocol</li>
 
-<li><code>component:setsource</code>: runtime is able to compile and run custom components sent as source code strings</li>
-
-<li><code>graph:getgraph</code>: runtime is able to serialize itself into graph messages and build a graph on the receiving end</li></ul>
+<li><code>component:setsource</code>: runtime is able to compile and run custom components sent as source code strings</li></ul>
 </li>
 
 <li><code>capabilities</code>: array of capability strings for things the runtime is able to do. 
@@ -303,9 +301,7 @@ If the runtime is currently running a graph and it is able to speak the full Run
 
 <li><code>protocol:graph</code>: the runtime is able to modify its graphs using the Graph protocol</li>
 
-<li><code>component:setsource</code>: runtime is able to compile and run custom components sent as source code strings</li>
-
-<li><code>graph:getgraph</code>: runtime is able to serialize itself into graph messages and build a graph on the receiving end</li></ul>
+<li><code>component:setsource</code>: runtime is able to compile and run custom components sent as source code strings</li></ul>
 </li>
 
 <li><code>graph</code>: (optional) ID of the currently configured main graph running on the runtime, if any</li>
@@ -322,24 +318,6 @@ If the runtime is currently running a graph and it is able to speak the full Run
 <h3 id="error-1"><code>error</code></h3>
 
 <p>Graph error</p>
-
-<h3 id="list"><code>list</code></h3>
-
-<p>Request a list of currently available graphs. Responses will be a set of <code>graph</code> messages.</p>
-
-<ul>
-<li><code>secret</code>: access token to authorize user</li>
-</ul>
-
-<h3 id="getgraph"><code>getgraph</code></h3>
-
-<p>Request graph nodes, edges, etc. Runtime should respond with graph:clear followed by graph:addnode, graph:addedge, etc. to build graph on receiver.</p>
-
-<ul>
-<li><code>id</code>: identifier for the graph</li>
-
-<li><code>secret</code>: access token to authorize user</li>
-</ul>
 
 <h3 id="clear"><code>clear</code></h3>
 
@@ -358,6 +336,8 @@ Graphs registered in this way should also be available for use as subgraphs in o
 <li><code>icon</code>: (optional) Icon to use for the graph when used as a component</li>
 
 <li><code>description</code>: (optional) Description to use for the graph when used as a component</li>
+
+<li><code>secret</code>: access token to authorize user</li>
 </ul>
 
 <h3 id="addnode"><code>addnode</code></h3>
@@ -739,7 +719,7 @@ Graphs registered in this way should also be available for use as subgraphs in o
 
 <p>Component error</p>
 
-<h3 id="list-1"><code>list</code></h3>
+<h3 id="list"><code>list</code></h3>
 
 <p>Request a list of currently available components. Will be responded with a set of <code>component</code> messages.</p>
 
