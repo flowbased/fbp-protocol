@@ -1,2 +1,3 @@
 fbp-config.json
 *.tgz
+.grunt/
