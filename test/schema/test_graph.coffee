@@ -9,15 +9,43 @@ describe 'Test graph protocol schema on event', ->
     tv4.addSchema '/shared/', sharedSchema
     tv4.addSchema '/graph/', graphSchema
 
+  describe 'receipt', ->
+    schema = '/graph/output/receipt'
+
+    it 'should have output schema', ->
+      chai.expect(tv4.getSchema schema).to.exist
+
+    it 'should validate event with required fields', ->
+      event =
+        protocol: 'graph'
+        command: 'receipt'
+        payload:
+          message_id: 'message1'
+          success: true
+
+      chai.expect(tv4.validate event, schema).to.be.true
+
+  describe 'clear', ->
+    schema = '/graph/input/clear'
+
+    it 'should have input schema', ->
+      chai.expect(tv4.getSchema schema).to.exist
+
+    it 'should validate event with required fields', ->
+      event =
+        protocol: 'graph'
+        command: 'clear'
+        payload:
+          id: 'graph1'
+          secret: 'abcdefg'
+
+      chai.expect(tv4.validate event, schema).to.be.true
+
   describe 'addnode', ->
     schema = '/graph/input/addnode'
 
     it 'should have input schema', ->
       chai.expect(tv4.getSchema schema).to.exist
-
-    it 'should have output shema', ->
-      chai.expect(tv4.getSchema(schema).properties).to.eql(
-        tv4.getSchema('/graph/output/addnode').properties)
 
     it 'should validate event with required fields', ->
       event =
@@ -70,10 +98,6 @@ describe 'Test graph protocol schema on event', ->
     it 'should have input schema', ->
       chai.expect(tv4.getSchema schema).to.exist
 
-    it 'should have output shema', ->
-      chai.expect(tv4.getSchema(schema).properties).to.eql(
-        tv4.getSchema('/graph/output/removenode').properties)
-
     it 'should validate event with required fields', ->
       event =
         protocol: 'graph'
@@ -89,10 +113,6 @@ describe 'Test graph protocol schema on event', ->
 
     it 'should have input schema', ->
       chai.expect(tv4.getSchema schema).to.exist
-
-    it 'should have output shema', ->
-      chai.expect(tv4.getSchema(schema).properties).to.eql(
-        tv4.getSchema('/graph/output/renamenode').properties)
 
     it 'should validate event with required fields', ->
       event =
@@ -110,10 +130,6 @@ describe 'Test graph protocol schema on event', ->
 
     it 'should have input schema', ->
       chai.expect(tv4.getSchema schema).to.exist
-
-    it 'should have output shema', ->
-      chai.expect(tv4.getSchema(schema).properties).to.eql(
-        tv4.getSchema('/graph/output/changenode').properties)
 
     it 'should validate event with required fields', ->
       event =
@@ -143,10 +159,6 @@ describe 'Test graph protocol schema on event', ->
 
     it 'should have input schema', ->
       chai.expect(tv4.getSchema schema).to.exist
-
-    it 'should have output schema', ->
-      chai.expect(tv4.getSchema(schema).properties).to.eql(
-        tv4.getSchema('/graph/output/addedge').properties)
 
     it 'should validate event with required fields', ->
       event =
@@ -182,10 +194,6 @@ describe 'Test graph protocol schema on event', ->
     it 'should have input schema', ->
       chai.expect(tv4.getSchema schema).to.exist
 
-    it 'should have output schema', ->
-      chai.expect(tv4.getSchema(schema).properties).to.eql(
-        tv4.getSchema('/graph/output/removeedge').properties)
-
     it 'should validate event with required fields', ->
       event =
         protocol: 'graph'
@@ -206,10 +214,6 @@ describe 'Test graph protocol schema on event', ->
 
     it 'should have input schema', ->
       chai.expect(tv4.getSchema schema).to.exist
-
-    it 'should have output schema', ->
-      chai.expect(tv4.getSchema(schema).properties).to.eql(
-        tv4.getSchema('/graph/output/changeedge').properties)
 
     it 'should validate event with required fields', ->
       event =
@@ -233,10 +237,6 @@ describe 'Test graph protocol schema on event', ->
 
     it 'should have input schema', ->
       chai.expect(tv4.getSchema schema).to.exist
-
-    it 'should have output shema', ->
-      chai.expect(tv4.getSchema(schema).properties).to.eql(
-        tv4.getSchema('/graph/output/addinitial').properties)
 
     it 'should validate event with required fields', ->
       event =
@@ -271,10 +271,6 @@ describe 'Test graph protocol schema on event', ->
     it 'should have input shema', ->
       chai.expect(tv4.getSchema schema).to.exist
 
-    it 'should have output shema', ->
-      chai.expect(tv4.getSchema(schema).properties).to.eql(
-        tv4.getSchema('/graph/output/removeinitial').properties)
-
     it 'should validate event with required fields', ->
       event =
         protocol: 'graph'
@@ -307,10 +303,6 @@ describe 'Test graph protocol schema on event', ->
     it 'should have input shema', ->
       chai.expect(tv4.getSchema schema).to.exist
 
-    it 'should have output schema', ->
-      chai.expect(tv4.getSchema(schema).properties).to.eql(
-        tv4.getSchema('/graph/output/addinport').properties)
-
     it 'should validate event with required fields', ->
       event =
         protocol: 'graph'
@@ -342,10 +334,6 @@ describe 'Test graph protocol schema on event', ->
     it 'should have input shema', ->
       chai.expect(tv4.getSchema schema).to.exist
 
-    it 'should have output schema', ->
-      chai.expect(tv4.getSchema(schema).properties).to.eql(
-        tv4.getSchema('/graph/output/removeinport').properties)
-
     it 'should validate event with required fields', ->
       event =
         protocol: 'graph'
@@ -374,10 +362,6 @@ describe 'Test graph protocol schema on event', ->
     it 'should have input shema', ->
       chai.expect(tv4.getSchema schema).to.exist
 
-    it 'should have output schema', ->
-      chai.expect(tv4.getSchema(schema).properties).to.eql(
-        tv4.getSchema('/graph/output/renameinport').properties)
-
     it 'should validate event with required fields', ->
       event =
         protocol: 'graph'
@@ -394,10 +378,6 @@ describe 'Test graph protocol schema on event', ->
 
     it 'should have input shema', ->
       chai.expect(tv4.getSchema schema).to.exist
-
-    it 'should have output schema', ->
-      chai.expect(tv4.getSchema(schema).properties).to.eql(
-        tv4.getSchema('/graph/output/addoutport').properties)
 
     it 'should validate event with required fields', ->
       event =
@@ -430,10 +410,6 @@ describe 'Test graph protocol schema on event', ->
     it 'should have input shema', ->
       chai.expect(tv4.getSchema schema).to.exist
 
-    it 'should have output schema', ->
-      chai.expect(tv4.getSchema(schema).properties).to.eql(
-        tv4.getSchema('/graph/output/removeoutport').properties)
-
     it 'should validate event with required fields', ->
       event =
         protocol: 'graph'
@@ -462,10 +438,6 @@ describe 'Test graph protocol schema on event', ->
     it 'should have input shema', ->
       chai.expect(tv4.getSchema schema).to.exist
 
-    it 'should have output schema', ->
-      chai.expect(tv4.getSchema(schema).properties).to.eql(
-        tv4.getSchema('/graph/output/renameoutport').properties)
-
     it 'should validate event with required fields', ->
       event =
         protocol: 'graph'
@@ -482,10 +454,6 @@ describe 'Test graph protocol schema on event', ->
 
     it 'should have input schema', ->
       chai.expect(tv4.getSchema schema).to.exist
-
-    it 'should have output shema', ->
-      chai.expect(tv4.getSchema(schema).properties).to.eql(
-        tv4.getSchema('/graph/output/addgroup').properties)
 
     it 'should validate event with required fields', ->
       event =
@@ -516,10 +484,6 @@ describe 'Test graph protocol schema on event', ->
     it 'should have input shema', ->
       chai.expect(tv4.getSchema schema).to.exist
 
-    it 'should have output schema', ->
-      chai.expect(tv4.getSchema(schema).properties).to.eql(
-        tv4.getSchema('/graph/output/removegroup').properties)
-
     it 'should validate event with required fields', ->
       event =
         protocol: 'graph'
@@ -535,10 +499,6 @@ describe 'Test graph protocol schema on event', ->
 
     it 'should have input shema', ->
       chai.expect(tv4.getSchema schema).to.exist
-
-    it 'should have output schema', ->
-      chai.expect(tv4.getSchema(schema).properties).to.eql(
-        tv4.getSchema('/graph/output/renamegroup').properties)
 
     it 'should validate event with required fields', ->
       event =
@@ -556,10 +516,6 @@ describe 'Test graph protocol schema on event', ->
 
     it 'should have input schema', ->
       chai.expect(tv4.getSchema schema).to.exist
-
-    it 'should have output shema', ->
-      chai.expect(tv4.getSchema(schema).properties).to.eql(
-        tv4.getSchema('/graph/output/changegroup').properties)
 
     it 'should validate event with required fields', ->
       event =

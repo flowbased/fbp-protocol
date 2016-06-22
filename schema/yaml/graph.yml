@@ -10,100 +10,33 @@ output:
     description: 'Graph error'
     $ref: '/shared/message'
 
-  addnode:
-    id: 'output/addnode'
-    description: 'Add node to a graph.'
-    $ref: '../input/addnode'
-
-  removenode:
-    id: 'output/removenode'
-    description: 'Remove a node from a graph.'
-    $ref: '../input/removenode'
-
-  renamenode:
-    id: 'output/renamenode'
-    description: 'Change the ID of a node in the graph'
-    $ref: '../input/renamenode'
-
-  changenode:
-    id: 'output/changenode'
-    description: 'Change the metadata associated to a node in the graph'
-    $ref: '../input/changenode'
-
-  addedge:
-    id: 'output/addedge'
-    description: 'Add an edge to the graph'
-    $ref: '../input/addedge'
-
-  removeedge:
-    id: 'output/removeedge'
-    description: 'Remove an edge from the graph'
-    $ref: '../input/removeedge'
-
-  changeedge:
-    id: 'output/changeedge'
-    description: 'Change an edge''s metadata'
-    $ref: '../input/changeedge'
-
-  addinitial:
-    id: 'output/addinitial'
-    description: 'Add an IIP to the graph'
-    $ref: '../input/addinitial'
-
-  removeinitial:
-    id: 'output/removeinitial'
-    description: 'Remove an IIP from the graph'
-    $ref: '../input/removeinitial'
-
-  addinport:
-    id: 'output/addinport'
-    description: 'Add an exported inport to the graph.'
-    $ref: '../input/addinport'
-
-  removeinport:
-    id: 'output/removeinport'
-    description: 'Remove an exported port from the graph'
-    $ref: '../input/removeinport'
-
-  renameinport:
-    id: 'output/renameinport'
-    description: 'Rename an exported port in the graph'
-    $ref: '../input/renameinport'
-
-  addoutport:
-    id: 'output/addoutport'
-    description: 'Add an exported outport to the graph.'
-    $ref: '../input/addoutport'
-
-  removeoutport:
-    id: 'output/removeoutport'
-    description: 'Remove an exported port from the graph'
-    $ref: '../input/removeoutport'
-
-  renameoutport:
-    id: 'output/renameoutport'
-    description: 'Rename an exported port in the graph'
-    $ref: '../input/renameoutport'
-
-  addgroup:
-    id: 'output/addgroup'
-    description: 'Add a group to the graph'
-    $ref: '../input/addgroup'
-
-  removegroup:
-    id: 'output/removegroup'
-    description: 'Remove a group from the graph'
-    $ref: '../input/removegroup'
-
-  renamegroup:
-    id: 'output/renamegroup'
-    description: 'Rename a group in the graph.'
-    $ref: '../input/renamegroup'
-
-  changegroup:
-    id: 'output/changegroup'
-    description: 'Change a group''s metadata'
-    $ref: '../input/changegroup'
+  receipt:
+    id: 'output/receipt'
+    description: >-
+      Acknowledge that message reached receiver and whether or not receiver
+      responded successfully. Messages that create or change graphs should
+      be responded to with receipt messages.
+    allOf:
+      - $ref: '/shared/message'
+      - properties:
+          protocol:
+            enum: ['graph']
+          command:
+            enum: ['receipt']
+          payload:
+            required: ['message_id', 'success']
+            additionalProperties: false
+            properties:
+              message_id:
+                type: string
+                description: 'Id of input message'
+              success:
+                type: boolean
+                description: 'Whether or not message was successfully processed'
+              error:
+                type: string
+                description: >-
+                  Error description if original message did not succeed
 
 input:
   error:
@@ -118,7 +51,7 @@ input:
           protocol:
             enum: ['graph']
           command:
-            enum: ['addnode']
+            enum: ['clear']
           payload:
             required: ['id']
             additionalProperties: false
