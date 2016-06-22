@@ -115,6 +115,7 @@ capabilities:
       - 'network:persist'
       - 'protocol:graph'
       - 'component:setsource'
+      - 'protocol:trace'
     _enumDescriptions: # Documentation
       - name: 'protocol:network'
         description: >-
@@ -144,3 +145,7 @@ capabilities:
         description: >-
           runtime is able to compile and run custom components
           sent as source code strings
+      - name: 'protocol:trace'
+        description: >-
+          runtime is able to record and send over flowtraces,
+          used for retroactive debugging.
