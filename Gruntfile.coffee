@@ -49,6 +49,8 @@ module.exports = ->
     mochaTest:
       test:
         src: ['test/schema/*.js']
+      options:
+        greph: process.env.TESTS
 
     # FBP Network Protocol tests
     exec:
