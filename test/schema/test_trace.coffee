@@ -3,20 +3,58 @@ schemas = require '../../schema/schemas.js'
 tv4 = require 'tv4'
 
 validExamples =
-  'typical start':
+  'start recording':
     protocol: 'trace'
     command: 'start'
     payload:
       graph: 'mygraph'
       secret: 'verygood'
+  'dump flowtrace.json':
+    protocol: 'trace'
+    command: 'dump'
+    payload:
+      graph: 'mygraph'
+      secret: 'verygood'
+      type: 'flowtrace.json'
+  'clear buffer':
+    protocol: 'trace'
+    command: 'clear'
+    payload:
+      graph: 'mygraph'
+      secret: 'verygood'
+  'stop recording':
+    protocol: 'trace'
+    command: 'stop'
+    payload:
+      graph: 'mygraph'
+      secret: 'verygood'
 
 invalidExamples =
-  'invalid graph id':
+  'start with invalid graph id':
     protocol: 'trace'
     command: 'start'
     payload:
       graph: 112.0
       secret: 'nnice'
+  'dump with invalid type':
+    protocol: 'trace'
+    command: 'dump'
+    payload:
+      graph: 'mygraph'
+      secret: 'verygood'
+      type: 'not-a-valid-trace-type'
+  'stop with missing secret':
+    protocol: 'trace'
+    command: 'start'
+    payload:
+      graph: 112.0
+      secret: undefined
+  'clear without graph':
+    protocol: 'trace'
+    command: 'start'
+    payload:
+      graph: undefined
+      secret: 'verygood'
 
 testValid = (name) -> 
   describe name, ->
