@@ -20,6 +20,7 @@ output:
     $ref: '../input/clear'
 
   dump:
+    id: 'output/dump'
     allOf:
       - $ref: '/shared/message'
       - properties:
@@ -31,9 +32,7 @@ output:
             required: ['graph', 'type', 'flowtrace']
             additionalProperties: false
             properties:
-              graph:
-                description: Graph identifier for network to trace
-                type: string
+              graph: { $ref: '/shared/graph_id' }
               type:
                 description: String describing type of trace.
                 type: string
@@ -57,12 +56,8 @@ input:
             required: ['secret', 'graph']
             additionalProperties: false
             properties:
-              secret:
-                description: access token to authorize the user
-                type: string
-              graph:
-                description: Graph identifier for network to trace
-                type: string
+              secret: { $ref: '/shared/secret' }
+              graph: { $ref: '/shared/graph_id' }
               buffersize:
                 description: '(optional) Size of tracing buffer to keep. In bytes'
                 type: integer
@@ -81,8 +76,8 @@ input:
             required: ['secret', 'graph']
             additionalProperties: false
             properties:
-              secret: access token to authorize the user
-              graph: Graph identifier for network to trace
+              secret: { $ref: '/shared/secret' }
+              graph: { $ref: '/shared/graph_id' }
 
   dump:
     description: 'Trigger dumping of the current tracing buffer, to return it back to server.'
@@ -98,8 +93,8 @@ input:
             required: ['secret', 'graph', 'type']
             additionalProperties: false
             properties:
-              secret: access token to authorize the user
-              graph: Graph identifier for network to trace
+              secret: { $ref: '/shared/secret' }
+              graph: { $ref: '/shared/graph_id' }
               type:
                 description: Type/format of trace to output
                 type: string
@@ -117,6 +112,7 @@ input:
             enum: ['clear']
           payload:
             required: ['secret', 'graph']
+            additionalProperties: false
             properties:
-              secret: access token to authorize the user
-              graph: Graph identifier for network to trace
+              secret: { $ref: '/shared/secret' }
+              graph: { $ref: '/shared/graph_id' }
