@@ -1,0 +1,122 @@
+$schema: 'http://json-schema.org/draft-04/schema#'
+title: 'Tracing protocol'
+description: >-
+  This protocol is utilized for triggering and transmitting
+  [Flowtrace](https://github.com/flowbased/flowtrace)s
+
+output:
+
+  start:
+    id: 'output/start'
+    description: 'Tracing was started'
+    $ref: '../input/start'
+  stop:
+    id: 'output/stop'
+    description: 'Tracing was stopped'
+    $ref: '../input/stop'
+  clear:
+    id: 'output/clear'
+    description: 'Tracing buffer was cleared'
+    $ref: '../input/clear'
+
+  dump:
+    allOf:
+      - $ref: '/shared/message'
+      - properties:
+          protocol:
+            enum: ['trace']
+          command:
+            enum: ['dump']
+          payload:
+            required: ['graph', 'type', 'flowtrace']
+            additionalProperties: false
+            properties:
+              graph:
+                description: Graph identifier for network to trace
+                type: string
+              type:
+                description: String describing type of trace.
+                type: string
+                enum: [flowtrace.json]
+              flowtrace:
+                description: A Flowtrace file of `type`
+                type: string
+
+input:
+  start:
+    id: 'input/start'
+    description: 'Enable/start tracing of a network.'
+    allOf:
+      - $ref: '/shared/message'
+      - properties:
+          protocol:
+            enum: ['trace']
+          command:
+            enum: ['start']
+          payload:
+            required: ['secret', 'graph']
+            additionalProperties: false
+            properties:
+              secret:
+                description: access token to authorize the user
+                type: string
+              graph:
+                description: Graph identifier for network to trace
+                type: string
+              buffersize:
+                description: '(optional) Size of tracing buffer to keep. In bytes'
+                type: integer
+
+  stop:
+    description: 'Stop/disable tracing of a network.'
+    id: 'input/stop'
+    allOf:
+      - $ref: '/shared/message'
+      - properties:
+          protocol:
+            enum: ['trace']
+          command:
+            enum: ['stop']
+          payload:
+            required: ['secret', 'graph']
+            additionalProperties: false
+            properties:
+              secret: access token to authorize the user
+              graph: Graph identifier for network to trace
+
+  dump:
+    description: 'Trigger dumping of the current tracing buffer, to return it back to server.'
+    id: 'input/dump'
+    allOf:
+      - $ref: '/shared/message'
+      - properties:
+          protocol:
+            enum: ['trace']
+          command:
+            enum: ['dump']
+          payload:
+            required: ['secret', 'graph', 'type']
+            additionalProperties: false
+            properties:
+              secret: access token to authorize the user
+              graph: Graph identifier for network to trace
+              type:
+                description: Type/format of trace to output
+                type: string
+                enum: ['flowtrace.json']
+
+  clear:
+    id: 'input/clear'
+    description: Clear current tracing buffer.
+    allOf:
+      - $ref: '/shared/message'
+      - properties:
+          protocol:
+            enum: ['trace']
+          command:
+            enum: ['clear']
+          payload:
+            required: ['secret', 'graph']
+            properties:
+              secret: access token to authorize the user
+              graph: Graph identifier for network to trace
