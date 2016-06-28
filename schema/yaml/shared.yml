@@ -80,7 +80,7 @@ iip:
 
 network_event:
   id: 'network_event'
-  required: ['id', 'src', 'tgt', 'graph']
+  required: ['id', 'tgt', 'graph']
   properties:
     id:
       type: 'string'

@@ -81,7 +81,7 @@ output:
           command:
             enum: ['status']
           payload:
-            required: ['running', 'graph', 'uptime']
+            required: ['running', 'graph']
             additionalProperties: false
             properties:
               graph:
