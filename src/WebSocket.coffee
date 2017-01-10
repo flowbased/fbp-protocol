@@ -338,44 +338,9 @@ exports.testRuntime = (runtimeType, startServer, stopServer, host='localhost', p
         it 'should remove the node and its associated edges', (done) ->
           expects = [
             protocol: 'graph'
-            command: 'changeedge'
-            payload:
-              src:
-                node: 'Repeat1'
-                port: 'out'
-              tgt:
-                node: 'Drop1'
-                port: 'in'
-              metadata:
-                route: 5
-              graph: 'foo'
-          ,
-            protocol: 'graph'
-            command: 'removeedge'
-            payload:
-              src:
-                node: 'Repeat1'
-                port: 'out'
-              tgt:
-                node: 'Drop1'
-                port: 'in'
-              metadata:
-                route: 5
-              graph: 'foo'
-          ,
-            protocol: 'graph'
-            command: 'changenode'
-            payload:
-              id: 'Drop1'
-              metadata: {}
-              graph: 'foo'
-          ,
-            protocol: 'graph'
             command: 'removenode'
             payload:
               id: 'Drop1'
-              component: "#{collection}/Drop"
-              metadata: {}
               graph: 'foo'
           ]
           connection.once 'message', (message) ->
@@ -480,15 +445,15 @@ exports.testRuntime = (runtimeType, startServer, stopServer, host='localhost', p
             protocol: 'graph',
             command: 'addinport',
             payload:
-              graph: 'foo'
               node: 'RepeatRenamed'
+              graph: 'foo'
               public: 'in'
               port: 'in'
           ]
           connection.once 'message', (message) ->
             data = JSON.parse message.utf8Data
             chai.expect(tv4.validate data, '/graph/output/addinport').to.be.true
-            chai.expect(data.payload).to.equal expects[0].payload
+            chai.expect(data.payload).to.eql expects[0].payload
 
             done()
 
@@ -525,7 +490,7 @@ exports.testRuntime = (runtimeType, startServer, stopServer, host='localhost', p
           connection.once 'message', (message) ->
             data = JSON.parse message.utf8Data
             chai.expect(tv4.validate data, '/graph/output/addoutport').to.be.true
-            chai.expect(data.payload).to.equal expects[0].payload
+            chai.expect(data.payload).to.eql expects[0].payload
 
             done()
 
@@ -573,7 +538,7 @@ exports.testRuntime = (runtimeType, startServer, stopServer, host='localhost', p
           connection.once 'message', (message) ->
             data = JSON.parse message.utf8Data
             chai.expect(tv4.validate data, '/graph/output/removeoutport').to.be.true
-            chai.expect(data.payload).to.equal expects[0].payload
+            chai.expect(data.payload).to.eql expects[0].payload
 
             done()
 
@@ -627,25 +592,9 @@ exports.testRuntime = (runtimeType, startServer, stopServer, host='localhost', p
             node: 'Hello'
             port: 'in'
           graph: 'bar'
-      # getstatus does not return a status when the network has not been started: seems like a bug
-      # describe "on requesting a graph's status", ->
-      #   it 'should provide the status', (done) ->
-      #     expects = [
-      #       protocol: 'network'
-      #       command: 'status'
-      #       payload:
-      #         graph: 'bar'
-      #         running: false
-      #         started: false
-      #     ]
-      #     receive expects, done
-      #     send 'network', 'getstatus',
-      #       graph: 'bar'
+
       describe 'on starting the network', ->
         it 'should process the nodes and stop when it completes', (done) ->
-          # send 'network', 'debug',
-          #   graph: 'bar'
-          #   enable: true
           expects = [
             protocol: 'network'
             command: 'started'
@@ -657,14 +606,14 @@ exports.testRuntime = (runtimeType, startServer, stopServer, host='localhost', p
           ,
             protocol: 'network'
             command: 'connect'
-            payload: 
+            payload:
                id: 'DATA -> IN Hello()'
                graph: 'bar'
                tgt: { node: 'Hello', port: 'in' }
           ,
             protocol: 'network'
             command: 'data'
-            payload: 
+            payload:
                id: 'DATA -> IN Hello()'
                graph: 'bar'
                tgt: { node: 'Hello', port: 'in' }
@@ -680,7 +629,7 @@ exports.testRuntime = (runtimeType, startServer, stopServer, host='localhost', p
           ,
             protocol: 'network'
             command: 'data'
-            payload: 
+            payload:
                id: 'Hello() OUT -> IN World()'
                graph: 'bar'
                src: { node: 'Hello', port: 'out' }
@@ -703,12 +652,21 @@ exports.testRuntime = (runtimeType, startServer, stopServer, host='localhost', p
                tgt: { node: 'World', port: 'in' }
           ]
 
-          connection.once 'message', (message) ->
-            data = JSON.parse message.utf8Data
-            chai.expect(tv4.validate data, '/network/output/started').to.be.true
+          addListener = ->
+            connection.once 'message', (message) ->
+              data = JSON.parse message.utf8Data
+              chai.expect(tv4.validate data, "/network/output/#{data.command}").to.be.true
+              for expected, i in expects
+                if data.command is expected.command
+                  expects.splice i, 1
+                  break
 
-            done()
+              if expects.length is 0
+                done()
+              else
+                addListener()
 
+          addListener()
           send 'network', 'start',
             graph: 'bar'
 
@@ -732,24 +690,16 @@ exports.testRuntime = (runtimeType, startServer, stopServer, host='localhost', p
             graph: 'bar'
       describe 'on stopping the network', ->
         it 'should be stopped', (done) ->
-          expects = [
-            protocol: 'network'
-            command: 'stopped'
-            payload:
-              graph: 'bar'
-              started: false
-              running: false
-              time: String
-              uptime: Number
-          ]
           connection.once 'message', (message) ->
             data = JSON.parse message.utf8Data
             chai.expect(tv4.validate data, '/network/output/stopped').to.be.true
+            chai.expect(data.payload.running).to.be.false
 
             done()
 
           send 'network', 'stop',
             graph: 'bar'
+
         it "should provide a 'stopped' status", (done) ->
           expects = [
             protocol: 'network'
@@ -761,7 +711,7 @@ exports.testRuntime = (runtimeType, startServer, stopServer, host='localhost', p
           ]
           connection.once 'message', (message) ->
             data = JSON.parse message.utf8Data
-            chai.expect(tv4.validate data, '/network/output/stopped').to.be.true
+            chai.expect(tv4.validate data, '/network/output/status').to.be.true
             chai.expect(data.payload.started).to.be.false
             chai.expect(data.payload.running).to.be.false
 
