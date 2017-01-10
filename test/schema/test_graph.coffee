@@ -293,8 +293,8 @@ describe 'Test graph protocol schema on event', ->
         command: 'removeinitial'
         payload:
           graph: 'mygraph'
-          src:
-            data: 5
+          metadata:
+            route: 5
           tgt:
             node: 'node2'
             port: 'IN'
