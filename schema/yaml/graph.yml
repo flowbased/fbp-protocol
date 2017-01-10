@@ -383,6 +383,9 @@ input:
             required: ['tgt', 'graph']
             additionalProperties: false
             properties:
+              src:
+                description: 'source data for the edge'
+                $ref: '/shared/iip'
               tgt:
                 $ref: '/shared/port'
                 description: 'target node for the edge'
