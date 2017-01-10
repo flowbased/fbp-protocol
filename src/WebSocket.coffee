@@ -12,6 +12,13 @@ check = (done, f) ->
   catch e
     done e
 
+validateSchema = (payload, schema) ->
+  res = tv4.validateMultiple payload, schema
+  chai.expect(res.errors).to.eql []
+  chai.expect(res.missing).to.eql []
+  chai.expect(res.valid).to.equal true
+  return res.valid
+
 exports.testRuntime = (runtimeType, startServer, stopServer, host='localhost', port=8080, collection='core', version='0.5') ->
   if version.length is 3
     semanticVersion = "#{version}.0"
@@ -89,7 +96,7 @@ exports.testRuntime = (runtimeType, startServer, stopServer, host='localhost', p
         it 'should provide it back', (done) ->
           connection.once 'message', (message) ->
             data = message.utf8Data
-            chai.expect(tv4.validate data, '/runtime/output/runtime').to.be.true
+            validateSchema event, 'runtime/output/runtime'
             done()
 
           send 'runtime', 'getruntime', {}
@@ -126,18 +133,18 @@ exports.testRuntime = (runtimeType, startServer, stopServer, host='localhost', p
           #receive expects, done
           connection.once 'message', (message) ->
             data = JSON.parse message.utf8Data
-            chai.expect(tv4.validate data, '/graph/output/clear').to.be.true
+            validateSchema data, '/graph/output/clear'
 
             connection.once 'message', (message) ->
               data = JSON.parse message.utf8Data
 
-              chai.expect(tv4.validate data, '/graph/output/addnode').to.be.true
+              validateSchema data, '/graph/output/addnode'
               chai.expect(data.payload.id).to.equal expects[1].payload.id
 
               connection.once 'message', (message) ->
                 data = JSON.parse message.utf8Data
 
-                chai.expect(tv4.validate data, '/graph/output/addnode').to.be.true
+                validateSchema data, '/graph/output/addnode'
                 chai.expect(data.payload.id).to.equal expects[2].payload.id
 
                 done()
@@ -170,7 +177,7 @@ exports.testRuntime = (runtimeType, startServer, stopServer, host='localhost', p
           connection.once 'message', (message) ->
             data = JSON.parse message.utf8Data
 
-            chai.expect(tv4.validate data, '/graph/output/addedge').to.be.true
+            validateSchema data, '/graph/output/addedge'
             chai.expect(data.payload.src).to.eql expects[0].payload.src
             chai.expect(data.payload.tgt).to.eql expects[0].payload.tgt
 
@@ -231,7 +238,7 @@ exports.testRuntime = (runtimeType, startServer, stopServer, host='localhost', p
             ]
             connection.once 'message', (message) ->
               data = JSON.parse message.utf8Data
-              chai.expect(tv4.validate data, '/graph/output/changenode').to.be.true
+              validateSchema data, '/graph/output/changenode'
               chai.expect(data.payload.metadata).to.eql expects[0].payload.metadata
 
               done()
@@ -252,7 +259,7 @@ exports.testRuntime = (runtimeType, startServer, stopServer, host='localhost', p
             ]
             connection.once 'message', (message) ->
               data = JSON.parse message.utf8Data
-              chai.expect(tv4.validate data, '/graph/output/changenode').to.be.true
+              validateSchema data, '/graph/output/changenode'
               chai.expect(data.payload.metadata).to.eql expects[0].payload.metadata
 
               done()
@@ -277,7 +284,7 @@ exports.testRuntime = (runtimeType, startServer, stopServer, host='localhost', p
             ]
             connection.once 'message', (message) ->
               data = JSON.parse message.utf8Data
-              chai.expect(tv4.validate data, '/graph/output/changenode').to.be.true
+              validateSchema data, '/graph/output/changenode'
               chai.expect(data.payload.metadata).to.eql expects[0].payload.metadata
 
               done()
@@ -299,7 +306,7 @@ exports.testRuntime = (runtimeType, startServer, stopServer, host='localhost', p
             ]
             connection.once 'message', (message) ->
               data = JSON.parse message.utf8Data
-              chai.expect(tv4.validate data, '/graph/output/changenode').to.be.true
+              validateSchema data, '/graph/output/changenode'
               chai.expect(data.payload.metadata).to.eql expects[0].payload.metadata
 
               done()
@@ -327,7 +334,7 @@ exports.testRuntime = (runtimeType, startServer, stopServer, host='localhost', p
           ]
           connection.once 'message', (message) ->
             data = JSON.parse message.utf8Data
-            chai.expect(tv4.validate data, '/graph/output/addinitial').to.be.true
+            validateSchema data, '/graph/output/addinitial'
             chai.expect(data.payload).to.eql expects[0].payload
 
             done()
@@ -345,7 +352,7 @@ exports.testRuntime = (runtimeType, startServer, stopServer, host='localhost', p
           ]
           connection.once 'message', (message) ->
             data = JSON.parse message.utf8Data
-            chai.expect(tv4.validate data, '/graph/output/removenode').to.be.true
+            validateSchema data, '/graph/output/removenode'
             chai.expect(data.payload).to.eql expects[0].payload
 
             done()
@@ -370,7 +377,7 @@ exports.testRuntime = (runtimeType, startServer, stopServer, host='localhost', p
           ]
           connection.once 'message', (message) ->
             data = JSON.parse message.utf8Data
-            chai.expect(tv4.validate data, '/graph/output/removeinitial').to.be.true
+            validateSchema data, '/graph/output/removeinitial'
             chai.expect(data.payload.src).to.eql expects[0].payload.src
 
             done()
@@ -393,7 +400,7 @@ exports.testRuntime = (runtimeType, startServer, stopServer, host='localhost', p
           ]
           connection.once 'message', (message) ->
             data = JSON.parse message.utf8Data
-            chai.expect(tv4.validate data, '/graph/output/renamenode').to.be.true
+            validateSchema data, '/graph/output/renamenode'
             chai.expect(data.payload).to.eql expects[0].payload
 
             done()
@@ -411,7 +418,7 @@ exports.testRuntime = (runtimeType, startServer, stopServer, host='localhost', p
           ]
           connection.once 'message', (message) ->
             data = JSON.parse message.utf8Data
-            chai.expect(tv4.validate data, '/graph/output/error').to.be.true
+            validateSchema data, '/graph/output/error'
 
             done()
 
@@ -431,7 +438,7 @@ exports.testRuntime = (runtimeType, startServer, stopServer, host='localhost', p
           ]
           connection.once 'message', (message) ->
             data = JSON.parse message.utf8Data
-            chai.expect(tv4.validate data, '/graph/output/error').to.be.true
+            validateSchema data, '/graph/output/error'
 
             done()
 
@@ -452,7 +459,7 @@ exports.testRuntime = (runtimeType, startServer, stopServer, host='localhost', p
           ]
           connection.once 'message', (message) ->
             data = JSON.parse message.utf8Data
-            chai.expect(tv4.validate data, '/graph/output/addinport').to.be.true
+            validateSchema data, '/graph/output/addinport'
             chai.expect(data.payload).to.eql expects[0].payload
 
             done()
@@ -489,7 +496,7 @@ exports.testRuntime = (runtimeType, startServer, stopServer, host='localhost', p
           ]
           connection.once 'message', (message) ->
             data = JSON.parse message.utf8Data
-            chai.expect(tv4.validate data, '/graph/output/addoutport').to.be.true
+            validateSchema data, '/graph/output/addoutport'
             chai.expect(data.payload).to.eql expects[0].payload
 
             done()
@@ -537,7 +544,7 @@ exports.testRuntime = (runtimeType, startServer, stopServer, host='localhost', p
           ]
           connection.once 'message', (message) ->
             data = JSON.parse message.utf8Data
-            chai.expect(tv4.validate data, '/graph/output/removeoutport').to.be.true
+            validateSchema data, '/graph/output/removeoutport'
             chai.expect(data.payload).to.eql expects[0].payload
 
             done()
@@ -655,7 +662,7 @@ exports.testRuntime = (runtimeType, startServer, stopServer, host='localhost', p
           addListener = ->
             connection.once 'message', (message) ->
               data = JSON.parse message.utf8Data
-              chai.expect(tv4.validate data, "/network/output/#{data.command}").to.be.true
+              validateSchema data, "/network/output/#{data.command}"
               for expected, i in expects
                 if data.command is expected.command
                   expects.splice i, 1
@@ -681,7 +688,7 @@ exports.testRuntime = (runtimeType, startServer, stopServer, host='localhost', p
           ]
           connection.once 'message', (message) ->
             data = JSON.parse message.utf8Data
-            chai.expect(tv4.validate data, '/network/output/status').to.be.true
+            validateSchema data, '/network/output/status'
             chai.expect(data.payload.started).to.be.true
 
             done()
@@ -692,7 +699,7 @@ exports.testRuntime = (runtimeType, startServer, stopServer, host='localhost', p
         it 'should be stopped', (done) ->
           connection.once 'message', (message) ->
             data = JSON.parse message.utf8Data
-            chai.expect(tv4.validate data, '/network/output/stopped').to.be.true
+            validateSchema data, '/network/output/stopped'
             chai.expect(data.payload.running).to.be.false
 
             done()
@@ -711,7 +718,7 @@ exports.testRuntime = (runtimeType, startServer, stopServer, host='localhost', p
           ]
           connection.once 'message', (message) ->
             data = JSON.parse message.utf8Data
-            chai.expect(tv4.validate data, '/network/output/status').to.be.true
+            validateSchema data, '/network/output/status'
             chai.expect(data.payload.started).to.be.false
             chai.expect(data.payload.running).to.be.false
 
@@ -740,7 +747,7 @@ exports.testRuntime = (runtimeType, startServer, stopServer, host='localhost', p
         it 'should receive some known components', (done) ->
           listener = (message) ->
             data = JSON.parse message.utf8Data
-            chai.expect(tv4.validate data, '/component/output/list').to.be.true
+            validateSchema data, '/component/output/list'
 
             if data.payload.name is "#{collection}/Repeat"
               done()
