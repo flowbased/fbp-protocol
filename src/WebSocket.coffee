@@ -96,7 +96,7 @@ exports.testRuntime = (runtimeType, startServer, stopServer, host='localhost', p
         it 'should provide it back', (done) ->
           connection.once 'message', (message) ->
             data = message.utf8Data
-            validateSchema event, 'runtime/output/runtime'
+            validateSchema data, 'runtime/output/runtime'
             done()
 
           send 'runtime', 'getruntime', {}
