@@ -11,9 +11,9 @@ env:
     secure: hylkH4bQkZDzSK+i39lMzrii99GsKJCkBHw1fu5HzGd+PdxCLOoWJeSlYFVyGpW4dBnzyRtX0S2iNO+71tU4KYEeSdi/wI/0Hb5r5nPZpyAyqcvQcqKPg28Zo0aChS4yDonXm8GquyarGrbTSxUgYTyQ8vd/quQzl04pgIRXLww=
 deploy:
   provider: npm
-  email: jononor@gmail.com
+  email: henri.bergius@iki.fi
   api_key:
-    secure: Kz8NZmAYZsSteh7TIzRpYLRn5QMaWC3f5j3KR0kwa2QM5feUlRMyzm5FHz+yOQBP4HzdWrJYvpJH1Ar+0M2dIdQ6jKlJjFaJb0JxRuB+P9vqn/9s8nPtBEfqZ8cOAG/zqq8s2ig/4F0NgWu0SKxJW4lgDdqsC97OswmEZ1C9QN0=
+    secure: kWKXkgv9GjyoYkerxpcUk3pJew7V33iPdToZhxtfbUeLwDMduL9ULZYOh1WHb4YqkHWuMCEMpQxG5fAybuPXwHMwDYd0E/CDtTdHlbB9nYWhKDbRSjSy6Mcw9EdTNGngX+KpmeSOSMtODhYef1j6kMDNn/LPqSJBLjL/+vcxdpg=
   on:
     tags: true
     repo: flowbased/fbp-protocol
