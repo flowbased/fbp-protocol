@@ -23,24 +23,28 @@ describe 'Test network protocol schema on events', ->
           protocol: 'network'
           command: 'stopped'
           payload:
-            time: '2016-05-29 13:26:01Z-1:00'
+            time: '2016-05-29T13:26:01.000Z'
             uptime: 1000
             graph: 'mygraph'
 
-        res = tv4.validate event, schema
-        chai.expect(res).to.be.true
+        res = tv4.validateMultiple event, schema
+        chai.expect(res.errors).to.eql []
+        chai.expect(res.missing).to.eql []
+        chai.expect(res.valid).to.equal true
 
       it 'should invalidate event with invalid date', ->
         event =
           protocol: 'network'
           command: 'stopped'
           payload:
-            time: '5:00PM'
+            time: '5a.m.'
             uptime: 1000
             graph: 'mygraph'
 
-        res = tv4.validate event, schema
-        chai.expect(res).to.be.false
+        res = tv4.validateMultiple event, schema
+        chai.expect(res.errors).to.not.equal []
+        chai.expect(res.missing).to.eql []
+        chai.expect(res.valid).to.equal false
 
       it 'should invalidate event with extra fields', ->
         # Tests that /shared/message $ref is added properly
@@ -49,12 +53,14 @@ describe 'Test network protocol schema on events', ->
           protocol: 'network'
           command: 'stopped'
           payload:
-            time: '5:00PM'
+            time: '2016-05-29T13:26:01.000Z'
             uptime: 1000
             graph: 'mygraph'
 
-        res = tv4.validate event, schema
-        chai.expect(res).to.be.false
+        res = tv4.validateMultiple event, schema
+        chai.expect(res.errors).to.not.equal []
+        chai.expect(res.missing).to.eql []
+        chai.expect(res.valid).to.equal false
 
     describe 'started', ->
       schema = '/network/output/started'
@@ -67,11 +73,13 @@ describe 'Test network protocol schema on events', ->
           protocol: 'network'
           command: 'started'
           payload:
-            time: '2016-05-29T13:26:01Z+1:00'
+            time: '2016-05-29T13:26:01.000Z'
             graph: 'mygraph'
 
-        res = tv4.validate event, schema
-        chai.expect(res).to.be.true
+        res = tv4.validateMultiple event, schema
+        chai.expect(res.errors).to.eql []
+        chai.expect(res.missing).to.eql []
+        chai.expect(res.valid).to.equal true
 
     describe 'status', ->
       schema = '/network/output/status'
@@ -88,8 +96,10 @@ describe 'Test network protocol schema on events', ->
             uptime: 1000
             graph: 'mygraph'
 
-        res = tv4.validate event, schema
-        chai.expect(res).to.be.true
+        res = tv4.validateMultiple event, schema
+        chai.expect(res.errors).to.eql []
+        chai.expect(res.missing).to.eql []
+        chai.expect(res.valid).to.equal true
 
     describe 'output', ->
       schema = '/network/output/output'
@@ -105,8 +115,10 @@ describe 'Test network protocol schema on events', ->
             message: 'hello'
             type: 'message'
 
-        res = tv4.validate event, schema
-        chai.expect(res).to.be.true
+        res = tv4.validateMultiple event, schema
+        chai.expect(res.errors).to.eql []
+        chai.expect(res.missing).to.eql []
+        chai.expect(res.valid).to.equal true
 
       it 'should invalidate event with invalid type', ->
         event =
@@ -116,8 +128,10 @@ describe 'Test network protocol schema on events', ->
             message: 'hello'
             type: 'hello'
 
-        res = tv4.validate event, schema
-        chai.expect(res).to.be.false
+        res = tv4.validateMultiple event, schema
+        chai.expect(res.errors).to.not.eql []
+        chai.expect(res.missing).to.eql []
+        chai.expect(res.valid).to.equal false
 
     describe 'error', ->
       schema = '/network/output/error'
@@ -132,8 +146,10 @@ describe 'Test network protocol schema on events', ->
           payload:
             message: 'oops'
 
-        res = tv4.validate event, schema
-        chai.expect(res).to.be.true
+        res = tv4.validateMultiple event, schema
+        chai.expect(res.errors).to.eql []
+        chai.expect(res.missing).to.eql []
+        chai.expect(res.valid).to.equal true
 
     describe 'processerror', ->
       schema = '/network/output/processerror'
@@ -150,8 +166,10 @@ describe 'Test network protocol schema on events', ->
             error: 'BigError'
             graph: 'mygraph'
 
-        res = tv4.validate event, schema
-        chai.expect(res).to.be.true
+        res = tv4.validateMultiple event, schema
+        chai.expect(res.errors).to.eql []
+        chai.expect(res.missing).to.eql []
+        chai.expect(res.valid).to.equal true
 
     describe 'icon', ->
       schema = '/network/output/icon'
@@ -168,8 +186,10 @@ describe 'Test network protocol schema on events', ->
             icon: 'amazingicon'
             graph: 'mygraph'
 
-        res = tv4.validate event, schema
-        chai.expect(res).to.be.true
+        res = tv4.validateMultiple event, schema
+        chai.expect(res.errors).to.eql []
+        chai.expect(res.missing).to.eql []
+        chai.expect(res.valid).to.equal true
 
     describe 'connect', ->
       schema = '/network/output/connect'
@@ -191,8 +211,10 @@ describe 'Test network protocol schema on events', ->
               port: 'in'
             graph: 'mygraph'
 
-        res = tv4.validate event, schema
-        chai.expect(res).to.be.true
+        res = tv4.validateMultiple event, schema
+        chai.expect(res.errors).to.eql []
+        chai.expect(res.missing).to.eql []
+        chai.expect(res.valid).to.equal true
 
     describe 'begingroup', ->
       schema = '/network/output/begingroup'
@@ -215,8 +237,10 @@ describe 'Test network protocol schema on events', ->
             group: 'group1'
             graph: 'mygraph'
 
-        res = tv4.validate event, schema
-        chai.expect(res).to.be.true
+        res = tv4.validateMultiple event, schema
+        chai.expect(res.errors).to.eql []
+        chai.expect(res.missing).to.eql []
+        chai.expect(res.valid).to.equal true
 
       it 'should invalidate event without required fields', ->
         event =
@@ -232,8 +256,10 @@ describe 'Test network protocol schema on events', ->
               port: 'in'
             graph: 'mygraph'
 
-        res = tv4.validate event, schema
-        chai.expect(res).to.be.false
+        res = tv4.validateMultiple event, schema
+        chai.expect(res.errors).not.to.eql []
+        chai.expect(res.missing).to.eql []
+        chai.expect(res.valid).to.equal false
 
       it 'should invalidate event with extra fields', ->
         event =
@@ -251,8 +277,10 @@ describe 'Test network protocol schema on events', ->
             graph: 'mygraph'
             extra: 'test'
 
-        res = tv4.validate event, schema
-        chai.expect(res).to.be.false
+        res = tv4.validateMultiple event, schema
+        chai.expect(res.errors).not.to.eql []
+        chai.expect(res.missing).to.eql []
+        chai.expect(res.valid).to.equal false
 
     describe 'data', ->
       schema = '/network/output/data'
@@ -275,9 +303,10 @@ describe 'Test network protocol schema on events', ->
             data: 5
             graph: 'mygraph'
 
-        res = tv4.validate event, schema
-        chai.expect(res).to.be.true
-
+        res = tv4.validateMultiple event, schema
+        chai.expect(res.errors).to.eql []
+        chai.expect(res.missing).to.eql []
+        chai.expect(res.valid).to.equal true
 
     describe 'endgroup', ->
       schema = '/network/output/endgroup'
@@ -300,8 +329,10 @@ describe 'Test network protocol schema on events', ->
             group: 'group1'
             graph: 'mygraph'
 
-        res = tv4.validate event, schema
-        chai.expect(res).to.be.true
+        res = tv4.validateMultiple event, schema
+        chai.expect(res.errors).to.eql []
+        chai.expect(res.missing).to.eql []
+        chai.expect(res.valid).to.equal true
 
     describe 'disconnect', ->
       schema = '/network/output/disconnect'
@@ -323,8 +354,10 @@ describe 'Test network protocol schema on events', ->
               port: 'in'
             graph: 'mygraph'
 
-        res = tv4.validate event, schema
-        chai.expect(res).to.be.true
+        res = tv4.validateMultiple event, schema
+        chai.expect(res.errors).to.eql []
+        chai.expect(res.missing).to.eql []
+        chai.expect(res.valid).to.equal true
 
   describe 'input', ->
     describe 'error', ->
@@ -339,8 +372,10 @@ describe 'Test network protocol schema on events', ->
           command: 'error'
           payload: {}
 
-        res = tv4.validate event, schema
-        chai.expect(res).to.be.true
+        res = tv4.validateMultiple event, schema
+        chai.expect(res.errors).to.eql []
+        chai.expect(res.missing).to.eql []
+        chai.expect(res.valid).to.equal true
 
     describe 'start', ->
       schema = '/network/input/start'
@@ -355,8 +390,10 @@ describe 'Test network protocol schema on events', ->
           payload:
             graph: 'start'
 
-        res = tv4.validate event, schema
-        chai.expect(res).to.be.true
+        res = tv4.validateMultiple event, schema
+        chai.expect(res.errors).to.eql []
+        chai.expect(res.missing).to.eql []
+        chai.expect(res.valid).to.equal true
 
     describe 'getstatus', ->
       schema = '/network/input/getstatus'
@@ -371,8 +408,10 @@ describe 'Test network protocol schema on events', ->
           payload:
             graph: 'mygraph'
 
-        res = tv4.validate event, schema
-        chai.expect(res).to.be.true
+        res = tv4.validateMultiple event, schema
+        chai.expect(res.errors).to.eql []
+        chai.expect(res.missing).to.eql []
+        chai.expect(res.valid).to.equal true
 
     describe 'getstatus', ->
       schema = '/network/input/getstatus'
@@ -387,8 +426,10 @@ describe 'Test network protocol schema on events', ->
           payload:
             graph: 'mygraph'
 
-        res = tv4.validate event, schema
-        chai.expect(res).to.be.true
+        res = tv4.validateMultiple event, schema
+        chai.expect(res.errors).to.eql []
+        chai.expect(res.missing).to.eql []
+        chai.expect(res.valid).to.equal true
 
     describe 'stop', ->
       schema = '/network/input/stop'
@@ -403,8 +444,10 @@ describe 'Test network protocol schema on events', ->
           payload:
             graph: 'mygraph'
 
-        res = tv4.validate event, schema
-        chai.expect(res).to.be.true
+        res = tv4.validateMultiple event, schema
+        chai.expect(res.errors).to.eql []
+        chai.expect(res.missing).to.eql []
+        chai.expect(res.valid).to.equal true
 
     describe 'persist', ->
       schema = '/network/input/persist'
@@ -418,8 +461,10 @@ describe 'Test network protocol schema on events', ->
           command: 'persist'
           payload: {}
 
-        res = tv4.validate event, schema
-        chai.expect(res).to.be.true
+        res = tv4.validateMultiple event, schema
+        chai.expect(res.errors).to.eql []
+        chai.expect(res.missing).to.eql []
+        chai.expect(res.valid).to.equal true
 
     describe 'debug', ->
       schema = '/network/input/debug'
@@ -435,8 +480,10 @@ describe 'Test network protocol schema on events', ->
             enable: true
             graph: 'mygraph'
 
-        res = tv4.validate event, schema
-        chai.expect(res).to.be.true
+        res = tv4.validateMultiple event, schema
+        chai.expect(res.errors).to.eql []
+        chai.expect(res.missing).to.eql []
+        chai.expect(res.valid).to.equal true
 
     describe 'edges', ->
       schema = '/network/input/edges'
@@ -459,6 +506,8 @@ describe 'Test network protocol schema on events', ->
                 index: 0
             ]
 
-        res = tv4.validate event, schema
-        chai.expect(res).to.be.true
+        res = tv4.validateMultiple event, schema
+        chai.expect(res.errors).to.eql []
+        chai.expect(res.missing).to.eql []
+        chai.expect(res.valid).to.equal true
 
