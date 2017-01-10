@@ -344,17 +344,34 @@ exports.testRuntime = (runtimeType, startServer, stopServer, host='localhost', p
         it 'should remove the node and its associated edges', (done) ->
           expects = [
             protocol: 'graph'
+            command: 'removeedge'
+            payload:
+              src:
+                node: 'Repeat1'
+                port: 'out'
+              tgt:
+                node: 'Drop1'
+                port: 'in'
+              graph: 'foo'
+          ,
+            protocol: 'graph'
             command: 'removenode'
             payload:
               id: 'Drop1'
               graph: 'foo'
           ]
-          connection.once 'message', (message) ->
+          listener = (message) ->
             data = JSON.parse message.utf8Data
-            validateSchema data, '/graph/output/removenode'
-            chai.expect(data.payload).to.eql expects[0].payload
-
+            validateSchema data, "/graph/output/#{data.command}"
+            return unless data.command is expects[0].command
+            expected = expects.shift()
+            chai.expect(data.payload).to.eql expected.payload
+            return if expects.length
+            # Received all packets
+            connection.removeListener 'message', listener
             done()
+            return
+          connection.on 'message', listener
 
           send 'graph', 'removenode',
             id: 'Drop1'
@@ -371,7 +388,6 @@ exports.testRuntime = (runtimeType, startServer, stopServer, host='localhost', p
               tgt:
                 node: 'Repeat1'
                 port: 'in'
-              metadata: {}
               graph: 'foo'
           ]
           connection.once 'message', (message) ->
@@ -744,6 +760,7 @@ exports.testRuntime = (runtimeType, startServer, stopServer, host='localhost', p
     describe 'Component protocol', ->
       describe 'on requesting a component list', ->
         it 'should receive some known components', (done) ->
+          @timeout 20000
           listener = (message) ->
             data = JSON.parse message.utf8Data
             validateSchema data, '/component/output/list'
