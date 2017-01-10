@@ -10,12 +10,7 @@
     "type": "git",
     "url": "git://github.com/flowbased/fbp-protocol.git"
   },
-  "licenses": [
-    {
-      "type": "MIT",
-      "url": "https://github.com/flowbased/fbp-protocol/raw/master/LICENSE"
-    }
-  ],
+  "license": "MIT",
   "bin": {
     "fbp-init": "./bin/fbp-init",
     "fbp-test": "./bin/fbp-test"
