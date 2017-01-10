@@ -15,7 +15,6 @@ check = (done, f) ->
 validateSchema = (payload, schema) ->
   res = tv4.validateMultiple payload, schema
   chai.expect(res.errors).to.eql []
-  chai.expect(res.missing).to.eql []
   chai.expect(res.valid).to.equal true
   return res.valid
 
