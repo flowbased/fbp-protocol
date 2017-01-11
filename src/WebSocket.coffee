@@ -787,7 +787,7 @@ exports.testRuntime = (runtimeType, startServer, stopServer, host='localhost', p
 
           connection.once 'message', listener
 
-          send 'component', 'list', collection
+          send 'component', 'list', {}
 
       # TODO:
       # getsource => source
