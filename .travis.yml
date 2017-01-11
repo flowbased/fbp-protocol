@@ -2,7 +2,7 @@ language: node_js
 node_js:
 - '4.2'
 before_install:
-- gem install jekyll
+- bundle install
 before_script:
 - npm install -g grunt-cli
 after_deploy:
