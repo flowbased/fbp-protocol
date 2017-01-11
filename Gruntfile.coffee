@@ -2,9 +2,10 @@ fs = require 'fs'
 path = require 'path'
 
 module.exports = ->
+  pkg = @file.readJSON 'package.json'
   # Project configuration
   @initConfig
-    pkg: @file.readJSON 'package.json'
+    pkg: pkg
 
     # CoffeeScript compilation
     coffee:
@@ -61,11 +62,13 @@ module.exports = ->
     'gh-pages':
       options:
         base: 'dist/',
+        clone: 'gh-pages'
+        message: "Release #{pkg.name} #{process.env.TRAVIS_TAG}"
+        repo: 'https://' + process.env.GH_TOKEN + '@github.com/flowbased/fbp-protocol.git'
         user:
           name: 'fbp-protocol bot',
           email: 'jononor+fbpprotocolbot@gmail.com'
         silent: true
-        repo: 'https://' + process.env.GH_TOKEN + '@github.com/flowbased/fbp-protocol.git'
       src: '**/*'
 
   # Grunt plugins used for testing
