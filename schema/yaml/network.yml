@@ -147,6 +147,10 @@ output:
             properties:
               message:
                 description: 'contents of the error message'
+                type: 'string'
+              stack:
+                description: '(optional) stack trace'
+                type: 'string'
 
   processerror:
     id: 'output/processerror'
