@@ -62,7 +62,7 @@ module.exports = ->
       options:
         src: 'spec/'
         dest: 'dist/'
-        layouts: 'spec/_layout'
+        layouts: 'spec/_layouts'
       dist:
         options:
           dest: 'dist/'
