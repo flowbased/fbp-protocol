@@ -23,6 +23,13 @@
         margin-bottom: 0px;
         padding-bottom: 0px;
       }
+      article aside {
+        border-left: 4px #2f4f4f solid;
+        margin-top: 1em;
+        padding-left: 1em;
+        font-size: smaller;
+        font-style: italic;
+      }
       a {
         color: #2f4f4f;
       }
@@ -34,6 +41,9 @@
   <body>
     <article>
       <h1>{{ page.title }}</h1>
+      <aside>
+        Last updated {{ site.time }}
+      </aside>
       {{ content }}
     </article>
   </body>
