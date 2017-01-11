@@ -3,7 +3,7 @@ node_js:
 - '4.2'
 before_script:
 - npm install -g grunt-cli
-before_deploy:
+after_deploy:
 - grunt gh-pages
 sudo: false
 env:
@@ -14,6 +14,7 @@ deploy:
   email: henri.bergius@iki.fi
   api_key:
     secure: kWKXkgv9GjyoYkerxpcUk3pJew7V33iPdToZhxtfbUeLwDMduL9ULZYOh1WHb4YqkHWuMCEMpQxG5fAybuPXwHMwDYd0E/CDtTdHlbB9nYWhKDbRSjSy6Mcw9EdTNGngX+KpmeSOSMtODhYef1j6kMDNn/LPqSJBLjL/+vcxdpg=
+  skip_cleanup: true
   on:
     tags: true
     repo: flowbased/fbp-protocol
