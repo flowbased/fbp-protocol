@@ -4,7 +4,7 @@ node_js:
 dist: trusty
 sudo: false
 before_install:
-- bundle install
+- gem install jekyll
 before_script:
 - npm install -g grunt-cli
 after_deploy:
