@@ -42,7 +42,7 @@ exports.testRuntime = (runtimeType, startServer, stopServer, host='localhost', p
             done()
           client.on 'connectFailed', (err) ->
             tries--
-            chai.expect(tries).to.be.above 0
+            chai.expect(tries, 'Connection retry limit must not be exceeded').to.be.above 0
             setTimeout(
               ->
                 client.connect address, 'noflo'
@@ -92,6 +92,8 @@ exports.testRuntime = (runtimeType, startServer, stopServer, host='localhost', p
       connection.once 'message', listener
 
     describe 'Runtime Protocol', ->
+      before ->
+        chai.expect(connection, 'Connection needs to be available').not.be.a 'null'
       describe 'requesting runtime metadata', ->
         it 'should provide it back', (done) ->
           connection.once 'message', (message) ->
@@ -104,6 +106,7 @@ exports.testRuntime = (runtimeType, startServer, stopServer, host='localhost', p
 
     describe 'Graph Protocol', ->
       before ->
+        chai.expect(connection, 'Connection needs to be available').not.be.a 'null'
         chai.expect(capabilities, 'Graph protocol should be allowed for user').to.contain 'protocol:graph'
       describe 'adding a graph and nodes', ->
         it 'should provide the nodes back', (done) ->
@@ -581,6 +584,7 @@ exports.testRuntime = (runtimeType, startServer, stopServer, host='localhost', p
     describe 'Network Protocol', ->
       # Set up a clean graph
       before (done) ->
+        chai.expect(connection, 'Connection needs to be available').not.be.a 'null'
         chai.expect(capabilities, 'Network protocol should be allowed for user').to.contain 'protocol:network'
         waitFor = 5  # set this to the number of commands below
         listener = (message) ->
@@ -764,6 +768,7 @@ exports.testRuntime = (runtimeType, startServer, stopServer, host='localhost', p
 
     describe 'Component Protocol', ->
       before ->
+        chai.expect(connection, 'Connection needs to be available').not.be.a 'null'
         chai.expect(capabilities, 'Component protocol should be allowed for connection').to.contain 'protocol:component'
       describe 'on requesting a component list', ->
         it 'should receive some known components', (done) ->
