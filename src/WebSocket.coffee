@@ -28,6 +28,7 @@ exports.testRuntime = (runtimeType, startServer, stopServer, host='localhost', p
   describe "#{runtimeType} webSocket network runtime version #{version}", ->
     client = null
     connection = null
+    capabilities = []
     send = null
     describe "Connecting to the runtime at #{address}", ->
       it 'should succeed', (done) ->
@@ -94,13 +95,16 @@ exports.testRuntime = (runtimeType, startServer, stopServer, host='localhost', p
       describe 'requesting runtime metadata', ->
         it 'should provide it back', (done) ->
           connection.once 'message', (message) ->
-            data = message.utf8Data
+            data = JSON.parse message.utf8Data
             validateSchema data, 'runtime/output/runtime'
+            capabilities = data.payload.capabilities
             done()
 
           send 'runtime', 'getruntime', {}
 
     describe 'Graph Protocol', ->
+      before ->
+        chai.expect(capabilities, 'Graph protocol should be allowed for user').to.contain 'protocol:graph'
       describe 'adding a graph and nodes', ->
         it 'should provide the nodes back', (done) ->
           expects = [
@@ -574,9 +578,10 @@ exports.testRuntime = (runtimeType, startServer, stopServer, host='localhost', p
       # groups:
       #   addgroup / removegroup / renamegroup / changegroup
 
-    describe 'Network protocol', ->
+    describe 'Network Protocol', ->
       # Set up a clean graph
       before (done) ->
+        chai.expect(capabilities, 'Network protocol should be allowed for user').to.contain 'protocol:network'
         waitFor = 5  # set this to the number of commands below
         listener = (message) ->
           waitFor--
@@ -757,7 +762,9 @@ exports.testRuntime = (runtimeType, startServer, stopServer, host='localhost', p
       #     rt.startCapture()
       #     console.log 'Hello, World!'
 
-    describe 'Component protocol', ->
+    describe 'Component Protocol', ->
+      before ->
+        chai.expect(capabilities, 'Component protocol should be allowed for connection').to.contain 'protocol:component'
       describe 'on requesting a component list', ->
         it 'should receive some known components', (done) ->
           @timeout 20000
