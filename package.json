@@ -37,6 +37,7 @@
     "grunt-convert": "^0.1.12",
     "grunt-exec": "~1.0.1",
     "grunt-gh-pages": "^2.0.0",
+    "grunt-jekyll": "^0.4.4",
     "grunt-mocha-test": "^0.13.2",
     "showdown": "^1.4.1"
   },

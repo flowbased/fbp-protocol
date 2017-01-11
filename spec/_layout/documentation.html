@@ -1,0 +1,40 @@
+---
+---
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>{{ page.title }}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#ffffff">
+    <style type="text/css">
+      body {
+        color: black !important;
+        background-color: hsla(  0, 98%, 100%, .8) !important;
+      }
+      article {
+        max-width: 36em;
+        margin-left: auto;
+        margin-right: auto;
+        font-size: 14pt;
+      }
+      article h1, article h2 {
+        font-family: sans-serif;
+        margin-bottom: 0px;
+        padding-bottom: 0px;
+      }
+      a {
+        color: #2f4f4f;
+      }
+      a:hover, a:visited {
+        color: #708090;
+      }
+    </style>
+  </head>
+  <body>
+    <article>
+      <h1>{{ page.title }}</h1>
+      {{ content }}
+    </article>
+  </body>
+</html>

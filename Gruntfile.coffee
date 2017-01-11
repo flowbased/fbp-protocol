@@ -56,7 +56,23 @@ module.exports = ->
     # FBP Network Protocol tests
     exec:
       fbp_test: 'node bin/fbp-test --colors'
-      spechtml: 'node ./node_modules/.bin/showdown makehtml -i spec/protocol.md -o dist/index.html'
+
+    # Building the website
+    jekyll:
+      options:
+        src: 'spec/'
+        dest: 'dist/'
+        layouts: 'spec/_layout'
+      dist:
+        options:
+          dest: 'dist/'
+      serve:
+        options:
+          dest: 'dist/'
+          serve: true
+          watch: true
+          host: process.env.HOSTNAME or 'localhost'
+          port: process.env.PORT or 4000
 
     # Deploying
     'gh-pages':
@@ -82,9 +98,10 @@ module.exports = ->
 
   # Create json schemas from yaml
   @loadNpmTasks 'grunt-convert'
+  @loadNpmTasks 'grunt-jekyll'
 
   # Our local tasks
-  @registerTask 'build', ['coffee', 'convert', 'json-to-js', 'build-markdown', 'exec:spechtml']
+  @registerTask 'build', ['coffee', 'convert', 'json-to-js', 'build-markdown', 'jekyll:dist']
   @registerTask 'test', ['build', 'mochaTest'] # FIXME: enable 'exec:fbp_test'
   @registerTask 'default', ['test']
 
@@ -155,6 +172,7 @@ module.exports = ->
       graph: ['input']
       component: ['input', 'output']
       network: ['input', 'output']
+      trace: ['input', 'output']
 
     for protocol, categories of protocols
       messages = {}
@@ -183,13 +201,12 @@ module.exports = ->
     p = (line) -> lines.push line
 
     for protocol, protocolProps of getDescriptions()
-      p "<a id=\"#{protocol}\"></a>"
       p "## #{protocolProps.title}\n"
       p "#{protocolProps.description}\n"
 
       for messageType, message of protocolProps.messages
         p "### `#{messageType}`\n"
-        p "#{message.description}"
+        p "#{message.description}\n"
 
         for messagePropName, messageProp of message.properties
           line = "* `#{messagePropName}`: #{messageProp.description}"
