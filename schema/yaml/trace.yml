@@ -1,5 +1,5 @@
 $schema: 'http://json-schema.org/draft-04/schema#'
-title: 'Tracing protocol'
+title: 'Trace protocol'
 description: >-
   This protocol is utilized for triggering and transmitting
   [Flowtrace](https://github.com/flowbased/flowtrace)s
@@ -80,8 +80,8 @@ input:
               graph: { $ref: '/shared/graph_id' }
 
   dump:
-    description: 'Trigger dumping of the current tracing buffer, to return it back to server.'
     id: 'input/dump'
+    description: 'Trigger dumping of the current tracing buffer, to return it back to server.'
     allOf:
       - $ref: '/shared/message'
       - properties:
