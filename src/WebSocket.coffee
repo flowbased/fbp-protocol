@@ -53,18 +53,51 @@ exports.testRuntime = (runtimeType, startServer, stopServer, host='localhost', p
         command: command
         payload: payload
 
-    receive = (expects, done) ->
+    messageMatches = (msg, expected) ->
+      return false unless msg.protocol is expected.protocol
+      return false unless msg.command is expected.command
+      true
+    getPacketSchema = (packet) ->
+      return "#{packet.protocol}/output/#{packet.command}"
+
+    receive = (expects, done, allowExtraPackets = false) ->
       listener = (message) ->
         # Basic validation
         chai.expect(message.utf8Data).to.be.a 'string'
         data = JSON.parse message.utf8Data
         chai.expect(data.protocol).to.be.a 'string'
         chai.expect(data.command).to.be.a 'string'
-        validateSchema data, "/#{data.protocol}/output/#{data.command}"
-        # Ignore messages we don't care about in context of the test
-        return unless (data.command is expects[0].command and data.protocol is expects[0].protocol)
+        # Validate all received packets against schema
+        validateSchema data, getPacketSchema data
+        # Don't ever expect payloads to return a secret
+        chai.expect(data.payload.secret, 'Payload should not contain secret').to.be.a 'undefined'
+        if allowExtraPackets and not messageMatches data, expects[0]
+          # Ignore messages we don't care about in context of the test
+          connection.once 'message', listener
+          return
+
         # Validate actual payload
         expected = expects.shift()
+        chai.expect(getPacketSchema(data)).to.equal getPacketSchema expected
+
+        # Clear values that can't be checked with deep equal. We already
+        # know they passed schema validation
+        if data.protocol is 'network'
+          if data.command is 'started'
+            delete data.payload.time
+            delete expected.payload.time
+          if data.command is 'stopped'
+            delete data.payload.time
+            delete expected.payload.time
+            delete data.payload.uptime
+            delete expected.payload.uptime
+        if data.command is 'error'
+          delete data.payload.stack
+          delete expected.payload.stack
+
+        # Don't ever expect payloads to return a secret
+        delete expected.payload.secret
+
         chai.expect(data.payload).to.eql expected.payload
         # Received all expected packets
         return done() unless expects.length
@@ -95,7 +128,7 @@ exports.testRuntime = (runtimeType, startServer, stopServer, host='localhost', p
           expects = [
               protocol: 'graph'
               command: 'clear',
-              payload: 
+              payload:
                 baseDir: path.resolve __dirname, '../'
                 id: 'foo'
                 main: true
@@ -118,7 +151,6 @@ exports.testRuntime = (runtimeType, startServer, stopServer, host='localhost', p
                 metadata: {}
                 graph: 'foo'
           ]
-          #receive expects, done
           connection.once 'message', (message) ->
             data = JSON.parse message.utf8Data
             validateSchema data, '/graph/output/clear'
@@ -162,15 +194,7 @@ exports.testRuntime = (runtimeType, startServer, stopServer, host='localhost', p
                 route: 5
               graph: 'foo'
           ]
-          connection.once 'message', (message) ->
-            data = JSON.parse message.utf8Data
-
-            validateSchema data, '/graph/output/addedge'
-            chai.expect(data.payload.src).to.eql expects[0].payload.src
-            chai.expect(data.payload.tgt).to.eql expects[0].payload.tgt
-
-            done()
-
+          receive expects, done
           send 'graph', 'addedge', expects[0].payload
       # describe 'adding an edge to a non-existent node', ->
       #   it 'should return an error', (done) ->
@@ -224,13 +248,7 @@ exports.testRuntime = (runtimeType, startServer, stopServer, host='localhost', p
                   sort: 1
                 graph: 'foo'
             ]
-            connection.once 'message', (message) ->
-              data = JSON.parse message.utf8Data
-              validateSchema data, '/graph/output/changenode'
-              chai.expect(data.payload.metadata).to.eql expects[0].payload.metadata
-
-              done()
-
+            receive expects, done
             send 'graph', 'changenode', expects[0].payload
 
         describe 'to a node with existing metadata', ->
@@ -245,13 +263,7 @@ exports.testRuntime = (runtimeType, startServer, stopServer, host='localhost', p
                   tag: 'awesome'
                 graph: 'foo'
             ]
-            connection.once 'message', (message) ->
-              data = JSON.parse message.utf8Data
-              validateSchema data, '/graph/output/changenode'
-              chai.expect(data.payload.metadata).to.eql expects[0].payload.metadata
-
-              done()
-
+            receive expects, done
             send 'graph', 'changenode',
               id: 'Drop1'
               metadata:
@@ -270,13 +282,7 @@ exports.testRuntime = (runtimeType, startServer, stopServer, host='localhost', p
                   tag: 'awesome'
                 graph: 'foo'
             ]
-            connection.once 'message', (message) ->
-              data = JSON.parse message.utf8Data
-              validateSchema data, '/graph/output/changenode'
-              chai.expect(data.payload.metadata).to.eql expects[0].payload.metadata
-
-              done()
-
+            receive expects, done
             send 'graph', 'changenode',
               id: 'Drop1'
               metadata: {}
@@ -292,13 +298,7 @@ exports.testRuntime = (runtimeType, startServer, stopServer, host='localhost', p
                 metadata: {}
                 graph: 'foo'
             ]
-            connection.once 'message', (message) ->
-              data = JSON.parse message.utf8Data
-              validateSchema data, '/graph/output/changenode'
-              chai.expect(data.payload.metadata).to.eql expects[0].payload.metadata
-
-              done()
-
+            receive expects, done
             send 'graph', 'changenode',
               id: 'Drop1'
               metadata:
@@ -320,14 +320,7 @@ exports.testRuntime = (runtimeType, startServer, stopServer, host='localhost', p
               metadata: {}
               graph: 'foo'
           ]
-          connection.once 'message', (message) ->
-            data = JSON.parse message.utf8Data
-            validateSchema data, '/graph/output/addinitial'
-            delete expects[0].payload.secret
-            chai.expect(data.payload).to.eql expects[0].payload
-
-            done()
-
+          receive expects, done
           send 'graph', 'addinitial', expects[0].payload
 
       describe 'removing a node', ->
@@ -350,19 +343,9 @@ exports.testRuntime = (runtimeType, startServer, stopServer, host='localhost', p
               id: 'Drop1'
               graph: 'foo'
           ]
-          listener = (message) ->
-            data = JSON.parse message.utf8Data
-            validateSchema data, "/graph/output/#{data.command}"
-            return unless data.command is expects[0].command
-            expected = expects.shift()
-            chai.expect(data.payload).to.eql expected.payload
-            return if expects.length
-            # Received all packets
-            connection.removeListener 'message', listener
-            done()
-            return
-          connection.on 'message', listener
-
+          # Runtimes can send 'changeedge' and 'changenode' as part
+          # of the response for better fbp-graph/Journal behavior
+          receive expects, done, true
           send 'graph', 'removenode',
             id: 'Drop1'
             graph: 'foo'
@@ -380,13 +363,7 @@ exports.testRuntime = (runtimeType, startServer, stopServer, host='localhost', p
                 port: 'in'
               graph: 'foo'
           ]
-          connection.once 'message', (message) ->
-            data = JSON.parse message.utf8Data
-            validateSchema data, '/graph/output/removeinitial'
-            chai.expect(data.payload.src).to.eql expects[0].payload.src
-
-            done()
-
+          receive expects, done
           send 'graph', 'removeinitial',
             tgt:
               node: 'Repeat1'
@@ -403,14 +380,7 @@ exports.testRuntime = (runtimeType, startServer, stopServer, host='localhost', p
               to: 'RepeatRenamed'
               graph: 'foo'
           ]
-          connection.once 'message', (message) ->
-            data = JSON.parse message.utf8Data
-            validateSchema data, '/graph/output/renamenode'
-            delete expects[0].payload.secret
-            chai.expect(data.payload).to.eql expects[0].payload
-
-            done()
-
+          receive expects, done
           send 'graph', 'renamenode', expects[0].payload
 
       describe 'adding a node to a non-existent graph', ->
@@ -420,14 +390,8 @@ exports.testRuntime = (runtimeType, startServer, stopServer, host='localhost', p
             command: 'error',
             payload:
               message: 'Requested graph not found'
-              stack: String
           ]
-          connection.once 'message', (message) ->
-            data = JSON.parse message.utf8Data
-            validateSchema data, '/graph/output/error'
-
-            done()
-
+          receive expects, done
           send 'graph', 'addnode',
             id: 'Repeat1'
             component: "#{collection}/Repeat"
@@ -440,14 +404,8 @@ exports.testRuntime = (runtimeType, startServer, stopServer, host='localhost', p
             command: 'error',
             payload:
               message: 'No graph specified'
-              stack: String
           ]
-          connection.once 'message', (message) ->
-            data = JSON.parse message.utf8Data
-            validateSchema data, '/graph/output/error'
-
-            done()
-
+          receive expects, done
           send 'graph', 'addnode',
             id: 'Repeat1'
             component: "#{collection}/Repeat"
@@ -463,13 +421,7 @@ exports.testRuntime = (runtimeType, startServer, stopServer, host='localhost', p
               public: 'in'
               port: 'in'
           ]
-          connection.once 'message', (message) ->
-            data = JSON.parse message.utf8Data
-            validateSchema data, '/graph/output/addinport'
-            chai.expect(data.payload).to.eql expects[0].payload
-
-            done()
-
+          receive expects, done
           send 'graph', 'addinport',
             public: 'in'
             node: 'RepeatRenamed'
@@ -500,13 +452,7 @@ exports.testRuntime = (runtimeType, startServer, stopServer, host='localhost', p
               port: 'out'
               public: 'out'
           ]
-          connection.once 'message', (message) ->
-            data = JSON.parse message.utf8Data
-            validateSchema data, '/graph/output/addoutport'
-            chai.expect(data.payload).to.eql expects[0].payload
-
-            done()
-
+          receive expects, done
           send 'graph', 'addoutport',
             public: 'out'
             node: 'RepeatRenamed'
@@ -548,13 +494,7 @@ exports.testRuntime = (runtimeType, startServer, stopServer, host='localhost', p
               graph: 'foo'
               public: 'out'
           ]
-          connection.once 'message', (message) ->
-            data = JSON.parse message.utf8Data
-            validateSchema data, '/graph/output/removeoutport'
-            chai.expect(data.payload).to.eql expects[0].payload
-
-            done()
-
+          receive expects, done
           send 'graph', 'removeoutport',
             public: 'out'
             graph: 'foo'
@@ -666,23 +606,7 @@ exports.testRuntime = (runtimeType, startServer, stopServer, host='localhost', p
                src: { node: 'Hello', port: 'out' }
                tgt: { node: 'World', port: 'in' }
           ]
-
-          listener = (message) ->
-            data = JSON.parse message.utf8Data
-            validateSchema data, "/#{data.protocol}/output/#{data.command}"
-            return unless data.command is expects[0].command
-            expected = expects.shift()
-            if data.command is 'started'
-              delete data.payload.time
-              delete expected.payload.time
-            chai.expect(data.payload).to.eql expected.payload
-            return if expects.length
-            # Received all packets
-            connection.removeListener 'message', listener
-            done()
-            return
-          connection.on 'message', listener
-
+          receive expects, done, true
           send 'network', 'start',
             graph: 'bar'
 
@@ -695,18 +619,20 @@ exports.testRuntime = (runtimeType, startServer, stopServer, host='localhost', p
               running: false
               started: true
           ]
-          receive expects, done
+          receive expects, done, true
           send 'network', 'getstatus',
             graph: 'bar'
       describe 'on stopping the network', ->
         it 'should be stopped', (done) ->
-          connection.once 'message', (message) ->
-            data = JSON.parse message.utf8Data
-            validateSchema data, '/network/output/stopped'
-            chai.expect(data.payload.running).to.be.false
-
-            done()
-
+          expects = [
+            protocol: 'network'
+            command: 'stopped'
+            payload:
+              graph: 'bar'
+              running: false
+              started: false
+          ]
+          receive expects, done
           send 'network', 'stop',
             graph: 'bar'
 
@@ -719,7 +645,7 @@ exports.testRuntime = (runtimeType, startServer, stopServer, host='localhost', p
               running: false
               started: false
           ]
-          receive expects, done
+          receive expects, done, true
           send 'network', 'getstatus',
             graph: 'bar'
       # describe 'on console output', ->
