@@ -10,3 +10,4 @@ spec/protocol.md
 test/**/*.js
 src/WebSocket.js
 /dist/index.html
+Gemfile.lock
