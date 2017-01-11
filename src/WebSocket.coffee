@@ -341,6 +341,7 @@ exports.testRuntime = (runtimeType, startServer, stopServer, host='localhost', p
           connection.once 'message', (message) ->
             data = JSON.parse message.utf8Data
             validateSchema data, '/graph/output/addinitial'
+            delete expects[0].payload.secret
             chai.expect(data.payload).to.eql expects[0].payload
 
             done()
@@ -423,6 +424,7 @@ exports.testRuntime = (runtimeType, startServer, stopServer, host='localhost', p
           connection.once 'message', (message) ->
             data = JSON.parse message.utf8Data
             validateSchema data, '/graph/output/renamenode'
+            delete expects[0].payload.secret
             chai.expect(data.payload).to.eql expects[0].payload
 
             done()
