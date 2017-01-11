@@ -1,8 +1,9 @@
 ---
 title: FBP Network Protocol
 layout: documentation
+permalink: index.html
 ---
-The Flow-Based Programming network protocol (*FBP protocol*) has been designed primarily for flow-based programming interfaces like the [NoFlo UI](http://www.kickstarter.com/projects/noflo/noflo-development-environment) to communicate with various FBP runtimes. However, it can also be utilized for communication between different runtimes, for example server-to-server or server-to-microcontroller.
+The Flow-Based Programming network protocol (*FBP protocol*) has been designed primarily for flow-based programming interfaces like the [Flowhub](https://flowhub.io) to communicate with various FBP runtimes. However, it can also be utilized for communication between different runtimes, for example server-to-server or server-to-microcontroller.
 
 ## Implementations
 
@@ -74,11 +75,11 @@ Different transports can be utilized as needed. It could be interesting to imple
 
 The FBP protocol is divided into four sub-protocols, or "channels":
 
-* `runtime`: communications about runtime capabilities and its exported ports
-* `graph`: communications about graph changes
-* `component`: communications about available components and changes to them
-* `network`: communications related to running a FBP graph
-* `trace`: communications related to tracing a FBP network
+* [`runtime`](#runtime-protocol): communications about runtime capabilities and its exported ports
+* [`graph`](#graph-protocol): communications about graph changes
+* [`component`](#component-protocol): communications about available components and changes to them
+* [`network`](#network-protocol): communications related to running a FBP graph
+* [`trace`](#trace-protocol): communications related to tracing a FBP network
 
 ### Message structure
 
