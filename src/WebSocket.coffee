@@ -6,16 +6,10 @@ WebSocketClient = require('websocket').client
 semver = require 'semver'
 tv4 = require '../schema/index.js'
 
-check = (done, f) ->
-  try
-    f()
-  catch e
-    done e
-
 validateSchema = (payload, schema) ->
   res = tv4.validateMultiple payload, schema
-  chai.expect(res.errors).to.eql []
-  chai.expect(res.valid).to.equal true
+  chai.expect(res.errors, "#{schema} should produce no errors").to.eql []
+  chai.expect(res.valid, "#{schema} should validate").to.equal true
   return res.valid
 
 exports.testRuntime = (runtimeType, startServer, stopServer, host='localhost', port=8080, collection='core', version='0.5') ->
@@ -59,36 +53,24 @@ exports.testRuntime = (runtimeType, startServer, stopServer, host='localhost', p
         command: command
         payload: payload
 
-    receive = (expects, done, ignore=null) ->
+    receive = (expects, done) ->
       listener = (message) ->
-        check done, ->
-          chai.expect(message.utf8Data).to.be.a 'string'
-          msg = JSON.parse message.utf8Data
-
-          if not ignore or not ignore(msg)
-            expected = expects.shift()
-            chai.expect(msg.protocol, 'protocol').to.equal expected.protocol
-            chai.expect(msg.command, 'command').to.equal expected.command
-            if expected.payload
-              for key, value of expected.payload
-                type = null
-                if value is String
-                  type = 'string'
-                else if value is Number
-                  type = 'number'
-                else if value is Array
-                  type = 'array'
-                if type
-                  chai.expect(msg.payload, "payload.#{key}").to.exist
-                  chai.expect(msg.payload[key], "payload.#{key}").to.be.a type
-                  delete expected.payload[key]
-                  delete msg.payload[key]
-
-            chai.expect(msg).to.eql expected
-          if expects.length
-            connection.once 'message', listener
-          else
-            done()
+        # Basic validation
+        chai.expect(message.utf8Data).to.be.a 'string'
+        data = JSON.parse message.utf8Data
+        chai.expect(data.protocol).to.be.a 'string'
+        chai.expect(data.command).to.be.a 'string'
+        validateSchema data, "/#{data.protocol}/output/#{data.command}"
+        # Ignore messages we don't care about in context of the test
+        return unless (data.command is expects[0].command and data.protocol is expects[0].protocol)
+        # Validate actual payload
+        expected = expects.shift()
+        chai.expect(data.payload).to.eql expected.payload
+        # Received all expected packets
+        return done() unless expects.length
+        # Still waiting
+        connection.once 'message', listener
+        return
       connection.once 'message', listener
 
     describe 'Runtime Protocol', ->
@@ -685,21 +667,22 @@ exports.testRuntime = (runtimeType, startServer, stopServer, host='localhost', p
                tgt: { node: 'World', port: 'in' }
           ]
 
-          addListener = ->
-            connection.once 'message', (message) ->
-              data = JSON.parse message.utf8Data
-              validateSchema data, "/network/output/#{data.command}"
-              for expected, i in expects
-                if data.command is expected.command
-                  expects.splice i, 1
-                  break
+          listener = (message) ->
+            data = JSON.parse message.utf8Data
+            validateSchema data, "/#{data.protocol}/output/#{data.command}"
+            return unless data.command is expects[0].command
+            expected = expects.shift()
+            if data.command is 'started'
+              delete data.payload.time
+              delete expected.payload.time
+            chai.expect(data.payload).to.eql expected.payload
+            return if expects.length
+            # Received all packets
+            connection.removeListener 'message', listener
+            done()
+            return
+          connection.on 'message', listener
 
-              if expects.length is 0
-                done()
-              else
-                addListener()
-
-          addListener()
           send 'network', 'start',
             graph: 'bar'
 
@@ -712,13 +695,7 @@ exports.testRuntime = (runtimeType, startServer, stopServer, host='localhost', p
               running: false
               started: true
           ]
-          connection.once 'message', (message) ->
-            data = JSON.parse message.utf8Data
-            validateSchema data, '/network/output/status'
-            chai.expect(data.payload.started).to.be.true
-
-            done()
-
+          receive expects, done
           send 'network', 'getstatus',
             graph: 'bar'
       describe 'on stopping the network', ->
@@ -742,14 +719,7 @@ exports.testRuntime = (runtimeType, startServer, stopServer, host='localhost', p
               running: false
               started: false
           ]
-          connection.once 'message', (message) ->
-            data = JSON.parse message.utf8Data
-            validateSchema data, '/network/output/status'
-            chai.expect(data.payload.started).to.be.false
-            chai.expect(data.payload.running).to.be.false
-
-            done()
-
+          receive expects, done
           send 'network', 'getstatus',
             graph: 'bar'
       # describe 'on console output', ->
