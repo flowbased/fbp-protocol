@@ -445,9 +445,12 @@ input:
           command:
             enum: ['edges']
           payload:
-            required: ['edges']
+            required: ['graph', 'edges']
             additionalProperties: false
             properties:
+              graph:
+                description: graph the action targets
+                type: string
               edges:
                 type: array
                 description: 'list of selected edges'
