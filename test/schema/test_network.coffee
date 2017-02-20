@@ -496,6 +496,7 @@ describe 'Test network protocol schema on events', ->
           protocol: 'network'
           command: 'edges'
           payload:
+            graph: 'mygraph'
             edges: [
               src:
                 node: 'node1'
