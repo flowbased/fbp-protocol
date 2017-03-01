@@ -86,6 +86,8 @@ exports.testRuntime = (runtimeType, startServer, stopServer, host='localhost', p
           if data.command is 'started'
             delete data.payload.time
             delete expected.payload.time
+            delete data.payload.running
+            delete expected.payload.running
           if data.command is 'stopped'
             delete data.payload.time
             delete expected.payload.time
@@ -560,27 +562,12 @@ exports.testRuntime = (runtimeType, startServer, stopServer, host='localhost', p
               time: String
           ,
             protocol: 'network'
-            command: 'connect'
-            payload:
-               id: 'DATA -> IN Hello()'
-               graph: 'bar'
-               tgt: { node: 'Hello', port: 'in' }
-          ,
-            protocol: 'network'
             command: 'data'
             payload:
                id: 'DATA -> IN Hello()'
                graph: 'bar'
                tgt: { node: 'Hello', port: 'in' }
                data: 'Hello, world!'
-          ,
-            protocol: 'network'
-            command: 'connect'
-            payload: 
-               id: 'Hello() OUT -> IN World()'
-               graph: 'bar'
-               src: { node: 'Hello', port: 'out' }
-               tgt: { node: 'World', port: 'in' }
           ,
             protocol: 'network'
             command: 'data'
@@ -590,21 +577,6 @@ exports.testRuntime = (runtimeType, startServer, stopServer, host='localhost', p
                src: { node: 'Hello', port: 'out' }
                tgt: { node: 'World', port: 'in' }
                data: 'Hello, world!'
-          ,
-            protocol: 'network'
-            command: 'disconnect'
-            payload: 
-               id: 'DATA -> IN Hello()'
-               graph: 'bar'
-               tgt: { node: 'Hello', port: 'in' }
-          ,
-            protocol: 'network'
-            command: 'disconnect'
-            payload: 
-               id: 'Hello() OUT -> IN World()'
-               graph: 'bar'
-               src: { node: 'Hello', port: 'out' }
-               tgt: { node: 'World', port: 'in' }
           ]
           receive expects, done, true
           send 'network', 'start',
