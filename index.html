@@ -40,7 +40,7 @@
     <article>
       <h1>FBP Network Protocol</h1>
       <aside>
-        Last updated 2017-01-11 16:55:55 +0000
+        Last updated 2017-03-01 20:28:02 +0000
       </aside>
       <p>The Flow-Based Programming network protocol (<em>FBP protocol</em>) has been designed primarily for flow-based programming interfaces like the <a href="https://flowhub.io">Flowhub</a> to communicate with various FBP runtimes. However, it can also be utilized for communication between different runtimes, for example server-to-server or server-to-microcontroller.</p>
 
@@ -702,6 +702,7 @@ Graphs registered in this way should also be available for use as subgraphs in o
 <p>List of edges user has selected for inspection in a user interface or debugger, sent from UI to a runtime.</p>
 
 <ul>
+  <li><code class="highlighter-rouge">graph</code>: graph the action targets</li>
   <li><code class="highlighter-rouge">edges</code>: list of selected edges, each containing
     <ul>
       <li><code class="highlighter-rouge">src</code>: source node for the edge
