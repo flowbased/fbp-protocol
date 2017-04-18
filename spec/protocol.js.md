@@ -22,7 +22,7 @@ Runtimes
 * [javafbp-runtime](https://github.com/jonnor/javafbp-runtime) is a Websocket implementation in Java for [JavaFBP](https://github.com/jpaulm/javafbp), for JRE and Android development
 * [sndflo](https://github.com/jonnor/sndflo) is a WebSocket implementation for the SuperCollider audio programming environment
 * [MsgFlo](https://github.com/the-grid/msgflo) is a Websocket implementation in Node.js for heterogenous distributed systems communicating via message queues
-* [pflow](https://github.com/LumaPictures/pflow) is a Python FBP runtime implementation, with support for the protocol over WebSocket.
+* [rill](https://github.com/PermaData/rill) is a Python FBP runtime implementation, with support for the protocol over WebSocket.
 
 Some [examples](https://github.com/flowbased/protocol-examples) have also been created, to help implementors.
 
