@@ -40,7 +40,7 @@
     <article>
       <h1>FBP Network Protocol</h1>
       <aside>
-        Last updated 2017-03-01 20:28:02 +0000
+        Last updated 2017-05-03 18:43:51 +0000
       </aside>
       <p>The Flow-Based Programming network protocol (<em>FBP protocol</em>) has been designed primarily for flow-based programming interfaces like the <a href="https://flowhub.io">Flowhub</a> to communicate with various FBP runtimes. However, it can also be utilized for communication between different runtimes, for example server-to-server or server-to-microcontroller.</p>
 
@@ -64,7 +64,7 @@
   <li><a href="https://github.com/jonnor/javafbp-runtime">javafbp-runtime</a> is a Websocket implementation in Java for <a href="https://github.com/jpaulm/javafbp">JavaFBP</a>, for JRE and Android development</li>
   <li><a href="https://github.com/jonnor/sndflo">sndflo</a> is a WebSocket implementation for the SuperCollider audio programming environment</li>
   <li><a href="https://github.com/the-grid/msgflo">MsgFlo</a> is a Websocket implementation in Node.js for heterogenous distributed systems communicating via message queues</li>
-  <li><a href="https://github.com/LumaPictures/pflow">pflow</a> is a Python FBP runtime implementation, with support for the protocol over WebSocket.</li>
+  <li><a href="https://github.com/PermaData/rill">rill</a> is a Python FBP runtime implementation, with support for the protocol over WebSocket.</li>
 </ul>
 
 <p>Some <a href="https://github.com/flowbased/protocol-examples">examples</a> have also been created, to help implementors.</p>
@@ -266,6 +266,9 @@ If the runtime is currently running a graph and it is able to speak the full Run
   </li>
   <li><code class="highlighter-rouge">graph</code>: (optional) ID of the currently configured main graph running on the runtime, if any</li>
   <li><code class="highlighter-rouge">type</code>: type of the runtime, for example noflo-nodejs or microflo</li>
+  <li><code class="highlighter-rouge">namespace</code>: (optional) Library namespace of the project running on the runtime, if any. Must match that of components belonging to the (top-level) of project.</li>
+  <li><code class="highlighter-rouge">repository</code>: (optional) Source-code repository URL of the project running on the runtime, if any</li>
+  <li><code class="highlighter-rouge">repositoryVersion</code>: (optional) Unique version identifier of the source code of the project, if known. The version should be available in @repository.</li>
 </ul>
 
 <h2 id="graph-protocol">Graph protocol</h2>
