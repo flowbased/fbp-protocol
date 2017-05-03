@@ -163,3 +163,21 @@ output:
               type:
                 description: 'type of the runtime, for example noflo-nodejs or microflo'
                 type: string
+              namespace:
+                description: >-
+                  (optional) Library namespace of the project running on the runtime,
+                  if any. Must match that of components belonging to the (top-level) of project.
+                type: string
+                example: 'my-project-foo'
+              repository:
+                description: >-
+                  (optional) Source-code repository URL of the project running on the runtime,
+                  if any
+                type: string
+                example: 'https://github.com/flowbased/fbp-protocol.git'
+              repositoryVersion:
+                description: >-
+                  (optional) Unique version identifier of the source code of the project,
+                  if known. The version should be available in @repository.
+                type: string
+                example: '0.6.3-8-g90edcfc'
