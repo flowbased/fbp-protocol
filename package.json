@@ -1,7 +1,7 @@
 {
   "name": "fbp-protocol",
   "description": "Tests, schemas, and documentation for the Flow Base Programming Network Protocol",
-  "version": "0.6.3",
+  "version": "0.6.4",
   "author": {
     "name": "Henri Bergius",
     "email": "henri.bergius@iki.fi"
