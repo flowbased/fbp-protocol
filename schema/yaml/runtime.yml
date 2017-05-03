@@ -166,10 +166,12 @@ output:
               namespace:
                 description: >-
                   (optional) Library namespace of the project running on the runtime,
-                  if any
+                  if any. Must match that of components belonging to the (top-level) of project.
                 type: string
+                example: 'my-project-foo'
               repository:
                 description: >-
-                  (optional) Repository URL of the project running on the runtime,
+                  (optional) Source-code repository URL of the project running on the runtime,
                   if any
                 type: string
+                example: 'https://github.com/flowbased/fbp-protocol.git'
