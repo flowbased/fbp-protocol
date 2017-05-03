@@ -163,3 +163,13 @@ output:
               type:
                 description: 'type of the runtime, for example noflo-nodejs or microflo'
                 type: string
+              namespace:
+                description: >-
+                  (optional) Library namespace of the project running on the runtime,
+                  if any
+                type: string
+              repository:
+                description: >-
+                  (optional) Repository URL of the project running on the runtime,
+                  if any
+                type: string
