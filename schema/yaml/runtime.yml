@@ -175,3 +175,9 @@ output:
                   if any
                 type: string
                 example: 'https://github.com/flowbased/fbp-protocol.git'
+              repositoryVersion:
+                description: >-
+                  (optional) Unique version identifier of the source code of the project,
+                  if known. The version should be available in @repository.
+                type: string
+                example: '0.6.3-8-g90edcfc'
