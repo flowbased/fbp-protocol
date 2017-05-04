@@ -13,7 +13,7 @@
         background-color: hsla(  0, 98%, 100%, .8) !important;
       }
       article {
-        max-width: 36em;
+        max-width: 48em;
         margin-left: auto;
         margin-right: auto;
         font-size: 14pt;
@@ -36,12 +36,34 @@
       a:hover, a:visited {
         color: #708090;
       }
-      code {
+      .properties li {
+        padding-bottom: 5px;
+      } 
+      .property.name {
+        font-family: monospace;
+        font-weight: 700;
+      }
+      .property.name::after {
+        content: ': ';
+        font-weight: 500;
+      }
+      .property.description {
+        display: block;
+      }
+      .property.example {
+        font-family: monospace;
+        background-color: hsla(210, 70%, 90%, 1);
+      }
+      .property.example::before {
+        content: 'Example: ';
+        background-color: white;
+      }
+      .enum.name {
         font-family: monospace;
         font-weight: 700;
       }
       h3 {
-        opacity: 0.6;
+        opacity: 0.75;
       }
     </style>
   </head>

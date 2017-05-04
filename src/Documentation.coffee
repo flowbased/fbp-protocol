@@ -92,8 +92,15 @@ getDescriptions = (schemas) ->
   return desc
 
 renderProperty = (name, def) ->
-  throw new Error("Property #{name} is missing description") if not def.description
-  return "`#{name}`: #{def.description}"
+  throw new Error("Property #{name} is missing .description") if not def.description
+  throw new Error("Property #{name} is missing .type") if not def.type
+
+  name = "<label class='property name'>#{name}</label>"
+  type = "<label class='property type'>#{def.type}</label>"
+  description = "<label class='property description'>#{def.description}</label>"
+  example = ""
+  example = "<code class='property example'>#{JSON.stringify(def.example)}</code>" if def.example?
+  return name + type + description + example
 
 renderMessage = (messageType, message) ->
 
@@ -103,38 +110,48 @@ renderMessage = (messageType, message) ->
   p "### #{messageType}\n"
   p "#{message.description}\n"
 
+  p "<ul class='message properties'>"
   for messagePropName, messageProp of message.properties
-    line = "* #{renderProperty(messagePropName, messageProp)}"
+    line = "<li>#{renderProperty(messagePropName, messageProp)}</li>"
     items = messageProp.items
 
     if messageProp.type is 'object' and messageProp.properties?
       p line
+      p "<ul class='properties'>"
       for subPropName, subProp of messageProp.properties
-        p "  - #{renderProperty(subPropName, subProp)}"
+        p "<li>#{renderProperty(subPropName, subProp)}</li>"
+      p "</ul>"
 
     else if items?.type is 'object'
-      line += ", each containing"
+      line += "Each item contains:"
       p line
 
+      p "<ul class='properties'>"
       for itemPropName, itemProp of items.properties
         if itemProp.type is 'object'
-          p "  * #{renderProperty(itemPropName, itemProp)}"
+          p "<li>#{renderProperty(itemPropName, itemProp)}</li>"
 
+          p "<ul class='properties'>"
           for itemSubPropName, itemSubProp of itemProp.properties
-            p "    - #{renderProperty(itemSubPropName, itemSubProp)}"
+            p "<li>#{renderProperty(itemSubPropName, itemSubProp)}</li>"
+          p "</ul>"
 
         else
-          p "  - #{renderProperty(itemPropName, itemProp)}"
+          p "<li>#{renderProperty(itemPropName, itemProp)}</li>"
+      p "</ul>"
 
     else if items?.type is 'string' and items?._enumDescriptions
-      line += " Options include:"
+      line += " Valid values are:"
       p line
 
+      p "<ul class='values'>"
       for enumDescription in items._enumDescriptions
-        p "  - #{renderProperty(enumDescription.name, enumDescription)}"
+        p "<li><label class='enum name'>#{enumDescription.name}</label>: #{enumDescription.description}</li>"
+      p "</ul>"
 
     else
       p line
+  p "</ul>"
 
   p '\n'
   return lines
