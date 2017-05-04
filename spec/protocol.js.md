@@ -32,6 +32,18 @@ The [fbp-protocol](https://github.com/flowbased/fbp-protocol) tool provides a se
 
 ## Changes
 
+* 2017-05-03:
+  - Added more optional metadata to `runtime:runtime` message: `repository`, `repositoryVersion` and `namespace`
+* 2017-02-20:
+  - Fixed payload definition of `network:edges` missing mandatory `graph` key
+* 2016-07-01:
+  - `network:error` payload may now contain an optional `stacktrace`
+* 2016-06-23:
+  - Trace subprotocol also available in machine-readable format
+* 2016-06-17:
+  - Protocol definition available as machine-readable JSON [schemas](https://github.com/flowbased/fbp-protocol/tree/master/schema/yaml).
+  - The human-readable HTML documentation is generated from this defintion.
+  - The npm package `fbp-protocol` contains the schemas as YAML, JSON and .js modules.
 * 2015-11-20:
   - Initial `trace` subprotocol, for [Flowtrace](https://github.com/flowbased/flowtrace) support
 * 2015-03-27:
