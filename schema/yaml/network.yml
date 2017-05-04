@@ -312,16 +312,6 @@ output:
             additionalProperties: false
 
 input:
-  error:
-    id: 'input/error'
-    description: 'Network error'
-    allOf:
-      - $ref: '/shared/message'
-      - properties:
-          protocol:
-            enum: ['network']
-          command:
-            enum: ['error']
 
   start:
     id: 'input/start'

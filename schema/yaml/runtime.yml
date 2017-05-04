@@ -3,16 +3,6 @@ description: >-
   When a client connects to a FBP procotol it may choose to discover the
   capabilities and other information about the runtime.
 input:
-  error:
-    id: 'input/error'
-    description: 'Runtime error'
-    allOf:
-      - $ref: '/shared/message'
-      - properties:
-          protocol:
-            enum: ['runtime']
-          command:
-            enum: ['error']
 
   getruntime:
     id: 'input/getruntime'
@@ -79,7 +69,7 @@ input:
 output:
   error:
     id: 'output/error'
-    description: 'Runtime error'
+    description: 'Error response to a command on runtime protocol'
     allOf:
       - $ref: '/shared/message'
       - properties:
@@ -87,6 +77,12 @@ output:
             enum: ['runtime']
           command:
             enum: ['error']
+          payload:
+            required: ['message']
+            properties:
+              message:
+                type: 'string'
+                description: 'Error message describing what went wrong'
 
   ports:
     id: 'output/ports'

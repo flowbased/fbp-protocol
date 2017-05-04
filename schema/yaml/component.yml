@@ -4,7 +4,7 @@ description: Protocol for handling the component registry.
 output:
   error:
     id: 'output/error'
-    description: 'Component error'
+    description: 'Error response to a command on component protocol'
     allOf:
       - $ref: '/shared/message'
       - properties:
@@ -12,6 +12,12 @@ output:
             enum: ['component']
           command:
             enum: ['error']
+          payload:
+            required: ['message']
+            properties:
+              message:
+                type: 'string'
+                description: 'Error message describing what went wrong'
 
   component:
     id: 'output/component'
@@ -88,16 +94,6 @@ output:
                 description: '(optional) unit tests for the component'
 
 input:
-  error:
-    id: 'input/error'
-    description: 'Component error'
-    allOf:
-      - $ref: '/shared/message'
-      - properties:
-          protocol:
-            enum: ['component']
-          command:
-            enum: ['error']
 
   list:
     id: 'input/list'

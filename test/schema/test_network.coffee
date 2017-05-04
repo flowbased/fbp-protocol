@@ -360,22 +360,6 @@ describe 'Test network protocol schema on events', ->
         chai.expect(res.valid).to.equal true
 
   describe 'input', ->
-    describe 'error', ->
-      schema = '/network/input/error'
-
-      it 'should have schema', ->
-        chai.expect(tv4.getSchema schema).to.exist
-
-      it 'should validate event with required fields', ->
-        event =
-          protocol: 'network'
-          command: 'error'
-          payload: {}
-
-        res = tv4.validateMultiple event, schema
-        chai.expect(res.errors).to.eql []
-        chai.expect(res.missing).to.eql []
-        chai.expect(res.valid).to.equal true
 
     describe 'start', ->
       schema = '/network/input/start'

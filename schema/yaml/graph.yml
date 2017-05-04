@@ -7,8 +7,20 @@ description: >-
 output:
   error:
     id: 'output/error'
-    description: 'Graph error'
-    $ref: '/shared/message'
+    description: 'Error response to a command on graph protocol'
+    allOf:
+      - $ref: '/shared/message'
+      - properties:
+          protocol:
+            enum: ['graph']
+          command:
+            enum: ['error']
+          payload:
+            required: ['message']
+            properties:
+              message:
+                type: 'string'
+                description: 'Error message describing what went wrong'
 
   addnode:
     id: 'output/addnode'
@@ -106,8 +118,6 @@ output:
     $ref: '../input/changegroup'
 
 input:
-  error:
-    description: 'Graph error'
 
   clear:
     id: 'input/clear'
