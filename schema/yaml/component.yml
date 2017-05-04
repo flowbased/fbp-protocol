@@ -29,7 +29,8 @@ output:
             properties:
               name:
                 type: string
-                description:  'component name in format that can be used in graphs'
+                description:  'component name in format that can be used in graphs. Should contain the component library prefix.'
+                example: 'my-project/MyComponent'
               description:
                 type: string
                 description: '(optional) textual description on what the component does'
@@ -67,7 +68,8 @@ output:
             properties:
               name:
                 type: string
-                description: 'Name of the component'
+                description: 'Name of the component. Must not contain library prefix'
+                example: 'MyComponent'
               language:
                 type: string
                 description: >-
@@ -77,6 +79,7 @@ output:
               library:
                 type: string
                 description: '(optional) Component library identifier'
+                example: 'components-common'
               code:
                 type: string
                 description: 'Component source code'
@@ -132,7 +135,8 @@ input:
             properties:
               name:
                 type: string
-                description: 'Name of the component to for which to get source code'
+                description: 'Name of the component to for which to get source code. Should contain the library prefix'
+                example: 'my-project/SomeComponent'
               secret:
                 type: string
                 description: access token to authorize user
@@ -156,7 +160,8 @@ input:
             properties:
               name:
                 type: string
-                description: 'Name of the component'
+                description: 'Name of the component. Must not contain library prefix.'
+                example: 'SomeComponent'
               language:
                 type: string
                 description: >-
@@ -165,6 +170,7 @@ input:
               library:
                 type: string
                 description: '(optional) Component library identifier'
+                example: 'my-project'
               code:
                 type: string
                 description: 'Component source code'
