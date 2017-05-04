@@ -26,6 +26,10 @@ message:
     payload:
       type: object
       description: 'content of message'
+    id:
+      type: string
+      description: >-
+        unique id of message, expected to be a uuid v4 as defined by rfc 4122
 
 port:
   id: 'port'

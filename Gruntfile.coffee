@@ -169,7 +169,7 @@ module.exports = ->
     desc = {}
     protocols =
       runtime: ['input', 'output']
-      graph: ['input']
+      graph: ['input', 'output']
       component: ['input', 'output']
       network: ['input', 'output']
       trace: ['input', 'output']
