@@ -39,12 +39,12 @@ output:
                 example: 'my-project/MyComponent'
               description:
                 type: string
-                description: '(optional) textual description on what the component does'
+                description: 'textual description on what the component does'
               icon:
                 type: string
                 description: >-
-                  (optional): visual icon for the component, matching icon
-                  names in [Font Awesome](http://fortawesome.github.io/Font-Awesome/icons/)
+                  Visual icon for the component, matching icon
+                  names in <a href="http://fortawesome.github.io/Font-Awesome/icons/">Font Awesome</a>
               subgraph:
                 type: boolean
                 description: 'boolean telling whether the component is a subgraph'
@@ -83,14 +83,14 @@ output:
                 example: 'c++'
               library:
                 type: string
-                description: '(optional) Component library identifier'
+                description: 'Component library identifier'
                 example: 'components-common'
               code:
                 type: string
                 description: 'Component source code'
               tests:
                 type: string
-                description: '(optional) unit tests for the component'
+                description: 'unit tests for the component'
 
 input:
 
@@ -164,15 +164,13 @@ input:
                 example: c++
               library:
                 type: string
-                description: '(optional) Component library identifier'
+                description: 'Component library identifier'
                 example: 'my-project'
               code:
                 type: string
                 description: 'Component source code'
               tests:
                 type: string
-                description: '(optional) unit tests for the component'
+                description: 'Unit tests for the component'
               secret:
                 type: string
-                description: access token to authorize user
-

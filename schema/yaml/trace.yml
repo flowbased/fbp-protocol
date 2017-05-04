@@ -59,7 +59,7 @@ input:
               secret: { $ref: '/shared/secret' }
               graph: { $ref: '/shared/graph_id' }
               buffersize:
-                description: '(optional) Size of tracing buffer to keep. In bytes'
+                description: 'Size of tracing buffer to keep. In bytes'
                 type: integer
 
   stop:

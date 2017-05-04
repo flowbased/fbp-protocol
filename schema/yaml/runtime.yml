@@ -60,7 +60,7 @@ input:
               payload:
                 type: object
                 description: >-
-                  (optional) payload for the packet. Used only with begingroup
+                  payload for the packet. Used only with begingroup
                   (for group names) and data packets
               secret:
                 type: string
@@ -129,10 +129,10 @@ output:
             properties:
               id:
                 type: string
-                description: '(optional) unique runtime ID. Must be a UUID, version 4'
+                description: 'unique runtime ID. Must be a UUID, version 4'
                 example: 'f18a4924-9d4f-414d-a37c-cd24b39bba10'
               label:
-                description: '(optional) Human-readable description of the runtime'
+                description: 'Human-readable description of the runtime'
                 type: string
               version:
                 description: >-
@@ -154,7 +154,7 @@ output:
                 $ref: '/shared/capabilities'
               graph:
                 description: >-
-                  (optional) ID of the currently configured main graph running
+                  ID of the currently configured main graph running
                   on the runtime, if any
                 type: string
                 example: 'service-main'
@@ -164,19 +164,19 @@ output:
                 example: 'microflo'
               namespace:
                 description: >-
-                  (optional) Library namespace of the project running on the runtime,
+                  Library namespace of the project running on the runtime,
                   if any. Must match that of components belonging to the (top-level) of project.
                 type: string
                 example: 'my-project-foo'
               repository:
                 description: >-
-                  (optional) Source-code repository URL of the project running on the runtime,
+                  Source-code repository URL of the project running on the runtime,
                   if any
                 type: string
                 example: 'https://github.com/flowbased/fbp-protocol.git'
               repositoryVersion:
                 description: >-
-                  (optional) Unique version identifier of the source code of the project,
+                  Unique version identifier of the source code of the project,
                   if known. The version should be available in @repository.
                 type: string
                 example: '0.6.3-8-g90edcfc'
