@@ -91,15 +91,26 @@ getDescriptions = (schemas) ->
 
   return desc
 
-renderProperty = (name, def) ->
+renderProperty = (name, def, parent) ->
   throw new Error("Property #{name} is missing .description") if not def.description
   throw new Error("Property #{name} is missing .type") if not def.type
+  throw new Error("Parent schema not specified for #{name}") if not parent
+  if parent.type == 'array'
+    if not parent.items?.required?.length
+      throw new Error(".required array not specified for #{name} of #{parent.id} (array)")
+  else
+    if not parent.required?.length?
+      console.log(JSON.stringify(parent, null, 2))
+      throw new Error(".required array not specified for #{name} of #{parent.id}")
 
-  name = "<label class='property name'>#{name}</label>"
-  type = "<label class='property type'>#{def.type}</label>"
-  description = "<label class='property description'>#{def.description}</label>"
+  isOptional = (parent.type == 'array' and parent.required?.indexOf(name) == -1) or parent.items?.required?.indexOf(name) == -1
+  classes = "property"
+  classes += " optional" if isOptional
+  name = "<label class='#{classes} name'>#{name}</label>"
+  type = "<label class='#{classes} type'>#{def.type}</label>"
+  description = "<label class='#{classes} description'>#{def.description}</label>"
   example = ""
-  example = "<code class='property example'>#{JSON.stringify(def.example)}</code>" if def.example?
+  example = "<code class='#{classes} example'>#{JSON.stringify(def.example)}</code>" if def.example?
   return name + type + description + example
 
 renderMessage = (messageType, message) ->
@@ -112,14 +123,14 @@ renderMessage = (messageType, message) ->
 
   p "<ul class='message properties'>"
   for messagePropName, messageProp of message.properties
-    line = "<li>#{renderProperty(messagePropName, messageProp)}</li>"
+    line = "<li>#{renderProperty(messagePropName, messageProp, message)}</li>"
     items = messageProp.items
 
     if messageProp.type is 'object' and messageProp.properties?
       p line
       p "<ul class='properties'>"
       for subPropName, subProp of messageProp.properties
-        p "<li>#{renderProperty(subPropName, subProp)}</li>"
+        p "<li>#{renderProperty(subPropName, subProp, messageProp)}</li>"
       p "</ul>"
 
     else if items?.type is 'object'
@@ -129,15 +140,15 @@ renderMessage = (messageType, message) ->
       p "<ul class='properties'>"
       for itemPropName, itemProp of items.properties
         if itemProp.type is 'object'
-          p "<li>#{renderProperty(itemPropName, itemProp)}</li>"
+          p "<li>#{renderProperty(itemPropName, itemProp, messageProp)}</li>"
 
           p "<ul class='properties'>"
           for itemSubPropName, itemSubProp of itemProp.properties
-            p "<li>#{renderProperty(itemSubPropName, itemSubProp)}</li>"
+            p "<li>#{renderProperty(itemSubPropName, itemSubProp, itemProp)}</li>"
           p "</ul>"
 
         else
-          p "<li>#{renderProperty(itemPropName, itemProp)}</li>"
+          p "<li>#{renderProperty(itemPropName, itemProp, messageProp)}</li>"
       p "</ul>"
 
     else if items?.type is 'string' and items?._enumDescriptions
