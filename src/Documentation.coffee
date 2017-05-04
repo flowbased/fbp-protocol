@@ -108,7 +108,7 @@ renderMessage = (messageType, message) ->
       for subPropName, subProp of messageProp.properties
         p "  - `#{subPropName}`: #{subProp.description}"
 
-    if items?.type is 'object'
+    else if items?.type is 'object'
       line += ", each containing"
       p line
 
@@ -122,7 +122,7 @@ renderMessage = (messageType, message) ->
         else
           p "  - `#{itemPropName}`: #{itemProp.description}"
 
-    if items?.type is 'string' and items?._enumDescriptions
+    else if items?.type is 'string' and items?._enumDescriptions
       line += " Options include:"
       p line
 
