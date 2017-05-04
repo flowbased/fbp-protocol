@@ -81,12 +81,59 @@ getDescriptions = (schemas) ->
           description: schema.description
 
         if schema.allOf?
+          #console.log 'sc', schema.allOf[1].properties
           for key, value of schema.allOf[1].properties.payload
             message[key] = value
 
+        #if event == 'error'
+        #  console.log 'm', message
         messages[event] = mergeAllOf message
 
   return desc
+
+renderMessage = (messageType, message) ->
+
+  lines = []
+  p = (line) -> lines.push line
+
+  p "### `#{messageType}`\n"
+  p "#{message.description}\n"
+
+  for messagePropName, messageProp of message.properties
+    line = "* `#{messagePropName}`: #{messageProp.description}"
+    items = messageProp.items
+
+    if messageProp.type is 'object' and messageProp.properties?
+      p line
+      for subPropName, subProp of messageProp.properties
+        p "  - `#{subPropName}`: #{subProp.description}"
+
+    if items?.type is 'object'
+      line += ", each containing"
+      p line
+
+      for itemPropName, itemProp of items.properties
+        if itemProp.type is 'object'
+          p "  * `#{itemPropName}`: #{itemProp.description}"
+
+          for itemSubPropName, itemSubProp of itemProp.properties
+            p "    - `#{itemSubPropName}`: #{itemSubProp.description}"
+
+        else
+          p "  - `#{itemPropName}`: #{itemProp.description}"
+
+    if items?.type is 'string' and items?._enumDescriptions
+      line += " Options include:"
+      p line
+
+      for enumDescription in items._enumDescriptions
+        p "  - `#{enumDescription.name}`: #{enumDescription.description}"
+
+    else
+      p line
+
+  p '\n'
+  return lines
 
 renderMarkdown = () ->
   schemas = getSchemas()
@@ -100,43 +147,8 @@ renderMarkdown = () ->
     p "#{protocolProps.description}\n"
 
     for messageType, message of protocolProps.messages
-      p "### `#{messageType}`\n"
-      p "#{message.description}\n"
-
-      for messagePropName, messageProp of message.properties
-        line = "* `#{messagePropName}`: #{messageProp.description}"
-        items = messageProp.items
-
-        if messageProp.type is 'object' and messageProp.properties?
-          p line
-          for subPropName, subProp of messageProp.properties
-            p "  - `#{subPropName}`: #{subProp.description}"
-
-        if items?.type is 'object'
-          line += ", each containing"
-          p line
-
-          for itemPropName, itemProp of items.properties
-            if itemProp.type is 'object'
-              p "  * `#{itemPropName}`: #{itemProp.description}"
-
-              for itemSubPropName, itemSubProp of itemProp.properties
-                p "    - `#{itemSubPropName}`: #{itemSubProp.description}"
-
-            else
-              p "  - `#{itemPropName}`: #{itemProp.description}"
-
-        if items?.type is 'string' and items?._enumDescriptions
-          line += " Options include:"
-          p line
-
-          for enumDescription in items._enumDescriptions
-            p "  - `#{enumDescription.name}`: #{enumDescription.description}"
-
-        else
-          p line
-
-      p '\n'
+      m = renderMessage messageType, message
+      lines = lines.concat m
 
   return lines.join('\n')
 
