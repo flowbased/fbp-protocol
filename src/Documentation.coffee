@@ -96,7 +96,7 @@ renderMessage = (messageType, message) ->
   lines = []
   p = (line) -> lines.push line
 
-  p "### `#{messageType}`\n"
+  p "### #{messageType}\n"
   p "#{message.description}\n"
 
   for messagePropName, messageProp of message.properties
