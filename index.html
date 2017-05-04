@@ -11,7 +11,7 @@
         background-color: hsla(  0, 98%, 100%, .8) !important;
       }
       article {
-        max-width: 36em;
+        max-width: 48em;
         margin-left: auto;
         margin-right: auto;
         font-size: 14pt;
@@ -34,13 +34,47 @@
       a:hover, a:visited {
         color: #708090;
       }
+      .properties li {
+        padding-bottom: 5px;
+      } 
+      .property.name {
+        font-family: monospace;
+        font-weight: 700;
+      }
+      .property.name::after {
+        content: ': ';
+        font-weight: 500;
+      }
+      .property.optional.type::after {
+        content: ' (optional)';
+        font-weight: 500;
+        color: hsla(210, 40%, 70%, 1);
+      }
+      .property.description {
+        display: block;
+      }
+      .property.example {
+        font-family: monospace;
+        background-color: hsla(210, 70%, 90%, 1);
+      }
+      .property.example::before {
+        content: 'Example: ';
+        background-color: white;
+      }
+      .enum.name {
+        font-family: monospace;
+        font-weight: 700;
+      }
+      h3 {
+        opacity: 0.75;
+      }
     </style>
   </head>
   <body>
     <article>
       <h1>FBP Network Protocol</h1>
       <aside>
-        Last updated 2017-05-03 18:43:51 +0000
+        Last updated 2017-05-04 16:31:40 +0000
       </aside>
       <p>The Flow-Based Programming network protocol (<em>FBP protocol</em>) has been designed primarily for flow-based programming interfaces like the <a href="https://flowhub.io">Flowhub</a> to communicate with various FBP runtimes. However, it can also be utilized for communication between different runtimes, for example server-to-server or server-to-microcontroller.</p>
 
@@ -76,6 +110,41 @@
 <h2 id="changes">Changes</h2>
 
 <ul>
+  <li>2017-05-04:
+    <ul>
+      <li>Fixed protocol errors (<code class="highlighter-rouge">graph:error</code>, <code class="highlighter-rouge">component:error</code> and <code class="highlighter-rouge">runtime:error</code>) to have mandatory <code class="highlighter-rouge">message</code> string payload.</li>
+      <li>Fixed missing <code class="highlighter-rouge">required</code> markers in some JSON schemas for <code class="highlighter-rouge">graph</code> protocol. Affected messages:
+<code class="highlighter-rouge">graph:renamegroup</code>, <code class="highlighter-rouge">graph:renameinport</code>, <code class="highlighter-rouge">graph:removeinport</code>, <code class="highlighter-rouge">graph:addinitial</code>, <code class="highlighter-rouge">graph:changeedge</code></li>
+      <li>More readable HTML output, including property value types and examples</li>
+    </ul>
+  </li>
+  <li>2017-05-03:
+    <ul>
+      <li>Added more optional metadata to <code class="highlighter-rouge">runtime:runtime</code> message: <code class="highlighter-rouge">repository</code>, <code class="highlighter-rouge">repositoryVersion</code> and <code class="highlighter-rouge">namespace</code></li>
+    </ul>
+  </li>
+  <li>2017-02-20:
+    <ul>
+      <li>Fixed payload definition of <code class="highlighter-rouge">network:edges</code> missing mandatory <code class="highlighter-rouge">graph</code> key</li>
+    </ul>
+  </li>
+  <li>2016-07-01:
+    <ul>
+      <li><code class="highlighter-rouge">network:error</code> payload may now contain an optional <code class="highlighter-rouge">stacktrace</code></li>
+    </ul>
+  </li>
+  <li>2016-06-23:
+    <ul>
+      <li>Trace subprotocol also available in machine-readable format</li>
+    </ul>
+  </li>
+  <li>2016-06-17:
+    <ul>
+      <li>Protocol definition available as machine-readable JSON <a href="https://github.com/flowbased/fbp-protocol/tree/master/schema/yaml">schemas</a>.</li>
+      <li>The human-readable HTML documentation is generated from this defintion.</li>
+      <li>The npm package <code class="highlighter-rouge">fbp-protocol</code> contains the schemas as YAML, JSON and .js modules.</li>
+    </ul>
+  </li>
   <li>2015-11-20:
     <ul>
       <li>Initial <code class="highlighter-rouge">trace</code> subprotocol, for <a href="https://github.com/flowbased/flowtrace">Flowtrace</a> support</li>
@@ -178,778 +247,737 @@ changegroup commands to the graph protocol</li>
 
 <p>When a client connects to a FBP procotol it may choose to discover the capabilities and other information about the runtime.</p>
 
-<h3 id="error"><code class="highlighter-rouge">error</code></h3>
-
-<p>Runtime error</p>
-
-<h3 id="getruntime"><code class="highlighter-rouge">getruntime</code></h3>
+<h3 id="getruntime">getruntime</h3>
 
 <p>Request the information about the runtime. When receiving this message the runtime should response with a runtime message.</p>
 
-<ul>
-  <li><code class="highlighter-rouge">secret</code>: access token to authorize user</li>
+<ul class="message properties">
+<li><label class="property name">secret</label><label class="property type">string</label><label class="property description">access token to authorize user</label></li>
 </ul>
 
-<h3 id="packet"><code class="highlighter-rouge">packet</code></h3>
+<h3 id="packet">packet</h3>
 
 <p>Runtimes that can be used as remote subgraphs (i.e. ones that have reported supporting the protocol:runtime capability) need to be able to receive and transmit information packets at their exposed ports. 
 These packets can be send from the client to the runtimes input ports, or from runtimes output ports to the client.</p>
 
-<ul>
-  <li><code class="highlighter-rouge">port</code>: port name for the input or output port</li>
-  <li><code class="highlighter-rouge">event</code>: packet event</li>
-  <li><code class="highlighter-rouge">graph</code>: graph the action targets</li>
-  <li><code class="highlighter-rouge">payload</code>: (optional) payload for the packet. Used only with begingroup (for group names) and data packets</li>
-  <li><code class="highlighter-rouge">secret</code>: access token to authorize user</li>
+<ul class="message properties">
+<li><label class="property name">port</label><label class="property type">string</label><label class="property description">port name for the input or output port</label></li>
+<li><label class="property name">event</label><label class="property type">string</label><label class="property description">packet event</label></li>
+<li><label class="property name">graph</label><label class="property type">string</label><label class="property description">graph the action targets</label></li>
+<li><label class="property name">payload</label><label class="property type">object</label><label class="property description">payload for the packet. Used only with begingroup (for group names) and data packets</label></li>
+<li><label class="property name">secret</label><label class="property type">string</label><label class="property description">access token to authorize user</label></li>
 </ul>
 
-<h3 id="ports"><code class="highlighter-rouge">ports</code></h3>
+<h3 id="error">error</h3>
+
+<p>Error response to a command on runtime protocol</p>
+
+<ul class="message properties">
+<li><label class="property name">message</label><label class="property type">string</label><label class="property description">Error message describing what went wrong</label></li>
+</ul>
+
+<h3 id="ports">ports</h3>
 
 <p>Message sent by the runtime to signal its available ports. The runtime is responsible for sending the up-to-date list of available ports back to client whenever it changes.</p>
 
-<ul>
-  <li><code class="highlighter-rouge">graph</code>: ID of the currently configured main graph running on the runtime</li>
-  <li><code class="highlighter-rouge">inPorts</code>: list of input ports, each containing
-    <ul>
-      <li><code class="highlighter-rouge">addressable</code>: boolean telling whether the port is an ArrayPort</li>
-      <li><code class="highlighter-rouge">id</code>: port name</li>
-      <li><code class="highlighter-rouge">type</code>: port datatype, for example boolean</li>
-      <li><code class="highlighter-rouge">required</code>: boolean telling whether the port needs to be connected for the component to work</li>
-      <li><code class="highlighter-rouge">description</code>: textual description of the port</li>
-    </ul>
-  </li>
-  <li><code class="highlighter-rouge">inPorts</code>: list of input ports, each containing</li>
-  <li><code class="highlighter-rouge">outPorts</code>: list of output ports, each containing
-    <ul>
-      <li><code class="highlighter-rouge">addressable</code>: boolean telling whether the port is an ArrayPort</li>
-      <li><code class="highlighter-rouge">id</code>: port name</li>
-      <li><code class="highlighter-rouge">type</code>: port datatype, for example boolean</li>
-      <li><code class="highlighter-rouge">required</code>: boolean telling whether the port needs to be connected for the component to work</li>
-      <li><code class="highlighter-rouge">description</code>: textual description of the port</li>
-    </ul>
-  </li>
-  <li><code class="highlighter-rouge">outPorts</code>: list of output ports, each containing</li>
+<ul class="message properties">
+<li><label class="property name">graph</label><label class="property type">string</label><label class="property description">ID of the currently configured main graph running on the runtime</label></li>
+<li><label class="property name">inPorts</label><label class="property type">array</label><label class="property description">list of input ports of the runtime</label></li>Each item contains:
+<ul class="properties">
+<li><label class="property optional name">addressable</label><label class="property optional type">boolean</label><label class="property optional description">whether the port is an ArrayPort</label></li>
+<li><label class="property name">id</label><label class="property type">string</label><label class="property description">port name</label></li>
+<li><label class="property name">type</label><label class="property type">string</label><label class="property description">port datatype</label><code class="property example">"boolean"</code></li>
+<li><label class="property optional name">required</label><label class="property optional type">boolean</label><label class="property optional description">whether the port needs to be connected for the component to work</label><code class="property optional example">true</code></li>
+<li><label class="property optional name">description</label><label class="property optional type">string</label><label class="property optional description">textual description of the port</label></li>
+</ul>
+<li><label class="property name">outPorts</label><label class="property type">array</label><label class="property description">list of output ports of the runtime</label></li>Each item contains:
+<ul class="properties">
+<li><label class="property optional name">addressable</label><label class="property optional type">boolean</label><label class="property optional description">whether the port is an ArrayPort</label></li>
+<li><label class="property name">id</label><label class="property type">string</label><label class="property description">port name</label></li>
+<li><label class="property name">type</label><label class="property type">string</label><label class="property description">port datatype</label><code class="property example">"boolean"</code></li>
+<li><label class="property optional name">required</label><label class="property optional type">boolean</label><label class="property optional description">whether the port needs to be connected for the component to work</label><code class="property optional example">true</code></li>
+<li><label class="property optional name">description</label><label class="property optional type">string</label><label class="property optional description">textual description of the port</label></li>
+</ul>
 </ul>
 
-<h3 id="runtime"><code class="highlighter-rouge">runtime</code></h3>
+<h3 id="runtime">runtime</h3>
 
 <p>Response from the runtime to the getruntime request.</p>
 
-<ul>
-  <li><code class="highlighter-rouge">id</code>: (optional) runtime ID used with Flowhub Registry</li>
-  <li><code class="highlighter-rouge">label</code>: (optional) Human-readable description of the runtime</li>
-  <li><code class="highlighter-rouge">version</code>: version of the runtime protocol that the runtime supports, for example 0.4</li>
-  <li><code class="highlighter-rouge">allCapabilities</code>: array of capability strings for things the runtime is able to do. May include things not permitted for the user. Options include:
-    <ul>
-      <li><code class="highlighter-rouge">protocol:network</code>: the runtime is able to control and introspect its running networks using the Network protocol</li>
-      <li><code class="highlighter-rouge">protocol:component</code>: the runtime is able to list and modify its components using the Component protocol</li>
-      <li><code class="highlighter-rouge">protocol:runtime</code>: the runtime is able to expose the ports of its main graph using the Runtime protocol and transmit packet information to/from them</li>
-      <li><code class="highlighter-rouge">component:getsource</code>: runtime is able to read and send component source code back to client</li>
-      <li><code class="highlighter-rouge">network:persist</code>: runtime is able to <em>flash</em> a running graph setup into itself, making it persistent across reboots</li>
-      <li><code class="highlighter-rouge">protocol:graph</code>: the runtime is able to modify its graphs using the Graph protocol</li>
-      <li><code class="highlighter-rouge">component:setsource</code>: runtime is able to compile and run custom components sent as source code strings</li>
-      <li><code class="highlighter-rouge">protocol:trace</code>: runtime is able to record and send over flowtraces, used for retroactive debugging.</li>
-    </ul>
-  </li>
-  <li><code class="highlighter-rouge">capabilities</code>: array of capability strings for things the runtime is able to do. 
-If the runtime is currently running a graph and it is able to speak the full Runtime protocol, it should follow up with a ports message. Options include:
-    <ul>
-      <li><code class="highlighter-rouge">protocol:network</code>: the runtime is able to control and introspect its running networks using the Network protocol</li>
-      <li><code class="highlighter-rouge">protocol:component</code>: the runtime is able to list and modify its components using the Component protocol</li>
-      <li><code class="highlighter-rouge">protocol:runtime</code>: the runtime is able to expose the ports of its main graph using the Runtime protocol and transmit packet information to/from them</li>
-      <li><code class="highlighter-rouge">component:getsource</code>: runtime is able to read and send component source code back to client</li>
-      <li><code class="highlighter-rouge">network:persist</code>: runtime is able to <em>flash</em> a running graph setup into itself, making it persistent across reboots</li>
-      <li><code class="highlighter-rouge">protocol:graph</code>: the runtime is able to modify its graphs using the Graph protocol</li>
-      <li><code class="highlighter-rouge">component:setsource</code>: runtime is able to compile and run custom components sent as source code strings</li>
-      <li><code class="highlighter-rouge">protocol:trace</code>: runtime is able to record and send over flowtraces, used for retroactive debugging.</li>
-    </ul>
-  </li>
-  <li><code class="highlighter-rouge">graph</code>: (optional) ID of the currently configured main graph running on the runtime, if any</li>
-  <li><code class="highlighter-rouge">type</code>: type of the runtime, for example noflo-nodejs or microflo</li>
-  <li><code class="highlighter-rouge">namespace</code>: (optional) Library namespace of the project running on the runtime, if any. Must match that of components belonging to the (top-level) of project.</li>
-  <li><code class="highlighter-rouge">repository</code>: (optional) Source-code repository URL of the project running on the runtime, if any</li>
-  <li><code class="highlighter-rouge">repositoryVersion</code>: (optional) Unique version identifier of the source code of the project, if known. The version should be available in @repository.</li>
+<ul class="message properties">
+<li><label class="property name">id</label><label class="property type">string</label><label class="property description">unique runtime ID. Must be a UUID, version 4</label><code class="property example">"f18a4924-9d4f-414d-a37c-cd24b39bba10"</code></li>
+<li><label class="property name">label</label><label class="property type">string</label><label class="property description">Human-readable description of the runtime</label></li>
+<li><label class="property name">version</label><label class="property type">string</label><label class="property description">version of the runtime protocol that the runtime supports</label><code class="property example">"0.5"</code></li>
+<li><label class="property name">allCapabilities</label><label class="property type">array</label><label class="property description">array of capability strings for things the runtime is able to do. May include things not permitted for the user.</label></li> Valid values are:
+<ul class="values">
+<li><label class="enum name">protocol:network</label>: the runtime is able to control and introspect its running networks using the Network protocol</li>
+<li><label class="enum name">protocol:component</label>: the runtime is able to list and modify its components using the Component protocol</li>
+<li><label class="enum name">protocol:runtime</label>: the runtime is able to expose the ports of its main graph using the Runtime protocol and transmit packet information to/from them</li>
+<li><label class="enum name">component:getsource</label>: runtime is able to read and send component source code back to client</li>
+<li><label class="enum name">network:persist</label>: runtime is able to *flash* a running graph setup into itself, making it persistent across reboots</li>
+<li><label class="enum name">protocol:graph</label>: the runtime is able to modify its graphs using the Graph protocol</li>
+<li><label class="enum name">component:setsource</label>: runtime is able to compile and run custom components sent as source code strings</li>
+<li><label class="enum name">protocol:trace</label>: runtime is able to record and send over flowtraces, used for retroactive debugging.</li>
+</ul>
+<li><label class="property name">capabilities</label><label class="property type">array</label><label class="property description">array of capability strings for things the runtime is able to do. 
+If the runtime is currently running a graph and it is able to speak the full Runtime protocol, it should follow up with a ports message.</label></li> Valid values are:
+<ul class="values">
+<li><label class="enum name">protocol:network</label>: the runtime is able to control and introspect its running networks using the Network protocol</li>
+<li><label class="enum name">protocol:component</label>: the runtime is able to list and modify its components using the Component protocol</li>
+<li><label class="enum name">protocol:runtime</label>: the runtime is able to expose the ports of its main graph using the Runtime protocol and transmit packet information to/from them</li>
+<li><label class="enum name">component:getsource</label>: runtime is able to read and send component source code back to client</li>
+<li><label class="enum name">network:persist</label>: runtime is able to *flash* a running graph setup into itself, making it persistent across reboots</li>
+<li><label class="enum name">protocol:graph</label>: the runtime is able to modify its graphs using the Graph protocol</li>
+<li><label class="enum name">component:setsource</label>: runtime is able to compile and run custom components sent as source code strings</li>
+<li><label class="enum name">protocol:trace</label>: runtime is able to record and send over flowtraces, used for retroactive debugging.</li>
+</ul>
+<li><label class="property name">graph</label><label class="property type">string</label><label class="property description">ID of the currently configured main graph running on the runtime, if any</label><code class="property example">"service-main"</code></li>
+<li><label class="property name">type</label><label class="property type">string</label><label class="property description">type of the runtime</label><code class="property example">"microflo"</code></li>
+<li><label class="property name">namespace</label><label class="property type">string</label><label class="property description">Library namespace of the project running on the runtime, if any. Must match that of components belonging to the (top-level) of project.</label><code class="property example">"my-project-foo"</code></li>
+<li><label class="property name">repository</label><label class="property type">string</label><label class="property description">Source-code repository URL of the project running on the runtime, if any</label><code class="property example">"https://github.com/flowbased/fbp-protocol.git"</code></li>
+<li><label class="property name">repositoryVersion</label><label class="property type">string</label><label class="property description">Unique version identifier of the source code of the project, if known. The version should be available in @repository.</label><code class="property example">"0.6.3-8-g90edcfc"</code></li>
 </ul>
 
 <h2 id="graph-protocol">Graph protocol</h2>
 
 <p>This protocol is utilized for communicating about graph changes in both directions.</p>
 
-<h3 id="error-1"><code class="highlighter-rouge">error</code></h3>
-
-<p>Graph error</p>
-
-<h3 id="clear"><code class="highlighter-rouge">clear</code></h3>
+<h3 id="clear">clear</h3>
 
 <p>Initialize an empty graph.</p>
 
-<ul>
-  <li><code class="highlighter-rouge">id</code>: identifier for the graph being created. Used for all subsequent messages related to the graph instance</li>
-  <li><code class="highlighter-rouge">name</code>: (optional) Human-readable label for the graph</li>
-  <li><code class="highlighter-rouge">library</code>: (optional) Component library identifier</li>
-  <li><code class="highlighter-rouge">main</code>: (optional) Identifies the graph as a main graph of a project that should not be registered as a component
-Graphs registered in this way should also be available for use as subgraphs in other graphs. Therefore a graph registration and later changes to it may cause component messages of the Component protocol to be sent back to the client informing of possible changes in the ports of the subgraph component.</li>
-  <li><code class="highlighter-rouge">icon</code>: (optional) Icon to use for the graph when used as a component</li>
-  <li><code class="highlighter-rouge">description</code>: (optional) Description to use for the graph when used as a component</li>
-  <li><code class="highlighter-rouge">secret</code>: access token to authorize user</li>
+<ul class="message properties">
+<li><label class="property name">id</label><label class="property type">string</label><label class="property description">identifier for the graph being created. Used for all subsequent messages related to the graph instance</label></li>
+<li><label class="property name">name</label><label class="property type">string</label><label class="property description">Human-readable label for the graph</label></li>
+<li><label class="property name">library</label><label class="property type">string</label><label class="property description">Component library identifier</label></li>
+<li><label class="property name">main</label><label class="property type">boolean</label><label class="property description">Identifies the graph as a main graph of a project that should not be registered as a component
+Graphs registered in this way should also be available for use as subgraphs in other graphs. Therefore a graph registration and later changes to it may cause component messages of the Component protocol to be sent back to the client informing of possible changes in the ports of the subgraph component.</label></li>
+<li><label class="property name">icon</label><label class="property type">string</label><label class="property description">Icon to use for the graph when used as a component</label></li>
+<li><label class="property name">description</label><label class="property type">string</label><label class="property description">Description to use for the graph when used as a component</label></li>
+<li><label class="property name">secret</label><label class="property type">string</label><label class="property description">access token to authorize user</label></li>
 </ul>
 
-<h3 id="addnode"><code class="highlighter-rouge">addnode</code></h3>
+<h3 id="addnode">addnode</h3>
 
 <p>Add node to a graph.</p>
 
-<ul>
-  <li><code class="highlighter-rouge">id</code>: identifier for the node</li>
-  <li><code class="highlighter-rouge">component</code>: component name used for the node</li>
-  <li><code class="highlighter-rouge">metadata</code>: (optional): structure of key-value pairs for node metadata</li>
-  <li><code class="highlighter-rouge">graph</code>: graph the action targets</li>
-  <li><code class="highlighter-rouge">secret</code>: access token to authorize user</li>
+<ul class="message properties">
+<li><label class="property name">id</label><label class="property type">string</label><label class="property description">identifier for the node</label></li>
+<li><label class="property name">component</label><label class="property type">string</label><label class="property description">component name used for the node</label></li>
+<li><label class="property name">metadata</label><label class="property type">object</label><label class="property description">structure of key-value pairs for node metadata</label></li>
+<li><label class="property name">graph</label><label class="property type">string</label><label class="property description">graph the action targets</label></li>
+<li><label class="property name">secret</label><label class="property type">string</label><label class="property description">access token to authorize user</label></li>
 </ul>
 
-<h3 id="removenode"><code class="highlighter-rouge">removenode</code></h3>
+<h3 id="removenode">removenode</h3>
 
 <p>Remove a node from a graph.</p>
 
-<ul>
-  <li><code class="highlighter-rouge">id</code>: identifier for the node</li>
-  <li><code class="highlighter-rouge">graph</code>: graph the action targets</li>
-  <li><code class="highlighter-rouge">secret</code>: access token to authorize user</li>
+<ul class="message properties">
+<li><label class="property name">id</label><label class="property type">string</label><label class="property description">identifier for the node</label></li>
+<li><label class="property name">graph</label><label class="property type">string</label><label class="property description">graph the action targets</label></li>
+<li><label class="property name">secret</label><label class="property type">string</label><label class="property description">access token to authorize user</label></li>
 </ul>
 
-<h3 id="renamenode"><code class="highlighter-rouge">renamenode</code></h3>
+<h3 id="renamenode">renamenode</h3>
 
 <p>Change the ID of a node in the graph</p>
 
-<ul>
-  <li><code class="highlighter-rouge">from</code>: original identifier for the node</li>
-  <li><code class="highlighter-rouge">to</code>: new identifier for the node</li>
-  <li><code class="highlighter-rouge">graph</code>: graph the action targets</li>
-  <li><code class="highlighter-rouge">secret</code>: access token to authorize user</li>
+<ul class="message properties">
+<li><label class="property name">from</label><label class="property type">string</label><label class="property description">original identifier for the node</label></li>
+<li><label class="property name">to</label><label class="property type">string</label><label class="property description">new identifier for the node</label></li>
+<li><label class="property name">graph</label><label class="property type">string</label><label class="property description">graph the action targets</label></li>
+<li><label class="property name">secret</label><label class="property type">string</label><label class="property description">access token to authorize user</label></li>
 </ul>
 
-<h3 id="changenode"><code class="highlighter-rouge">changenode</code></h3>
+<h3 id="changenode">changenode</h3>
 
 <p>Change the metadata associated to a node in the graph</p>
 
-<ul>
-  <li><code class="highlighter-rouge">id</code>: identifier for the node</li>
-  <li><code class="highlighter-rouge">metadata</code>: structure of key-value pairs for node metadata</li>
-  <li><code class="highlighter-rouge">graph</code>: graph the action targets</li>
-  <li><code class="highlighter-rouge">secret</code>: access token to authorize user</li>
+<ul class="message properties">
+<li><label class="property name">id</label><label class="property type">string</label><label class="property description">identifier for the node</label></li>
+<li><label class="property name">metadata</label><label class="property type">object</label><label class="property description">structure of key-value pairs for node metadata</label></li>
+<li><label class="property name">graph</label><label class="property type">string</label><label class="property description">graph the action targets</label></li>
+<li><label class="property name">secret</label><label class="property type">string</label><label class="property description">access token to authorize user</label></li>
 </ul>
 
-<h3 id="addedge"><code class="highlighter-rouge">addedge</code></h3>
+<h3 id="addedge">addedge</h3>
 
 <p>Add an edge to the graph</p>
 
-<ul>
-  <li><code class="highlighter-rouge">src</code>: source node for the edge
-    <ul>
-      <li><code class="highlighter-rouge">node</code>: node identifier</li>
-      <li><code class="highlighter-rouge">port</code>: port name</li>
-      <li><code class="highlighter-rouge">index</code>: connection index (optional, for addressable ports)</li>
-    </ul>
-  </li>
-  <li><code class="highlighter-rouge">src</code>: source node for the edge</li>
-  <li><code class="highlighter-rouge">tgt</code>: target node for the edge
-    <ul>
-      <li><code class="highlighter-rouge">node</code>: node identifier</li>
-      <li><code class="highlighter-rouge">port</code>: port name</li>
-      <li><code class="highlighter-rouge">index</code>: connection index (optional, for addressable ports)</li>
-    </ul>
-  </li>
-  <li><code class="highlighter-rouge">tgt</code>: target node for the edge</li>
-  <li><code class="highlighter-rouge">metadata</code>: (optional): structure of key-value pairs for edge metadata</li>
-  <li><code class="highlighter-rouge">graph</code>: graph the action targets</li>
-  <li><code class="highlighter-rouge">secret</code>: access token to authorize user</li>
+<ul class="message properties">
+<li><label class="property name">src</label><label class="property type">object</label><label class="property description">source node for the edge</label></li>
+<ul class="properties">
+<li><label class="property name">node</label><label class="property type">string</label><label class="property description">node identifier</label></li>
+<li><label class="property name">port</label><label class="property type">string</label><label class="property description">port name</label></li>
+<li><label class="property name">index</label><label class="property type">string,number</label><label class="property description">connection index, for addressable ports</label></li>
+</ul>
+<li><label class="property name">tgt</label><label class="property type">object</label><label class="property description">target node for the edge</label></li>
+<ul class="properties">
+<li><label class="property name">node</label><label class="property type">string</label><label class="property description">node identifier</label></li>
+<li><label class="property name">port</label><label class="property type">string</label><label class="property description">port name</label></li>
+<li><label class="property name">index</label><label class="property type">string,number</label><label class="property description">connection index, for addressable ports</label></li>
+</ul>
+<li><label class="property name">metadata</label><label class="property type">object</label><label class="property description">Structure of key-value pairs for edge metadata</label></li>
+<li><label class="property name">graph</label><label class="property type">string</label><label class="property description">graph the action targets</label></li>
+<li><label class="property name">secret</label><label class="property type">string</label><label class="property description">access token to authorize user</label></li>
 </ul>
 
-<h3 id="removeedge"><code class="highlighter-rouge">removeedge</code></h3>
+<h3 id="removeedge">removeedge</h3>
 
 <p>Remove an edge from the graph</p>
 
-<ul>
-  <li><code class="highlighter-rouge">graph</code>: graph the action targets</li>
-  <li><code class="highlighter-rouge">src</code>: source node for the edge
-    <ul>
-      <li><code class="highlighter-rouge">node</code>: node identifier</li>
-      <li><code class="highlighter-rouge">port</code>: port name</li>
-      <li><code class="highlighter-rouge">index</code>: connection index (optional, for addressable ports)</li>
-    </ul>
-  </li>
-  <li><code class="highlighter-rouge">src</code>: source node for the edge</li>
-  <li><code class="highlighter-rouge">tgt</code>: target node for the edge
-    <ul>
-      <li><code class="highlighter-rouge">node</code>: node identifier</li>
-      <li><code class="highlighter-rouge">port</code>: port name</li>
-      <li><code class="highlighter-rouge">index</code>: connection index (optional, for addressable ports)</li>
-    </ul>
-  </li>
-  <li><code class="highlighter-rouge">tgt</code>: target node for the edge</li>
-  <li><code class="highlighter-rouge">secret</code>: access token to authorize user</li>
+<ul class="message properties">
+<li><label class="property name">graph</label><label class="property type">string</label><label class="property description">graph the action targets</label></li>
+<li><label class="property name">src</label><label class="property type">object</label><label class="property description">source node for the edge</label></li>
+<ul class="properties">
+<li><label class="property name">node</label><label class="property type">string</label><label class="property description">node identifier</label></li>
+<li><label class="property name">port</label><label class="property type">string</label><label class="property description">port name</label></li>
+<li><label class="property name">index</label><label class="property type">string,number</label><label class="property description">connection index, for addressable ports</label></li>
+</ul>
+<li><label class="property name">tgt</label><label class="property type">object</label><label class="property description">target node for the edge</label></li>
+<ul class="properties">
+<li><label class="property name">node</label><label class="property type">string</label><label class="property description">node identifier</label></li>
+<li><label class="property name">port</label><label class="property type">string</label><label class="property description">port name</label></li>
+<li><label class="property name">index</label><label class="property type">string,number</label><label class="property description">connection index, for addressable ports</label></li>
+</ul>
+<li><label class="property name">secret</label><label class="property type">string</label><label class="property description">access token to authorize user</label></li>
 </ul>
 
-<h3 id="changeedge"><code class="highlighter-rouge">changeedge</code></h3>
+<h3 id="changeedge">changeedge</h3>
 
 <p>Change an edge’s metadata</p>
 
-<ul>
-  <li><code class="highlighter-rouge">graph</code>: graph the action targets</li>
-  <li><code class="highlighter-rouge">metadata</code>: struct of key-value pairs for edge metadata</li>
-  <li><code class="highlighter-rouge">src</code>: source node for the edge
-    <ul>
-      <li><code class="highlighter-rouge">node</code>: node identifier</li>
-      <li><code class="highlighter-rouge">port</code>: port name</li>
-      <li><code class="highlighter-rouge">index</code>: connection index (optional, for addressable ports)</li>
-    </ul>
-  </li>
-  <li><code class="highlighter-rouge">src</code>: source node for the edge</li>
-  <li><code class="highlighter-rouge">tgt</code>: target node for the edge
-    <ul>
-      <li><code class="highlighter-rouge">node</code>: node identifier</li>
-      <li><code class="highlighter-rouge">port</code>: port name</li>
-      <li><code class="highlighter-rouge">index</code>: connection index (optional, for addressable ports)</li>
-    </ul>
-  </li>
-  <li><code class="highlighter-rouge">tgt</code>: target node for the edge</li>
-  <li><code class="highlighter-rouge">secret</code>: access token to authorize user</li>
+<ul class="message properties">
+<li><label class="property name">graph</label><label class="property type">string</label><label class="property description">graph the action targets</label></li>
+<li><label class="property name">metadata</label><label class="property type">object</label><label class="property description">struct of key-value pairs for edge metadata</label></li>
+<li><label class="property name">src</label><label class="property type">object</label><label class="property description">source node for the edge</label></li>
+<ul class="properties">
+<li><label class="property name">node</label><label class="property type">string</label><label class="property description">node identifier</label></li>
+<li><label class="property name">port</label><label class="property type">string</label><label class="property description">port name</label></li>
+<li><label class="property name">index</label><label class="property type">string,number</label><label class="property description">connection index, for addressable ports</label></li>
+</ul>
+<li><label class="property name">tgt</label><label class="property type">object</label><label class="property description">target node for the edge</label></li>
+<ul class="properties">
+<li><label class="property name">node</label><label class="property type">string</label><label class="property description">node identifier</label></li>
+<li><label class="property name">port</label><label class="property type">string</label><label class="property description">port name</label></li>
+<li><label class="property name">index</label><label class="property type">string,number</label><label class="property description">connection index, for addressable ports</label></li>
+</ul>
+<li><label class="property name">secret</label><label class="property type">string</label><label class="property description">access token to authorize user</label></li>
 </ul>
 
-<h3 id="addinitial"><code class="highlighter-rouge">addinitial</code></h3>
+<h3 id="addinitial">addinitial</h3>
 
 <p>Add an IIP to the graph</p>
 
-<ul>
-  <li><code class="highlighter-rouge">graph</code>: graph the action targets</li>
-  <li><code class="highlighter-rouge">metadata</code>: (optional): structure of key-value pairs for edge metadata</li>
-  <li><code class="highlighter-rouge">src</code>: source data for the edge
-    <ul>
-      <li><code class="highlighter-rouge">data</code>: IIP value in its actual data type</li>
-    </ul>
-  </li>
-  <li><code class="highlighter-rouge">src</code>: source data for the edge</li>
-  <li><code class="highlighter-rouge">tgt</code>: target node for the edge
-    <ul>
-      <li><code class="highlighter-rouge">node</code>: node identifier</li>
-      <li><code class="highlighter-rouge">port</code>: port name</li>
-      <li><code class="highlighter-rouge">index</code>: connection index (optional, for addressable ports)</li>
-    </ul>
-  </li>
-  <li><code class="highlighter-rouge">tgt</code>: target node for the edge</li>
-  <li><code class="highlighter-rouge">secret</code>: access token to authorize user</li>
+<ul class="message properties">
+<li><label class="property name">graph</label><label class="property type">string</label><label class="property description">graph the action targets</label></li>
+<li><label class="property name">metadata</label><label class="property type">object</label><label class="property description">structure of key-value pairs for edge metadata</label></li>
+<li><label class="property name">src</label><label class="property type">object</label><label class="property description">source data for the edge</label></li>
+<ul class="properties">
+<li><label class="property name">data</label><label class="property type">object,array,string,number,integer,boolean,null</label><label class="property description">IIP value in its actual data type</label></li>
+</ul>
+<li><label class="property name">tgt</label><label class="property type">object</label><label class="property description">target node for the edge</label></li>
+<ul class="properties">
+<li><label class="property name">node</label><label class="property type">string</label><label class="property description">node identifier</label></li>
+<li><label class="property name">port</label><label class="property type">string</label><label class="property description">port name</label></li>
+<li><label class="property name">index</label><label class="property type">string,number</label><label class="property description">connection index, for addressable ports</label></li>
+</ul>
+<li><label class="property name">secret</label><label class="property type">string</label><label class="property description">access token to authorize user</label></li>
 </ul>
 
-<h3 id="removeinitial"><code class="highlighter-rouge">removeinitial</code></h3>
+<h3 id="removeinitial">removeinitial</h3>
 
 <p>Remove an IIP from the graph</p>
 
-<ul>
-  <li><code class="highlighter-rouge">src</code>: source data for the edge
-    <ul>
-      <li><code class="highlighter-rouge">data</code>: IIP value in its actual data type</li>
-    </ul>
-  </li>
-  <li><code class="highlighter-rouge">src</code>: source data for the edge</li>
-  <li><code class="highlighter-rouge">tgt</code>: target node for the edge
-    <ul>
-      <li><code class="highlighter-rouge">node</code>: node identifier</li>
-      <li><code class="highlighter-rouge">port</code>: port name</li>
-      <li><code class="highlighter-rouge">index</code>: connection index (optional, for addressable ports)</li>
-    </ul>
-  </li>
-  <li><code class="highlighter-rouge">tgt</code>: target node for the edge</li>
-  <li><code class="highlighter-rouge">graph</code>: graph the action targets</li>
-  <li><code class="highlighter-rouge">secret</code>: access token to authorize user</li>
+<ul class="message properties">
+<li><label class="property name">src</label><label class="property type">object</label><label class="property description">source data for the edge</label></li>
+<ul class="properties">
+<li><label class="property name">data</label><label class="property type">object,array,string,number,integer,boolean,null</label><label class="property description">IIP value in its actual data type</label></li>
+</ul>
+<li><label class="property name">tgt</label><label class="property type">object</label><label class="property description">target node for the edge</label></li>
+<ul class="properties">
+<li><label class="property name">node</label><label class="property type">string</label><label class="property description">node identifier</label></li>
+<li><label class="property name">port</label><label class="property type">string</label><label class="property description">port name</label></li>
+<li><label class="property name">index</label><label class="property type">string,number</label><label class="property description">connection index, for addressable ports</label></li>
+</ul>
+<li><label class="property name">graph</label><label class="property type">string</label><label class="property description">graph the action targets</label></li>
+<li><label class="property name">secret</label><label class="property type">string</label><label class="property description">access token to authorize user</label></li>
 </ul>
 
-<h3 id="addinport"><code class="highlighter-rouge">addinport</code></h3>
+<h3 id="addinport">addinport</h3>
 
 <p>Add an exported inport to the graph.</p>
 
-<ul>
-  <li><code class="highlighter-rouge">public</code>: the exported name of the port</li>
-  <li><code class="highlighter-rouge">node</code>: node identifier</li>
-  <li><code class="highlighter-rouge">port</code>: internal port name</li>
-  <li><code class="highlighter-rouge">metadata</code>: (optional): structure of key-value pairs for node metadata</li>
-  <li><code class="highlighter-rouge">graph</code>: graph the action targets</li>
-  <li><code class="highlighter-rouge">secret</code>: access token to authorize user</li>
+<ul class="message properties">
+<li><label class="property name">public</label><label class="property type">string</label><label class="property description">the exported name of the port</label></li>
+<li><label class="property name">node</label><label class="property type">string</label><label class="property description">node identifier</label></li>
+<li><label class="property name">port</label><label class="property type">string</label><label class="property description">internal port name</label></li>
+<li><label class="property name">metadata</label><label class="property type">object</label><label class="property description">structure of key-value pairs for node metadata</label></li>
+<li><label class="property name">graph</label><label class="property type">string</label><label class="property description">graph the action targets</label></li>
+<li><label class="property name">secret</label><label class="property type">string</label><label class="property description">access token to authorize user</label></li>
 </ul>
 
-<h3 id="removeinport"><code class="highlighter-rouge">removeinport</code></h3>
+<h3 id="removeinport">removeinport</h3>
 
 <p>Remove an exported port from the graph</p>
 
-<ul>
-  <li><code class="highlighter-rouge">public</code>: the exported name of the port to remove</li>
-  <li><code class="highlighter-rouge">graph</code>: graph the action targets</li>
-  <li><code class="highlighter-rouge">secret</code>: access token to authorize user</li>
+<ul class="message properties">
+<li><label class="property name">public</label><label class="property type">string</label><label class="property description">the exported name of the port to remove</label></li>
+<li><label class="property name">graph</label><label class="property type">string</label><label class="property description">graph the action targets</label></li>
+<li><label class="property name">secret</label><label class="property type">string</label><label class="property description">access token to authorize user</label></li>
 </ul>
 
-<h3 id="renameinport"><code class="highlighter-rouge">renameinport</code></h3>
+<h3 id="renameinport">renameinport</h3>
 
 <p>Rename an exported port in the graph</p>
 
-<ul>
-  <li><code class="highlighter-rouge">from</code>: original exported port name</li>
-  <li><code class="highlighter-rouge">to</code>: new exported port name</li>
-  <li><code class="highlighter-rouge">graph</code>: graph the action targets</li>
-  <li><code class="highlighter-rouge">secret</code>: access token to authorize user</li>
+<ul class="message properties">
+<li><label class="property name">from</label><label class="property type">string</label><label class="property description">original exported port name</label></li>
+<li><label class="property name">to</label><label class="property type">string</label><label class="property description">new exported port name</label></li>
+<li><label class="property name">graph</label><label class="property type">string</label><label class="property description">graph the action targets</label></li>
+<li><label class="property name">secret</label><label class="property type">string</label><label class="property description">access token to authorize user</label></li>
 </ul>
 
-<h3 id="addoutport"><code class="highlighter-rouge">addoutport</code></h3>
+<h3 id="addoutport">addoutport</h3>
 
 <p>Add an exported outport to the graph.</p>
 
-<ul>
-  <li><code class="highlighter-rouge">public</code>: the exported name of the port</li>
-  <li><code class="highlighter-rouge">node</code>: node identifier</li>
-  <li><code class="highlighter-rouge">port</code>: internal port name</li>
-  <li><code class="highlighter-rouge">metadata</code>: (optional): structure of key-value pairs for port metadata</li>
-  <li><code class="highlighter-rouge">graph</code>: graph the action targets</li>
-  <li><code class="highlighter-rouge">secret</code>: access token to authorize user</li>
+<ul class="message properties">
+<li><label class="property name">public</label><label class="property type">string</label><label class="property description">the exported name of the port</label></li>
+<li><label class="property name">node</label><label class="property type">string</label><label class="property description">node identifier</label></li>
+<li><label class="property name">port</label><label class="property type">string</label><label class="property description">internal port name</label></li>
+<li><label class="property name">metadata</label><label class="property type">object</label><label class="property description">structure of key-value pairs for port metadata</label></li>
+<li><label class="property name">graph</label><label class="property type">string</label><label class="property description">graph the action targets</label></li>
+<li><label class="property name">secret</label><label class="property type">string</label><label class="property description">access token to authorize user</label></li>
 </ul>
 
-<h3 id="removeoutport"><code class="highlighter-rouge">removeoutport</code></h3>
+<h3 id="removeoutport">removeoutport</h3>
 
 <p>Remove an exported port from the graph</p>
 
-<ul>
-  <li><code class="highlighter-rouge">public</code>: the exported name of the port to remove</li>
-  <li><code class="highlighter-rouge">graph</code>: graph the action targets</li>
-  <li><code class="highlighter-rouge">secret</code>: access token to authorize user</li>
+<ul class="message properties">
+<li><label class="property name">public</label><label class="property type">string</label><label class="property description">the exported name of the port to remove</label></li>
+<li><label class="property name">graph</label><label class="property type">string</label><label class="property description">graph the action targets</label></li>
+<li><label class="property name">secret</label><label class="property type">string</label><label class="property description">access token to authorize user</label></li>
 </ul>
 
-<h3 id="renameoutport"><code class="highlighter-rouge">renameoutport</code></h3>
+<h3 id="renameoutport">renameoutport</h3>
 
 <p>Rename an exported port in the graph</p>
 
-<ul>
-  <li><code class="highlighter-rouge">from</code>: original exported port name</li>
-  <li><code class="highlighter-rouge">to</code>: new exported port name</li>
-  <li><code class="highlighter-rouge">graph</code>: graph the action targets</li>
-  <li><code class="highlighter-rouge">secret</code>: access token to authorize user</li>
+<ul class="message properties">
+<li><label class="property name">from</label><label class="property type">string</label><label class="property description">original exported port name</label></li>
+<li><label class="property name">to</label><label class="property type">string</label><label class="property description">new exported port name</label></li>
+<li><label class="property name">graph</label><label class="property type">string</label><label class="property description">graph the action targets</label></li>
+<li><label class="property name">secret</label><label class="property type">string</label><label class="property description">access token to authorize user</label></li>
 </ul>
 
-<h3 id="addgroup"><code class="highlighter-rouge">addgroup</code></h3>
+<h3 id="addgroup">addgroup</h3>
 
 <p>Add a group to the graph</p>
 
-<ul>
-  <li><code class="highlighter-rouge">name</code>: the group name</li>
-  <li><code class="highlighter-rouge">nodes</code>: an array of node ids part of the group</li>
-  <li><code class="highlighter-rouge">metadata</code>: (optional): structure of key-value pairs for group metadata</li>
-  <li><code class="highlighter-rouge">graph</code>: graph the action targets</li>
-  <li><code class="highlighter-rouge">secret</code>: access token to authorize user</li>
+<ul class="message properties">
+<li><label class="property name">name</label><label class="property type">string</label><label class="property description">the group name</label></li>
+<li><label class="property name">nodes</label><label class="property type">array</label><label class="property description">an array of node ids part of the group</label></li>
+<li><label class="property name">metadata</label><label class="property type">object</label><label class="property description">structure of key-value pairs for group metadata</label></li>
+<li><label class="property name">graph</label><label class="property type">string</label><label class="property description">graph the action targets</label></li>
+<li><label class="property name">secret</label><label class="property type">string</label><label class="property description">access token to authorize user</label></li>
 </ul>
 
-<h3 id="removegroup"><code class="highlighter-rouge">removegroup</code></h3>
+<h3 id="removegroup">removegroup</h3>
 
 <p>Remove a group from the graph</p>
 
-<ul>
-  <li><code class="highlighter-rouge">name</code>: the group name</li>
-  <li><code class="highlighter-rouge">graph</code>: graph the action targets</li>
-  <li><code class="highlighter-rouge">secret</code>: access token to authorize user</li>
+<ul class="message properties">
+<li><label class="property name">name</label><label class="property type">string</label><label class="property description">the group name</label></li>
+<li><label class="property name">graph</label><label class="property type">string</label><label class="property description">graph the action targets</label></li>
+<li><label class="property name">secret</label><label class="property type">string</label><label class="property description">access token to authorize user</label></li>
 </ul>
 
-<h3 id="renamegroup"><code class="highlighter-rouge">renamegroup</code></h3>
+<h3 id="renamegroup">renamegroup</h3>
 
 <p>Rename a group in the graph.</p>
 
-<ul>
-  <li><code class="highlighter-rouge">from</code>: original group name</li>
-  <li><code class="highlighter-rouge">to</code>: new group name</li>
-  <li><code class="highlighter-rouge">graph</code>: graph the action targets</li>
-  <li><code class="highlighter-rouge">secret</code>: access token to authorize user</li>
+<ul class="message properties">
+<li><label class="property name">from</label><label class="property type">string</label><label class="property description">original group name</label></li>
+<li><label class="property name">to</label><label class="property type">string</label><label class="property description">new group name</label></li>
+<li><label class="property name">graph</label><label class="property type">string</label><label class="property description">graph the action targets</label></li>
+<li><label class="property name">secret</label><label class="property type">string</label><label class="property description">access token to authorize user</label></li>
 </ul>
 
-<h3 id="changegroup"><code class="highlighter-rouge">changegroup</code></h3>
+<h3 id="changegroup">changegroup</h3>
 
 <p>Change a group’s metadata</p>
 
-<ul>
-  <li><code class="highlighter-rouge">name</code>: the group name</li>
-  <li><code class="highlighter-rouge">metadata</code>: structure of key-value pairs for group metadata</li>
-  <li><code class="highlighter-rouge">graph</code>: graph the action targets</li>
-  <li><code class="highlighter-rouge">secret</code>: access token to authorize user</li>
+<ul class="message properties">
+<li><label class="property name">name</label><label class="property type">string</label><label class="property description">the group name</label></li>
+<li><label class="property name">metadata</label><label class="property type">object</label><label class="property description">structure of key-value pairs for group metadata</label></li>
+<li><label class="property name">graph</label><label class="property type">string</label><label class="property description">graph the action targets</label></li>
+<li><label class="property name">secret</label><label class="property type">string</label><label class="property description">access token to authorize user</label></li>
 </ul>
 
 <h2 id="component-protocol">Component protocol</h2>
 
 <p>Protocol for handling the component registry.</p>
 
-<h3 id="error-2"><code class="highlighter-rouge">error</code></h3>
-
-<p>Component error</p>
-
-<h3 id="list"><code class="highlighter-rouge">list</code></h3>
+<h3 id="list">list</h3>
 
 <p>Request a list of currently available components. Will be responded with a set of <code class="highlighter-rouge">component</code> messages.</p>
 
-<ul>
-  <li><code class="highlighter-rouge">secret</code>: access token to authorize user</li>
+<ul class="message properties">
+<li><label class="property name">secret</label><label class="property type">string</label><label class="property description">access token to authorize user</label></li>
 </ul>
 
-<h3 id="getsource"><code class="highlighter-rouge">getsource</code></h3>
+<h3 id="getsource">getsource</h3>
 
 <p>Request for the source code of a given component. Will be responded with a <code class="highlighter-rouge">source</code> message.</p>
 
-<ul>
-  <li><code class="highlighter-rouge">name</code>: Name of the component to for which to get source code</li>
-  <li><code class="highlighter-rouge">secret</code>: access token to authorize user</li>
+<ul class="message properties">
+<li><label class="property name">name</label><label class="property type">string</label><label class="property description">Name of the component to for which to get source code. Should contain the library prefix</label><code class="property example">"my-project/SomeComponent"</code></li>
+<li><label class="property name">secret</label><label class="property type">string</label><label class="property description">access token to authorize user</label></li>
 </ul>
 
-<h3 id="source"><code class="highlighter-rouge">source</code></h3>
+<h3 id="source">source</h3>
 
 <p>Source code for a component. In cases where a runtime receives a <code class="highlighter-rouge">source</code> message, it should do whatever operations are needed for making that component available for graphs, including possible compilation.</p>
 
-<ul>
-  <li><code class="highlighter-rouge">name</code>: Name of the component</li>
-  <li><code class="highlighter-rouge">language</code>: The programming language used for the component code, for example <code class="highlighter-rouge">coffeescript</code></li>
-  <li><code class="highlighter-rouge">library</code>: (optional) Component library identifier</li>
-  <li><code class="highlighter-rouge">code</code>: Component source code</li>
-  <li><code class="highlighter-rouge">tests</code>: (optional) unit tests for the component</li>
+<ul class="message properties">
+<li><label class="property name">name</label><label class="property type">string</label><label class="property description">Name of the component. Must not contain library prefix</label><code class="property example">"MyComponent"</code></li>
+<li><label class="property name">language</label><label class="property type">string</label><label class="property description">The programming language used for the component code</label><code class="property example">"c++"</code></li>
+<li><label class="property name">library</label><label class="property type">string</label><label class="property description">Component library identifier</label><code class="property example">"components-common"</code></li>
+<li><label class="property name">code</label><label class="property type">string</label><label class="property description">Component source code</label></li>
+<li><label class="property name">tests</label><label class="property type">string</label><label class="property description">unit tests for the component</label></li>
 </ul>
 
-<h3 id="component"><code class="highlighter-rouge">component</code></h3>
+<h3 id="error-1">error</h3>
+
+<p>Error response to a command on component protocol</p>
+
+<ul class="message properties">
+<li><label class="property name">message</label><label class="property type">string</label><label class="property description">Error message describing what went wrong</label></li>
+</ul>
+
+<h3 id="component">component</h3>
 
 <p>Transmit the metadata about a component instance.</p>
 
-<ul>
-  <li><code class="highlighter-rouge">name</code>: component name in format that can be used in graphs</li>
-  <li><code class="highlighter-rouge">description</code>: (optional) textual description on what the component does</li>
-  <li><code class="highlighter-rouge">icon</code>: (optional): visual icon for the component, matching icon names in <a href="http://fortawesome.github.io/Font-Awesome/icons/">Font Awesome</a></li>
-  <li><code class="highlighter-rouge">subgraph</code>: boolean telling whether the component is a subgraph</li>
-  <li><code class="highlighter-rouge">inPorts</code>: list of input ports, each containing
-    <ul>
-      <li><code class="highlighter-rouge">addressable</code>: boolean telling whether the port is an ArrayPort</li>
-      <li><code class="highlighter-rouge">id</code>: port name</li>
-      <li><code class="highlighter-rouge">type</code>: port datatype, for example boolean</li>
-      <li><code class="highlighter-rouge">required</code>: boolean telling whether the port needs to be connected for the component to work</li>
-      <li><code class="highlighter-rouge">description</code>: textual description of the port</li>
-    </ul>
-  </li>
-  <li><code class="highlighter-rouge">inPorts</code>: list of input ports, each containing</li>
-  <li><code class="highlighter-rouge">outPorts</code>: list of output ports, each containing
-    <ul>
-      <li><code class="highlighter-rouge">addressable</code>: boolean telling whether the port is an ArrayPort</li>
-      <li><code class="highlighter-rouge">id</code>: port name</li>
-      <li><code class="highlighter-rouge">type</code>: port datatype, for example boolean</li>
-      <li><code class="highlighter-rouge">required</code>: boolean telling whether the port needs to be connected for the component to work</li>
-      <li><code class="highlighter-rouge">description</code>: textual description of the port</li>
-    </ul>
-  </li>
-  <li><code class="highlighter-rouge">outPorts</code>: list of output ports, each containing</li>
+<ul class="message properties">
+<li><label class="property name">name</label><label class="property type">string</label><label class="property description">component name in format that can be used in graphs. Should contain the component library prefix.</label><code class="property example">"my-project/MyComponent"</code></li>
+<li><label class="property name">description</label><label class="property type">string</label><label class="property description">textual description on what the component does</label></li>
+<li><label class="property name">icon</label><label class="property type">string</label><label class="property description">Visual icon for the component, matching icon names in <a href="http://fortawesome.github.io/Font-Awesome/icons/">Font Awesome</a></label></li>
+<li><label class="property name">subgraph</label><label class="property type">boolean</label><label class="property description">boolean telling whether the component is a subgraph</label></li>
+<li><label class="property name">inPorts</label><label class="property type">array</label><label class="property description">list of input ports of the component</label></li>Each item contains:
+<ul class="properties">
+<li><label class="property optional name">addressable</label><label class="property optional type">boolean</label><label class="property optional description">whether the port is an ArrayPort</label></li>
+<li><label class="property name">id</label><label class="property type">string</label><label class="property description">port name</label></li>
+<li><label class="property name">type</label><label class="property type">string</label><label class="property description">port datatype</label><code class="property example">"boolean"</code></li>
+<li><label class="property optional name">required</label><label class="property optional type">boolean</label><label class="property optional description">whether the port needs to be connected for the component to work</label><code class="property optional example">true</code></li>
+<li><label class="property optional name">description</label><label class="property optional type">string</label><label class="property optional description">textual description of the port</label></li>
+</ul>
+<li><label class="property name">outPorts</label><label class="property type">array</label><label class="property description">list of output ports of the component</label></li>Each item contains:
+<ul class="properties">
+<li><label class="property optional name">addressable</label><label class="property optional type">boolean</label><label class="property optional description">whether the port is an ArrayPort</label></li>
+<li><label class="property name">id</label><label class="property type">string</label><label class="property description">port name</label></li>
+<li><label class="property name">type</label><label class="property type">string</label><label class="property description">port datatype</label><code class="property example">"boolean"</code></li>
+<li><label class="property optional name">required</label><label class="property optional type">boolean</label><label class="property optional description">whether the port needs to be connected for the component to work</label><code class="property optional example">true</code></li>
+<li><label class="property optional name">description</label><label class="property optional type">string</label><label class="property optional description">textual description of the port</label></li>
+</ul>
 </ul>
 
 <h2 id="network-protocol">Network protocol</h2>
 
 <p>Protocol for starting and stopping FBP networks, and finding out about their state.</p>
 
-<h3 id="error-3"><code class="highlighter-rouge">error</code></h3>
-
-<p>An error from a running network, roughly similar to STDERR output of a Unix process, or a line of console.error in JavaScript.’</p>
-
-<ul>
-  <li><code class="highlighter-rouge">message</code>: contents of the error message</li>
-  <li><code class="highlighter-rouge">stack</code>: (optional) stack trace</li>
-</ul>
-
-<h3 id="start"><code class="highlighter-rouge">start</code></h3>
+<h3 id="start">start</h3>
 
 <p>Start execution of a FBP network based on a given graph.</p>
 
-<ul>
-  <li><code class="highlighter-rouge">graph</code>: graph the action targets</li>
-  <li><code class="highlighter-rouge">secret</code>: access token to authorize user</li>
+<ul class="message properties">
+<li><label class="property name">graph</label><label class="property type">string</label><label class="property description">graph the action targets</label></li>
+<li><label class="property name">secret</label><label class="property type">string</label><label class="property description">access token to authorize user</label></li>
 </ul>
 
-<h3 id="getstatus"><code class="highlighter-rouge">getstatus</code></h3>
+<h3 id="getstatus">getstatus</h3>
 
 <p>Get the current status of the runtime. The runtime should respond with a status message.</p>
 
-<ul>
-  <li><code class="highlighter-rouge">graph</code>: graph the action targets</li>
-  <li><code class="highlighter-rouge">secret</code>: access token to authorize user</li>
+<ul class="message properties">
+<li><label class="property name">graph</label><label class="property type">string</label><label class="property description">graph the action targets</label></li>
+<li><label class="property name">secret</label><label class="property type">string</label><label class="property description">access token to authorize user</label></li>
 </ul>
 
-<h3 id="stop"><code class="highlighter-rouge">stop</code></h3>
+<h3 id="stop">stop</h3>
 
 <p>Stop execution of a FBP network based on a given graph.</p>
 
-<ul>
-  <li><code class="highlighter-rouge">graph</code>: graph the action targets</li>
-  <li><code class="highlighter-rouge">secret</code>: access token to authorize user</li>
+<ul class="message properties">
+<li><label class="property name">graph</label><label class="property type">string</label><label class="property description">graph the action targets</label></li>
+<li><label class="property name">secret</label><label class="property type">string</label><label class="property description">access token to authorize user</label></li>
 </ul>
 
-<h3 id="persist"><code class="highlighter-rouge">persist</code></h3>
+<h3 id="persist">persist</h3>
 
 <p>Tells the runtime to persist the current state of graphs and components so that they are available between restarts. Requires the network:persist capability.</p>
 
-<ul>
-  <li><code class="highlighter-rouge">secret</code>: access token to authorize user</li>
+<ul class="message properties">
+<li><label class="property name">secret</label><label class="property type">string</label><label class="property description">access token to authorize user</label></li>
 </ul>
 
-<h3 id="debug"><code class="highlighter-rouge">debug</code></h3>
+<h3 id="debug">debug</h3>
 
 <p>Set a network into debug mode</p>
 
-<ul>
-  <li><code class="highlighter-rouge">enable</code>: tells whether to put the network in debug mode</li>
-  <li><code class="highlighter-rouge">graph</code>: graph the action targets</li>
-  <li><code class="highlighter-rouge">secret</code>: access token to authorize the user</li>
+<ul class="message properties">
+<li><label class="property name">enable</label><label class="property type">boolean</label><label class="property description">tells whether to put the network in debug mode</label></li>
+<li><label class="property name">graph</label><label class="property type">string</label><label class="property description">graph the action targets</label></li>
+<li><label class="property name">secret</label><label class="property type">string</label><label class="property description">access token to authorize the user</label></li>
 </ul>
 
-<h3 id="edges"><code class="highlighter-rouge">edges</code></h3>
+<h3 id="edges">edges</h3>
 
 <p>List of edges user has selected for inspection in a user interface or debugger, sent from UI to a runtime.</p>
 
-<ul>
-  <li><code class="highlighter-rouge">graph</code>: graph the action targets</li>
-  <li><code class="highlighter-rouge">edges</code>: list of selected edges, each containing
-    <ul>
-      <li><code class="highlighter-rouge">src</code>: source node for the edge
-        <ul>
-          <li><code class="highlighter-rouge">node</code>: node identifier</li>
-          <li><code class="highlighter-rouge">port</code>: port name</li>
-          <li><code class="highlighter-rouge">index</code>: connection index (optional, for addressable ports)</li>
-        </ul>
-      </li>
-      <li><code class="highlighter-rouge">tgt</code>: target node for the edge
-        <ul>
-          <li><code class="highlighter-rouge">node</code>: node identifier</li>
-          <li><code class="highlighter-rouge">port</code>: port name</li>
-          <li><code class="highlighter-rouge">index</code>: connection index (optional, for addressable ports)</li>
-        </ul>
-      </li>
-    </ul>
-  </li>
-  <li><code class="highlighter-rouge">edges</code>: list of selected edges, each containing</li>
-  <li><code class="highlighter-rouge">secret</code>: access token to authorize user</li>
+<ul class="message properties">
+<li><label class="property name">graph</label><label class="property type">string</label><label class="property description">graph the action targets</label></li>
+<li><label class="property name">edges</label><label class="property type">array</label><label class="property description">list of selected edges</label></li>Each item contains:
+<ul class="properties">
+<li><label class="property name">src</label><label class="property type">object</label><label class="property description">source node for the edge</label></li>
+<ul class="properties">
+<li><label class="property name">node</label><label class="property type">string</label><label class="property description">node identifier</label></li>
+<li><label class="property name">port</label><label class="property type">string</label><label class="property description">port name</label></li>
+<li><label class="property name">index</label><label class="property type">string,number</label><label class="property description">connection index, for addressable ports</label></li>
+</ul>
+<li><label class="property name">tgt</label><label class="property type">object</label><label class="property description">target node for the edge</label></li>
+<ul class="properties">
+<li><label class="property name">node</label><label class="property type">string</label><label class="property description">node identifier</label></li>
+<li><label class="property name">port</label><label class="property type">string</label><label class="property description">port name</label></li>
+<li><label class="property name">index</label><label class="property type">string,number</label><label class="property description">connection index, for addressable ports</label></li>
+</ul>
+</ul>
+<li><label class="property name">secret</label><label class="property type">string</label><label class="property description">access token to authorize user</label></li>
 </ul>
 
-<h3 id="stopped"><code class="highlighter-rouge">stopped</code></h3>
+<h3 id="stopped">stopped</h3>
 
 <p>Inform that a given network has stopped.</p>
 
-<ul>
-  <li><code class="highlighter-rouge">time</code>: time when the network was stopped</li>
-  <li><code class="highlighter-rouge">uptime</code>: time the network was running, in seconds</li>
-  <li><code class="highlighter-rouge">graph</code>: graph the action targets</li>
-  <li><code class="highlighter-rouge">running</code>: whether or not network is currently running</li>
-  <li><code class="highlighter-rouge">started</code>: whether or not network has been started</li>
-  <li><code class="highlighter-rouge">debug</code>: whether or not network is in debug mode</li>
+<ul class="message properties">
+<li><label class="property name">time</label><label class="property type">string</label><label class="property description">time when the network was stopped</label></li>
+<li><label class="property name">uptime</label><label class="property type">number</label><label class="property description">time the network was running, in seconds</label></li>
+<li><label class="property name">graph</label><label class="property type">string</label><label class="property description">graph the action targets</label></li>
+<li><label class="property name">running</label><label class="property type">boolean</label><label class="property description">whether or not network is currently running</label></li>
+<li><label class="property name">started</label><label class="property type">boolean</label><label class="property description">whether or not network has been started</label></li>
+<li><label class="property name">debug</label><label class="property type">boolean</label><label class="property description">whether or not network is in debug mode</label></li>
 </ul>
 
-<h3 id="started"><code class="highlighter-rouge">started</code></h3>
+<h3 id="started">started</h3>
 
 <p>Inform that a given network has been started.</p>
 
-<ul>
-  <li><code class="highlighter-rouge">time</code>: time when the network was started</li>
-  <li><code class="highlighter-rouge">graph</code>: graph the action targets</li>
-  <li><code class="highlighter-rouge">started</code>: whether or not network has started running</li>
-  <li><code class="highlighter-rouge">running</code>: whether or not network is currently running</li>
-  <li><code class="highlighter-rouge">debug</code>: whether or not network is in debug mode</li>
+<ul class="message properties">
+<li><label class="property name">time</label><label class="property type">string</label><label class="property description">time when the network was started</label></li>
+<li><label class="property name">graph</label><label class="property type">string</label><label class="property description">graph the action targets</label></li>
+<li><label class="property name">started</label><label class="property type">boolean</label><label class="property description">whether or not network has started running</label></li>
+<li><label class="property name">running</label><label class="property type">boolean</label><label class="property description">whether or not network is currently running</label></li>
+<li><label class="property name">debug</label><label class="property type">boolean</label><label class="property description">whether or not network is in debug mode</label></li>
 </ul>
 
-<h3 id="status"><code class="highlighter-rouge">status</code></h3>
+<h3 id="status">status</h3>
 
 <p>Response to a getstatus message.</p>
 
-<ul>
-  <li><code class="highlighter-rouge">graph</code>: graph the action targets</li>
-  <li><code class="highlighter-rouge">uptime</code>: (optional) time the network has been running, in seconds</li>
-  <li><code class="highlighter-rouge">started</code>: whether or not network has started running</li>
-  <li><code class="highlighter-rouge">running</code>: boolean tells whether the network is running or not</li>
-  <li><code class="highlighter-rouge">debug</code>: whether or not network is in debug mode</li>
+<ul class="message properties">
+<li><label class="property name">graph</label><label class="property type">string</label><label class="property description">graph the action targets</label></li>
+<li><label class="property name">uptime</label><label class="property type">number</label><label class="property description">time the network has been running, in seconds</label></li>
+<li><label class="property name">started</label><label class="property type">boolean</label><label class="property description">whether or not network has started running</label></li>
+<li><label class="property name">running</label><label class="property type">boolean</label><label class="property description">boolean tells whether the network is running or not</label></li>
+<li><label class="property name">debug</label><label class="property type">boolean</label><label class="property description">whether or not network is in debug mode</label></li>
 </ul>
 
-<h3 id="output"><code class="highlighter-rouge">output</code></h3>
+<h3 id="output">output</h3>
 
 <p>An output message from a running network, roughly similar to STDOUT output of a Unix process, or a line of console.log in JavaScript. Output can also be used for passing images from the runtime to the UI.’</p>
 
-<ul>
-  <li><code class="highlighter-rouge">message</code>: contents of the output line</li>
-  <li><code class="highlighter-rouge">type</code>: (optional) type of output, either message or previewurl</li>
-  <li><code class="highlighter-rouge">url</code>: (optional) URL for an image generated by the runtime</li>
+<ul class="message properties">
+<li><label class="property name">message</label><label class="property type">string</label><label class="property description">contents of the output line</label></li>
+<li><label class="property name">type</label><label class="property type">string</label><label class="property description">type of output, either message or previewurl</label></li>
+<li><label class="property name">url</label><label class="property type">string</label><label class="property description">URL for an image generated by the runtime</label></li>
 </ul>
 
-<h3 id="processerror"><code class="highlighter-rouge">processerror</code></h3>
+<h3 id="error-2">error</h3>
+
+<p>An error from a running network, roughly similar to STDERR output of a Unix process, or a line of console.error in JavaScript.’</p>
+
+<ul class="message properties">
+<li><label class="property name">message</label><label class="property type">string</label><label class="property description">contents of the error message</label></li>
+<li><label class="property name">stack</label><label class="property type">string</label><label class="property description">stack trace</label></li>
+</ul>
+
+<h3 id="processerror">processerror</h3>
 
 <p>When in debug mode, a network can signal an error happening inside a process.</p>
 
-<ul>
-  <li><code class="highlighter-rouge">id</code>: identifier of the node</li>
-  <li><code class="highlighter-rouge">error</code>: error from the component</li>
-  <li><code class="highlighter-rouge">graph</code>: graph the action targets</li>
+<ul class="message properties">
+<li><label class="property name">id</label><label class="property type">string</label><label class="property description">identifier of the node</label></li>
+<li><label class="property name">error</label><label class="property type">string</label><label class="property description">error from the component</label></li>
+<li><label class="property name">graph</label><label class="property type">string</label><label class="property description">graph the action targets</label></li>
 </ul>
 
-<h3 id="icon"><code class="highlighter-rouge">icon</code></h3>
+<h3 id="icon">icon</h3>
 
 <p>Icon of a component instance has changed.</p>
 
-<ul>
-  <li><code class="highlighter-rouge">id</code>: identifier of the node</li>
-  <li><code class="highlighter-rouge">icon</code>: new icon for the component instance</li>
-  <li><code class="highlighter-rouge">graph</code>: graph the action targets</li>
+<ul class="message properties">
+<li><label class="property name">id</label><label class="property type">string</label><label class="property description">identifier of the node</label></li>
+<li><label class="property name">icon</label><label class="property type">string</label><label class="property description">new icon for the component instance</label></li>
+<li><label class="property name">graph</label><label class="property type">string</label><label class="property description">graph the action targets</label></li>
 </ul>
 
-<h3 id="connect"><code class="highlighter-rouge">connect</code></h3>
+<h3 id="connect">connect</h3>
 
 <p>Beginning of transmission on an edge.</p>
 
-<ul>
-  <li><code class="highlighter-rouge">id</code>: textual edge identifier, usually in form of a FBP language line</li>
-  <li><code class="highlighter-rouge">src</code>: source node for the edge
-    <ul>
-      <li><code class="highlighter-rouge">node</code>: node identifier</li>
-      <li><code class="highlighter-rouge">port</code>: port name</li>
-      <li><code class="highlighter-rouge">index</code>: connection index (optional, for addressable ports)</li>
-    </ul>
-  </li>
-  <li><code class="highlighter-rouge">src</code>: source node for the edge</li>
-  <li><code class="highlighter-rouge">tgt</code>: target node for the edge
-    <ul>
-      <li><code class="highlighter-rouge">node</code>: node identifier</li>
-      <li><code class="highlighter-rouge">port</code>: port name</li>
-      <li><code class="highlighter-rouge">index</code>: connection index (optional, for addressable ports)</li>
-    </ul>
-  </li>
-  <li><code class="highlighter-rouge">tgt</code>: target node for the edge</li>
-  <li><code class="highlighter-rouge">graph</code>: graph the action targets</li>
-  <li><code class="highlighter-rouge">subgraph</code>: (optional): subgraph identifier for the event. An array of node IDs</li>
+<ul class="message properties">
+<li><label class="property name">id</label><label class="property type">string</label><label class="property description">textual edge identifier, usually in form of a FBP language line</label></li>
+<li><label class="property name">src</label><label class="property type">object</label><label class="property description">source node for the edge</label></li>
+<ul class="properties">
+<li><label class="property name">node</label><label class="property type">string</label><label class="property description">node identifier</label></li>
+<li><label class="property name">port</label><label class="property type">string</label><label class="property description">port name</label></li>
+<li><label class="property name">index</label><label class="property type">string,number</label><label class="property description">connection index, for addressable ports</label></li>
+</ul>
+<li><label class="property name">tgt</label><label class="property type">object</label><label class="property description">target node for the edge</label></li>
+<ul class="properties">
+<li><label class="property name">node</label><label class="property type">string</label><label class="property description">node identifier</label></li>
+<li><label class="property name">port</label><label class="property type">string</label><label class="property description">port name</label></li>
+<li><label class="property name">index</label><label class="property type">string,number</label><label class="property description">connection index, for addressable ports</label></li>
+</ul>
+<li><label class="property name">graph</label><label class="property type">string</label><label class="property description">graph the action targets</label></li>
+<li><label class="property name">subgraph</label><label class="property type">string</label><label class="property description">Subgraph identifier for the event. An array of node IDs.</label></li>
 </ul>
 
-<h3 id="begingroup"><code class="highlighter-rouge">begingroup</code></h3>
+<h3 id="begingroup">begingroup</h3>
 
 <p>Beginning of a group (bracket IP) on an edge.</p>
 
-<ul>
-  <li><code class="highlighter-rouge">id</code>: textual edge identifier, usually in form of a FBP language line</li>
-  <li><code class="highlighter-rouge">src</code>: source node for the edge
-    <ul>
-      <li><code class="highlighter-rouge">node</code>: node identifier</li>
-      <li><code class="highlighter-rouge">port</code>: port name</li>
-      <li><code class="highlighter-rouge">index</code>: connection index (optional, for addressable ports)</li>
-    </ul>
-  </li>
-  <li><code class="highlighter-rouge">src</code>: source node for the edge</li>
-  <li><code class="highlighter-rouge">tgt</code>: target node for the edge
-    <ul>
-      <li><code class="highlighter-rouge">node</code>: node identifier</li>
-      <li><code class="highlighter-rouge">port</code>: port name</li>
-      <li><code class="highlighter-rouge">index</code>: connection index (optional, for addressable ports)</li>
-    </ul>
-  </li>
-  <li><code class="highlighter-rouge">tgt</code>: target node for the edge</li>
-  <li><code class="highlighter-rouge">graph</code>: graph the action targets</li>
-  <li><code class="highlighter-rouge">subgraph</code>: (optional): subgraph identifier for the event. An array of node IDs</li>
+<ul class="message properties">
+<li><label class="property name">id</label><label class="property type">string</label><label class="property description">textual edge identifier, usually in form of a FBP language line</label></li>
+<li><label class="property name">src</label><label class="property type">object</label><label class="property description">source node for the edge</label></li>
+<ul class="properties">
+<li><label class="property name">node</label><label class="property type">string</label><label class="property description">node identifier</label></li>
+<li><label class="property name">port</label><label class="property type">string</label><label class="property description">port name</label></li>
+<li><label class="property name">index</label><label class="property type">string,number</label><label class="property description">connection index, for addressable ports</label></li>
+</ul>
+<li><label class="property name">tgt</label><label class="property type">object</label><label class="property description">target node for the edge</label></li>
+<ul class="properties">
+<li><label class="property name">node</label><label class="property type">string</label><label class="property description">node identifier</label></li>
+<li><label class="property name">port</label><label class="property type">string</label><label class="property description">port name</label></li>
+<li><label class="property name">index</label><label class="property type">string,number</label><label class="property description">connection index, for addressable ports</label></li>
+</ul>
+<li><label class="property name">graph</label><label class="property type">string</label><label class="property description">graph the action targets</label></li>
+<li><label class="property name">subgraph</label><label class="property type">string</label><label class="property description">Subgraph identifier for the event. An array of node IDs.</label></li>
 </ul>
 
-<h3 id="data"><code class="highlighter-rouge">data</code></h3>
+<h3 id="data">data</h3>
 
 <p>Data transmission on an edge.</p>
 
-<ul>
-  <li><code class="highlighter-rouge">id</code>: textual edge identifier, usually in form of a FBP language line</li>
-  <li><code class="highlighter-rouge">src</code>: source node for the edge
-    <ul>
-      <li><code class="highlighter-rouge">node</code>: node identifier</li>
-      <li><code class="highlighter-rouge">port</code>: port name</li>
-      <li><code class="highlighter-rouge">index</code>: connection index (optional, for addressable ports)</li>
-    </ul>
-  </li>
-  <li><code class="highlighter-rouge">src</code>: source node for the edge</li>
-  <li><code class="highlighter-rouge">tgt</code>: target node for the edge
-    <ul>
-      <li><code class="highlighter-rouge">node</code>: node identifier</li>
-      <li><code class="highlighter-rouge">port</code>: port name</li>
-      <li><code class="highlighter-rouge">index</code>: connection index (optional, for addressable ports)</li>
-    </ul>
-  </li>
-  <li><code class="highlighter-rouge">tgt</code>: target node for the edge</li>
-  <li><code class="highlighter-rouge">graph</code>: graph the action targets</li>
-  <li><code class="highlighter-rouge">subgraph</code>: (optional): subgraph identifier for the event. An array of node IDs</li>
+<ul class="message properties">
+<li><label class="property name">id</label><label class="property type">string</label><label class="property description">textual edge identifier, usually in form of a FBP language line</label></li>
+<li><label class="property name">src</label><label class="property type">object</label><label class="property description">source node for the edge</label></li>
+<ul class="properties">
+<li><label class="property name">node</label><label class="property type">string</label><label class="property description">node identifier</label></li>
+<li><label class="property name">port</label><label class="property type">string</label><label class="property description">port name</label></li>
+<li><label class="property name">index</label><label class="property type">string,number</label><label class="property description">connection index, for addressable ports</label></li>
+</ul>
+<li><label class="property name">tgt</label><label class="property type">object</label><label class="property description">target node for the edge</label></li>
+<ul class="properties">
+<li><label class="property name">node</label><label class="property type">string</label><label class="property description">node identifier</label></li>
+<li><label class="property name">port</label><label class="property type">string</label><label class="property description">port name</label></li>
+<li><label class="property name">index</label><label class="property type">string,number</label><label class="property description">connection index, for addressable ports</label></li>
+</ul>
+<li><label class="property name">graph</label><label class="property type">string</label><label class="property description">graph the action targets</label></li>
+<li><label class="property name">subgraph</label><label class="property type">string</label><label class="property description">Subgraph identifier for the event. An array of node IDs.</label></li>
 </ul>
 
-<h3 id="endgroup"><code class="highlighter-rouge">endgroup</code></h3>
+<h3 id="endgroup">endgroup</h3>
 
 <p>Ending of a group (bracket IP) on an edge.</p>
 
-<ul>
-  <li><code class="highlighter-rouge">id</code>: textual edge identifier, usually in form of a FBP language line</li>
-  <li><code class="highlighter-rouge">src</code>: source node for the edge
-    <ul>
-      <li><code class="highlighter-rouge">node</code>: node identifier</li>
-      <li><code class="highlighter-rouge">port</code>: port name</li>
-      <li><code class="highlighter-rouge">index</code>: connection index (optional, for addressable ports)</li>
-    </ul>
-  </li>
-  <li><code class="highlighter-rouge">src</code>: source node for the edge</li>
-  <li><code class="highlighter-rouge">tgt</code>: target node for the edge
-    <ul>
-      <li><code class="highlighter-rouge">node</code>: node identifier</li>
-      <li><code class="highlighter-rouge">port</code>: port name</li>
-      <li><code class="highlighter-rouge">index</code>: connection index (optional, for addressable ports)</li>
-    </ul>
-  </li>
-  <li><code class="highlighter-rouge">tgt</code>: target node for the edge</li>
-  <li><code class="highlighter-rouge">graph</code>: graph the action targets</li>
-  <li><code class="highlighter-rouge">subgraph</code>: (optional): subgraph identifier for the event. An array of node IDs</li>
+<ul class="message properties">
+<li><label class="property name">id</label><label class="property type">string</label><label class="property description">textual edge identifier, usually in form of a FBP language line</label></li>
+<li><label class="property name">src</label><label class="property type">object</label><label class="property description">source node for the edge</label></li>
+<ul class="properties">
+<li><label class="property name">node</label><label class="property type">string</label><label class="property description">node identifier</label></li>
+<li><label class="property name">port</label><label class="property type">string</label><label class="property description">port name</label></li>
+<li><label class="property name">index</label><label class="property type">string,number</label><label class="property description">connection index, for addressable ports</label></li>
+</ul>
+<li><label class="property name">tgt</label><label class="property type">object</label><label class="property description">target node for the edge</label></li>
+<ul class="properties">
+<li><label class="property name">node</label><label class="property type">string</label><label class="property description">node identifier</label></li>
+<li><label class="property name">port</label><label class="property type">string</label><label class="property description">port name</label></li>
+<li><label class="property name">index</label><label class="property type">string,number</label><label class="property description">connection index, for addressable ports</label></li>
+</ul>
+<li><label class="property name">graph</label><label class="property type">string</label><label class="property description">graph the action targets</label></li>
+<li><label class="property name">subgraph</label><label class="property type">string</label><label class="property description">Subgraph identifier for the event. An array of node IDs.</label></li>
 </ul>
 
-<h3 id="disconnect"><code class="highlighter-rouge">disconnect</code></h3>
+<h3 id="disconnect">disconnect</h3>
 
 <p>End of transmission on an edge.</p>
 
-<ul>
-  <li><code class="highlighter-rouge">id</code>: textual edge identifier, usually in form of a FBP language line</li>
-  <li><code class="highlighter-rouge">src</code>: source node for the edge
-    <ul>
-      <li><code class="highlighter-rouge">node</code>: node identifier</li>
-      <li><code class="highlighter-rouge">port</code>: port name</li>
-      <li><code class="highlighter-rouge">index</code>: connection index (optional, for addressable ports)</li>
-    </ul>
-  </li>
-  <li><code class="highlighter-rouge">src</code>: source node for the edge</li>
-  <li><code class="highlighter-rouge">tgt</code>: target node for the edge
-    <ul>
-      <li><code class="highlighter-rouge">node</code>: node identifier</li>
-      <li><code class="highlighter-rouge">port</code>: port name</li>
-      <li><code class="highlighter-rouge">index</code>: connection index (optional, for addressable ports)</li>
-    </ul>
-  </li>
-  <li><code class="highlighter-rouge">tgt</code>: target node for the edge</li>
-  <li><code class="highlighter-rouge">graph</code>: graph the action targets</li>
-  <li><code class="highlighter-rouge">subgraph</code>: (optional): subgraph identifier for the event. An array of node IDs</li>
+<ul class="message properties">
+<li><label class="property name">id</label><label class="property type">string</label><label class="property description">textual edge identifier, usually in form of a FBP language line</label></li>
+<li><label class="property name">src</label><label class="property type">object</label><label class="property description">source node for the edge</label></li>
+<ul class="properties">
+<li><label class="property name">node</label><label class="property type">string</label><label class="property description">node identifier</label></li>
+<li><label class="property name">port</label><label class="property type">string</label><label class="property description">port name</label></li>
+<li><label class="property name">index</label><label class="property type">string,number</label><label class="property description">connection index, for addressable ports</label></li>
+</ul>
+<li><label class="property name">tgt</label><label class="property type">object</label><label class="property description">target node for the edge</label></li>
+<ul class="properties">
+<li><label class="property name">node</label><label class="property type">string</label><label class="property description">node identifier</label></li>
+<li><label class="property name">port</label><label class="property type">string</label><label class="property description">port name</label></li>
+<li><label class="property name">index</label><label class="property type">string,number</label><label class="property description">connection index, for addressable ports</label></li>
+</ul>
+<li><label class="property name">graph</label><label class="property type">string</label><label class="property description">graph the action targets</label></li>
+<li><label class="property name">subgraph</label><label class="property type">string</label><label class="property description">Subgraph identifier for the event. An array of node IDs.</label></li>
 </ul>
 
 <h2 id="trace-protocol">Trace protocol</h2>
 
 <p>This protocol is utilized for triggering and transmitting <a href="https://github.com/flowbased/flowtrace">Flowtrace</a>s</p>
 
-<h3 id="start-1"><code class="highlighter-rouge">start</code></h3>
+<h3 id="start-1">start</h3>
 
 <p>Tracing was started</p>
 
-<h3 id="stop-1"><code class="highlighter-rouge">stop</code></h3>
+<ul class="message properties">
+</ul>
+
+<h3 id="stop-1">stop</h3>
 
 <p>Tracing was stopped</p>
 
-<h3 id="dump"><code class="highlighter-rouge">dump</code></h3>
+<ul class="message properties">
+</ul>
+
+<h3 id="dump">dump</h3>
 
 <p>undefined</p>
 
-<ul>
-  <li><code class="highlighter-rouge">graph</code>: Graph identifier the message targets</li>
-  <li><code class="highlighter-rouge">type</code>: String describing type of trace.</li>
-  <li><code class="highlighter-rouge">flowtrace</code>: A Flowtrace file of <code class="highlighter-rouge">type</code></li>
+<ul class="message properties">
+<li><label class="property name">graph</label><label class="property type">string</label><label class="property description">Graph identifier the message targets</label></li>
+<li><label class="property name">type</label><label class="property type">string</label><label class="property description">String describing type of trace.</label></li>
+<li><label class="property name">flowtrace</label><label class="property type">string</label><label class="property description">A Flowtrace file of `type`</label></li>
 </ul>
 
-<h3 id="clear-1"><code class="highlighter-rouge">clear</code></h3>
+<h3 id="clear-1">clear</h3>
 
 <p>Tracing buffer was cleared</p>
+
+<ul class="message properties">
+</ul>
 
 
     </article>
