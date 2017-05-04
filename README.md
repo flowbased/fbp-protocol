@@ -1,8 +1,6 @@
 FBP Network Protocol
 ====================
 
-[![Greenkeeper badge](https://badges.greenkeeper.io/flowbased/fbp-protocol.svg)](https://greenkeeper.io/)
-
 Tests, schemas, and specifications for the Flow Based Programming Network Protocol.
 
 You can find a built version of the specification at [flowbased.github.io/fbp-protocol](http://flowbased.github.io/fbp-protocol/).
