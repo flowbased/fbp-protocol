@@ -81,7 +81,7 @@ iip:
   properties:
     data:
       description: 'IIP value in its actual data type'
-      type: [ "object", "any" ]
+      type: [ "object", "array", 'string', 'number', 'integer', 'boolean', 'null' ]
 
 network_event:
   id: 'network_event'
