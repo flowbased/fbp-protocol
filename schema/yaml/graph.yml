@@ -334,6 +334,7 @@ input:
             enum: ['changeedge']
           payload:
             additionalProperties: false
+            required: ['graph', 'src', 'tgt']
             properties:
               graph:
                 type: string
@@ -363,6 +364,7 @@ input:
             enum: ['addinitial']
           payload:
             additionalProperties: false
+            required: ['graph', 'src', 'tgt']
             properties:
               graph:
                 type: string
@@ -451,6 +453,7 @@ input:
           command:
             enum: ['removeinport']
           payload:
+            required: ['public', 'graph']
             additionalProperties: false
             properties:
               public:
@@ -474,6 +477,7 @@ input:
           command:
             enum: ['renameinport']
           payload:
+            required: ['from', 'to', 'graph']
             additionalProperties: false
             properties:
               from:
@@ -638,6 +642,7 @@ input:
           command:
             enum: ['renamegroup']
           payload:
+            required: ['from', 'to', 'graph']
             properties:
               from:
                 type: string

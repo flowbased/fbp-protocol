@@ -17,6 +17,7 @@ input:
           command:
             enum: ['getruntime']
           payload:
+            required: []
             properties:
               secret:
                 type: string
@@ -107,10 +108,10 @@ output:
                   ID of the currently configured main graph running on the
                   runtime
               inPorts:
-                description: 'list of input ports'
+                description: 'list of input ports of the runtime'
                 $ref: '/shared/port_definition'
               outPorts:
-                description: 'list of output ports'
+                description: 'list of output ports of the runtime'
                 $ref: '/shared/port_definition'
 
   runtime:

@@ -392,6 +392,7 @@ input:
           command:
             enum: ['persist']
           payload:
+            required: []
             additionalProperties: false
             properties:
               secret:

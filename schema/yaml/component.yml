@@ -49,10 +49,10 @@ output:
                 type: boolean
                 description: 'boolean telling whether the component is a subgraph'
               inPorts:
-                description: 'list of input ports'
+                description: 'list of input ports of the component'
                 $ref: '/shared/port_definition'
               outPorts:
-                description: 'list of output ports'
+                description: 'list of output ports of the component'
                 $ref: '/shared/port_definition'
 
   source:
@@ -107,6 +107,7 @@ input:
           command:
             enum: ['list']
           payload:
+            required: []
             properties:
               secret:
                 type: string
