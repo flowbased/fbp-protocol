@@ -79,9 +79,8 @@ output:
               language:
                 type: string
                 description: >-
-                  The programming language used for the component code, for
-                  example `coffeescript`
-
+                  The programming language used for the component code
+                example: 'c++'
               library:
                 type: string
                 description: '(optional) Component library identifier'
@@ -161,8 +160,8 @@ input:
               language:
                 type: string
                 description: >-
-                  The programming language used for the component code, for
-                  example `coffeescript`
+                  The programming language used for the component code
+                example: c++
               library:
                 type: string
                 description: '(optional) Component library identifier'

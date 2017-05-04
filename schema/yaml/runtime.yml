@@ -129,15 +129,16 @@ output:
             properties:
               id:
                 type: string
-                description: '(optional) runtime ID used with Flowhub Registry'
+                description: '(optional) unique runtime ID. Must be a UUID, version 4'
+                example: 'f18a4924-9d4f-414d-a37c-cd24b39bba10'
               label:
                 description: '(optional) Human-readable description of the runtime'
                 type: string
               version:
                 description: >-
-                  version of the runtime protocol that the runtime supports,
-                  for example 0.4
+                  version of the runtime protocol that the runtime supports
                 type: string
+                example: '0.5'
               allCapabilities:
                 description: >-
                   array of capability strings for things the runtime is able to do.
@@ -156,9 +157,11 @@ output:
                   (optional) ID of the currently configured main graph running
                   on the runtime, if any
                 type: string
+                example: 'service-main'
               type:
-                description: 'type of the runtime, for example noflo-nodejs or microflo'
+                description: 'type of the runtime'
                 type: string
+                example: 'microflo'
               namespace:
                 description: >-
                   (optional) Library namespace of the project running on the runtime,

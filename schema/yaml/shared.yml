@@ -20,9 +20,11 @@ message:
     protocol:
       type: string
       description: 'type of protocol'
+      example: 'graph'
     command:
       type: string
       description: 'command to be executed'
+      example: 'addnode'
     payload:
       type: object
       description: 'content of message'
@@ -53,18 +55,20 @@ port_definition:
     properties:
       addressable:
         type: boolean
-        description: 'boolean telling whether the port is an ArrayPort'
+        description: 'whether the port is an ArrayPort'
       id:
         type: string
         description: 'port name'
       type:
-        description: 'port datatype, for example boolean'
+        description: 'port datatype'
         type: string
+        example: boolean
       required:
         description: >-
-          boolean telling whether the port needs to be
+          whether the port needs to be
           connected for the component to work
         type: boolean
+        example: true
       description:
         type: string
         description: 'textual description of the port'
