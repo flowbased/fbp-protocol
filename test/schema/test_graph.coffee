@@ -250,7 +250,10 @@ describe 'Test graph protocol schema on event', ->
             node: 'node2'
             port: 'IN'
 
-      chai.expect(tv4.validate event, schema).to.be.true
+      res = tv4.validateMultiple event, schema
+      chai.expect(res.missing).to.eql []
+      chai.expect(res.errors).to.eql []
+      chai.expect(res.valid).to.be.true
 
     it 'should invalidate event without required fields', ->
         event =
