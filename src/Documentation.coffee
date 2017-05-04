@@ -91,6 +91,10 @@ getDescriptions = (schemas) ->
 
   return desc
 
+renderProperty = (name, def) ->
+  throw new Error("Property #{name} is missing description") if not def.description
+  return "`#{name}`: #{def.description}"
+
 renderMessage = (messageType, message) ->
 
   lines = []
@@ -100,13 +104,13 @@ renderMessage = (messageType, message) ->
   p "#{message.description}\n"
 
   for messagePropName, messageProp of message.properties
-    line = "* `#{messagePropName}`: #{messageProp.description}"
+    line = "* #{renderProperty(messagePropName, messageProp)}"
     items = messageProp.items
 
     if messageProp.type is 'object' and messageProp.properties?
       p line
       for subPropName, subProp of messageProp.properties
-        p "  - `#{subPropName}`: #{subProp.description}"
+        p "  - #{renderProperty(subPropName, subProp)}"
 
     else if items?.type is 'object'
       line += ", each containing"
@@ -114,20 +118,20 @@ renderMessage = (messageType, message) ->
 
       for itemPropName, itemProp of items.properties
         if itemProp.type is 'object'
-          p "  * `#{itemPropName}`: #{itemProp.description}"
+          p "  * #{renderProperty(itemPropName, itemProp)}"
 
           for itemSubPropName, itemSubProp of itemProp.properties
-            p "    - `#{itemSubPropName}`: #{itemSubProp.description}"
+            p "    - #{renderProperty(itemSubPropName, itemSubProp)}"
 
         else
-          p "  - `#{itemPropName}`: #{itemProp.description}"
+          p "  - #{renderProperty(itemPropName, itemProp)}"
 
     else if items?.type is 'string' and items?._enumDescriptions
       line += " Options include:"
       p line
 
       for enumDescription in items._enumDescriptions
-        p "  - `#{enumDescription.name}`: #{enumDescription.description}"
+        p "  - #{renderProperty(enumDescription.name, enumDescription)}"
 
     else
       p line
