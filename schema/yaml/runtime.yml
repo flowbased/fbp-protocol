@@ -3,16 +3,6 @@ description: >-
   When a client connects to a FBP procotol it may choose to discover the
   capabilities and other information about the runtime.
 input:
-  error:
-    id: 'input/error'
-    description: 'Runtime error'
-    allOf:
-      - $ref: '/shared/message'
-      - properties:
-          protocol:
-            enum: ['runtime']
-          command:
-            enum: ['error']
 
   getruntime:
     id: 'input/getruntime'
@@ -27,6 +17,7 @@ input:
           command:
             enum: ['getruntime']
           payload:
+            required: []
             properties:
               secret:
                 type: string
@@ -70,7 +61,7 @@ input:
               payload:
                 type: object
                 description: >-
-                  (optional) payload for the packet. Used only with begingroup
+                  payload for the packet. Used only with begingroup
                   (for group names) and data packets
               secret:
                 type: string
@@ -79,7 +70,7 @@ input:
 output:
   error:
     id: 'output/error'
-    description: 'Runtime error'
+    description: 'Error response to a command on runtime protocol'
     allOf:
       - $ref: '/shared/message'
       - properties:
@@ -87,6 +78,12 @@ output:
             enum: ['runtime']
           command:
             enum: ['error']
+          payload:
+            required: ['message']
+            properties:
+              message:
+                type: 'string'
+                description: 'Error message describing what went wrong'
 
   ports:
     id: 'output/ports'
@@ -111,10 +108,10 @@ output:
                   ID of the currently configured main graph running on the
                   runtime
               inPorts:
-                description: 'list of input ports'
+                description: 'list of input ports of the runtime'
                 $ref: '/shared/port_definition'
               outPorts:
-                description: 'list of output ports'
+                description: 'list of output ports of the runtime'
                 $ref: '/shared/port_definition'
 
   runtime:
@@ -133,15 +130,16 @@ output:
             properties:
               id:
                 type: string
-                description: '(optional) runtime ID used with Flowhub Registry'
+                description: 'unique runtime ID. Must be a UUID, version 4'
+                example: 'f18a4924-9d4f-414d-a37c-cd24b39bba10'
               label:
-                description: '(optional) Human-readable description of the runtime'
+                description: 'Human-readable description of the runtime'
                 type: string
               version:
                 description: >-
-                  version of the runtime protocol that the runtime supports,
-                  for example 0.4
+                  version of the runtime protocol that the runtime supports
                 type: string
+                example: '0.5'
               allCapabilities:
                 description: >-
                   array of capability strings for things the runtime is able to do.
@@ -157,27 +155,29 @@ output:
                 $ref: '/shared/capabilities'
               graph:
                 description: >-
-                  (optional) ID of the currently configured main graph running
+                  ID of the currently configured main graph running
                   on the runtime, if any
                 type: string
+                example: 'service-main'
               type:
-                description: 'type of the runtime, for example noflo-nodejs or microflo'
+                description: 'type of the runtime'
                 type: string
+                example: 'microflo'
               namespace:
                 description: >-
-                  (optional) Library namespace of the project running on the runtime,
+                  Library namespace of the project running on the runtime,
                   if any. Must match that of components belonging to the (top-level) of project.
                 type: string
                 example: 'my-project-foo'
               repository:
                 description: >-
-                  (optional) Source-code repository URL of the project running on the runtime,
+                  Source-code repository URL of the project running on the runtime,
                   if any
                 type: string
                 example: 'https://github.com/flowbased/fbp-protocol.git'
               repositoryVersion:
                 description: >-
-                  (optional) Unique version identifier of the source code of the project,
+                  Unique version identifier of the source code of the project,
                   if known. The version should be available in @repository.
                 type: string
                 example: '0.6.3-8-g90edcfc'

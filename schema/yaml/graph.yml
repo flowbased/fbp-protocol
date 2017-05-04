@@ -7,8 +7,20 @@ description: >-
 output:
   error:
     id: 'output/error'
-    description: 'Graph error'
-    $ref: '/shared/message'
+    description: 'Error response to a command on graph protocol'
+    allOf:
+      - $ref: '/shared/message'
+      - properties:
+          protocol:
+            enum: ['graph']
+          command:
+            enum: ['error']
+          payload:
+            required: ['message']
+            properties:
+              message:
+                type: 'string'
+                description: 'Error message describing what went wrong'
 
   addnode:
     id: 'output/addnode'
@@ -106,8 +118,6 @@ output:
     $ref: '../input/changegroup'
 
 input:
-  error:
-    description: 'Graph error'
 
   clear:
     id: 'input/clear'
@@ -128,21 +138,21 @@ input:
                 description: 'identifier for the graph being created. Used for all subsequent messages related to the graph instance'
               name:
                 type: string
-                description: '(optional) Human-readable label for the graph'
+                description: 'Human-readable label for the graph'
               library:
                 type: string
-                description: '(optional) Component library identifier'
+                description: 'Component library identifier'
               main:
                 type: boolean
-                description: "(optional) Identifies the graph as a main graph of a project that should not be registered as a component\nGraphs registered in this way should also be available for use as subgraphs in other graphs. Therefore a graph registration and later changes to it may cause component messages of the Component protocol to be sent back to the client informing of possible changes in the ports of the subgraph component."
+                description: "Identifies the graph as a main graph of a project that should not be registered as a component\nGraphs registered in this way should also be available for use as subgraphs in other graphs. Therefore a graph registration and later changes to it may cause component messages of the Component protocol to be sent back to the client informing of possible changes in the ports of the subgraph component."
               icon:
                 type: string
                 description: >-
-                  (optional) Icon to use for the graph when used as a component
+                  Icon to use for the graph when used as a component
               description:
                 type: string
                 description: >-
-                  (optional) Description to use for the graph when used as a component
+                  Description to use for the graph when used as a component
               secret:
                 type: string
                 description: access token to authorize user
@@ -169,7 +179,7 @@ input:
                 description: 'component name used for the node'
               metadata:
                 type: object
-                description: '(optional): structure of key-value pairs for node metadata'
+                description: 'structure of key-value pairs for node metadata'
               graph:
                 type: string
                 description: 'graph the action targets'
@@ -277,8 +287,9 @@ input:
                 description: 'target node for the edge'
               metadata:
                 type: object
-                description: '(optional): structure of key-value pairs for edge metadata'
+                description: 'Structure of key-value pairs for edge metadata'
               graph:
+                type: string
                 description: 'graph the action targets'
               secret:
                 type: string
@@ -323,6 +334,7 @@ input:
             enum: ['changeedge']
           payload:
             additionalProperties: false
+            required: ['graph', 'src', 'tgt']
             properties:
               graph:
                 type: string
@@ -352,13 +364,14 @@ input:
             enum: ['addinitial']
           payload:
             additionalProperties: false
+            required: ['graph', 'src', 'tgt']
             properties:
               graph:
                 type: string
                 description: 'graph the action targets'
               metadata:
                 type: object
-                description: '(optional): structure of key-value pairs for edge metadata'
+                description: 'structure of key-value pairs for edge metadata'
               src:
                 description: 'source data for the edge'
                 $ref: '/shared/iip'
@@ -421,7 +434,7 @@ input:
                 description: 'internal port name'
               metadata:
                 type: object
-                description: '(optional): structure of key-value pairs for node metadata'
+                description: 'structure of key-value pairs for node metadata'
               graph:
                 type: string
                 description: 'graph the action targets'
@@ -440,6 +453,7 @@ input:
           command:
             enum: ['removeinport']
           payload:
+            required: ['public', 'graph']
             additionalProperties: false
             properties:
               public:
@@ -463,6 +477,7 @@ input:
           command:
             enum: ['renameinport']
           payload:
+            required: ['from', 'to', 'graph']
             additionalProperties: false
             properties:
               from:
@@ -503,7 +518,7 @@ input:
                 description: 'internal port name'
               metadata:
                 type: object
-                description: '(optional): structure of key-value pairs for port metadata'
+                description: 'structure of key-value pairs for port metadata'
               graph:
                 type: string
                 description: 'graph the action targets'
@@ -584,7 +599,7 @@ input:
                 description: 'an array of node ids part of the group'
               metadata:
                 type: object
-                description: '(optional): structure of key-value pairs for group metadata'
+                description: 'structure of key-value pairs for group metadata'
               graph:
                 type: string
                 description: 'graph the action targets'
@@ -627,6 +642,7 @@ input:
           command:
             enum: ['renamegroup']
           payload:
+            required: ['from', 'to', 'graph']
             properties:
               from:
                 type: string

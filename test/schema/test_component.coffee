@@ -20,10 +20,13 @@ describe 'Test component protocol schema on event', ->
         event =
           protocol: 'component'
           command: 'error'
-          payload: {}
+          payload:
+            message: "component failed to compile, line fofof:33"
 
-        res = tv4.validate event, schema
-        chai.expect(res).to.be.true
+        res = tv4.validateMultiple event, schema
+        chai.expect(res.missing).to.eql []
+        chai.expect(res.errors).to.eql []
+        chai.expect(res.valid).to.equal true
 
     describe 'component', ->
       schema = '/component/output/component'
@@ -63,20 +66,6 @@ describe 'Test component protocol schema on event', ->
         chai.expect(res).to.be.true
 
   describe 'input', ->
-    describe 'error', ->
-      schema = '/component/input/error'
-
-      it 'should have schema', ->
-        chai.expect(tv4.getSchema schema).to.exist
-
-      it 'should validate event with required fields', ->
-        event =
-          protocol: 'component'
-          command: 'error'
-          payload: {}
-
-        res = tv4.validate event, schema
-        chai.expect(res).to.be.true
 
     describe 'list', ->
       schema = '/component/input/list'

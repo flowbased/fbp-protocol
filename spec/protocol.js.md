@@ -32,6 +32,11 @@ The [fbp-protocol](https://github.com/flowbased/fbp-protocol) tool provides a se
 
 ## Changes
 
+* 2017-05-04:
+  - Fixed protocol errors (`graph:error`, `component:error` and `runtime:error`) to have mandatory `message` string payload.
+  - Fixed missing `required` markers in some JSON schemas for `graph` protocol. Affected messages:
+`graph:renamegroup`, `graph:renameinport`, `graph:removeinport`, `graph:addinitial`, `graph:changeedge`
+  - More readable HTML output, including property value types and examples
 * 2017-05-03:
   - Added more optional metadata to `runtime:runtime` message: `repository`, `repositoryVersion` and `namespace`
 * 2017-02-20:

@@ -10,20 +10,6 @@ describe 'Test runtime protocol schema on event', ->
     tv4.addSchema '/runtime/', runtimeSchema
 
   describe 'input', ->
-    describe 'error', ->
-      schema = '/runtime/input/error'
-
-      it 'should have schema', ->
-        chai.expect(tv4.getSchema schema).to.exist
-
-      it 'should validate event with required fields', ->
-        event =
-          protocol: 'runtime'
-          command: 'error'
-          payload: {}
-
-        res = tv4.validate event, schema
-        chai.expect(res).to.be.true
 
     describe 'getruntime', ->
       schema = '/runtime/input/getruntime'
@@ -81,7 +67,8 @@ describe 'Test runtime protocol schema on event', ->
         event =
           protocol: 'runtime'
           command: 'error'
-          payload: {}
+          payload:
+            message: 'inport "foo" for runtime:packet does not exist'
 
         res = tv4.validate event, schema
         chai.expect(res).to.be.true

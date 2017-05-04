@@ -4,7 +4,7 @@ description: Protocol for handling the component registry.
 output:
   error:
     id: 'output/error'
-    description: 'Component error'
+    description: 'Error response to a command on component protocol'
     allOf:
       - $ref: '/shared/message'
       - properties:
@@ -12,6 +12,12 @@ output:
             enum: ['component']
           command:
             enum: ['error']
+          payload:
+            required: ['message']
+            properties:
+              message:
+                type: 'string'
+                description: 'Error message describing what went wrong'
 
   component:
     id: 'output/component'
@@ -29,23 +35,24 @@ output:
             properties:
               name:
                 type: string
-                description:  'component name in format that can be used in graphs'
+                description:  'component name in format that can be used in graphs. Should contain the component library prefix.'
+                example: 'my-project/MyComponent'
               description:
                 type: string
-                description: '(optional) textual description on what the component does'
+                description: 'textual description on what the component does'
               icon:
                 type: string
                 description: >-
-                  (optional): visual icon for the component, matching icon
-                  names in [Font Awesome](http://fortawesome.github.io/Font-Awesome/icons/)
+                  Visual icon for the component, matching icon
+                  names in <a href="http://fortawesome.github.io/Font-Awesome/icons/">Font Awesome</a>
               subgraph:
                 type: boolean
                 description: 'boolean telling whether the component is a subgraph'
               inPorts:
-                description: 'list of input ports'
+                description: 'list of input ports of the component'
                 $ref: '/shared/port_definition'
               outPorts:
-                description: 'list of output ports'
+                description: 'list of output ports of the component'
                 $ref: '/shared/port_definition'
 
   source:
@@ -67,34 +74,25 @@ output:
             properties:
               name:
                 type: string
-                description: 'Name of the component'
+                description: 'Name of the component. Must not contain library prefix'
+                example: 'MyComponent'
               language:
                 type: string
                 description: >-
-                  The programming language used for the component code, for
-                  example `coffeescript`
-
+                  The programming language used for the component code
+                example: 'c++'
               library:
                 type: string
-                description: '(optional) Component library identifier'
+                description: 'Component library identifier'
+                example: 'components-common'
               code:
                 type: string
                 description: 'Component source code'
               tests:
                 type: string
-                description: '(optional) unit tests for the component'
+                description: 'unit tests for the component'
 
 input:
-  error:
-    id: 'input/error'
-    description: 'Component error'
-    allOf:
-      - $ref: '/shared/message'
-      - properties:
-          protocol:
-            enum: ['component']
-          command:
-            enum: ['error']
 
   list:
     id: 'input/list'
@@ -109,6 +107,7 @@ input:
           command:
             enum: ['list']
           payload:
+            required: []
             properties:
               secret:
                 type: string
@@ -132,7 +131,8 @@ input:
             properties:
               name:
                 type: string
-                description: 'Name of the component to for which to get source code'
+                description: 'Name of the component to for which to get source code. Should contain the library prefix'
+                example: 'my-project/SomeComponent'
               secret:
                 type: string
                 description: access token to authorize user
@@ -156,22 +156,22 @@ input:
             properties:
               name:
                 type: string
-                description: 'Name of the component'
+                description: 'Name of the component. Must not contain library prefix.'
+                example: 'SomeComponent'
               language:
                 type: string
                 description: >-
-                  The programming language used for the component code, for
-                  example `coffeescript`
+                  The programming language used for the component code
+                example: c++
               library:
                 type: string
-                description: '(optional) Component library identifier'
+                description: 'Component library identifier'
+                example: 'my-project'
               code:
                 type: string
                 description: 'Component source code'
               tests:
                 type: string
-                description: '(optional) unit tests for the component'
+                description: 'Unit tests for the component'
               secret:
                 type: string
-                description: access token to authorize user
-
