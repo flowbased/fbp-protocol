@@ -113,13 +113,16 @@ renderProperty = (name, def, parent) ->
   example = "<code class='#{classes} example'>#{JSON.stringify(def.example)}</code>" if def.example?
   return name + type + description + example
 
-renderMessage = (messageType, message) ->
+renderMessage = (messageType, message, protocolName) ->
 
   lines = []
   p = (line) -> lines.push line
 
-  p "### #{messageType}\n"
-  p "#{message.description}\n"
+  messageId = "#{protocolName}-#{messageType}"
+  anchorUrl = '#'+messageId
+
+  p "<h3 id='#{messageId}' class='message name'><a href='#{anchorUrl}'>#{messageType}</a></h3>"
+  p "<p>#{message.description}</p>"
 
   p "<ul class='message properties'>"
   for messagePropName, messageProp of message.properties
@@ -164,7 +167,6 @@ renderMessage = (messageType, message) ->
       p line
   p "</ul>"
 
-  p '\n'
   return lines
 
 renderMarkdown = () ->
@@ -175,11 +177,11 @@ renderMarkdown = () ->
   p = (line) -> lines.push line
 
   for protocol, protocolProps of descriptions
-    p "## #{protocolProps.title}\n"
-    p "#{protocolProps.description}\n"
+    p "<h2 class='protocol name'>#{protocolProps.title}</h2>"
+    p "<p class='protocol description'>#{protocolProps.description}</p>"
 
     for messageType, message of protocolProps.messages
-      m = renderMessage messageType, message
+      m = renderMessage messageType, message, protocol
       lines = lines.concat m
 
   return lines.join('\n')
