@@ -124,33 +124,50 @@ capabilities:
     _enumDescriptions: # Documentation
       - name: 'protocol:network'
         description: >-
-          the runtime is able to control and introspect its
-          running networks using the Network protocol
-      - name: 'protocol:component'
-        description: >-
-          the runtime is able to list and modify its components
-          using the Component protocol
-      - name: 'protocol:runtime'
-        description: >-
-          the runtime is able to expose the ports of its main
-          graph using the Runtime protocol and transmit packet information to/from them
-      - name: 'component:getsource'
-        description: >-
-          runtime is able to read and send component source code
-          back to client
+          can control and introspect its running networks using the Network protocol. Not persist.
+        inputs: ['network:start, network:getstatus, network:stop, network:debug, network:edges']
+        outputs: ['network:stopped, network:started, network:status, network:output, network:error, network:processerror, network:icon, network:connect, network:begingroup, network:data, network:endgroup, network:disconnect']
+
       - name: 'network:persist'
         description: >-
-          runtime is able to *flash* a running graph setup into
-          itself, making it persistent across reboots
-      - name: 'protocol:graph'
+          can *flash* a running graph setup to the runtime, making it persistent across restarts
+        inputs: [network:persist]
+        outputs: [network:persist]
+
+      - name: 'protocol:component'
         description: >-
-          the runtime is able to modify its graphs using the
-          Graph protocol
+          can list components of the runtime using the component:list message.
+        inputs: ['component:list']
+        outputs: ['component:component', 'component:componentsready']
+
+      - name: 'component:getsource'
+        description: >-
+          can get and follow changes in component source code
+        inputs: ['component:getsource']
+        outputs: ['component:source']
+
       - name: 'component:setsource'
         description: >-
           runtime is able to compile and run custom components
           sent as source code strings
+        inputs: ['component:setsource']
+        outputs: ['component:source']
+
+      - name: 'protocol:runtime'
+        description: >-
+          can expose ports of main graph and transmit packet information to/from them
+        inputs: [runtime:packet]
+        outputs: [runtime:ports, runtime:packet]
+
+      - name: 'protocol:graph'
+        description: >-
+          read & modify runtime graphs using the Graph protocol.
+        inputs: [graph:clear, graph:addnode, graph:removenode, graph:renamenode, graph:changenode, graph:addedge, graph:removeedge, graph:changeedge, graph:addinitial, graph:removeinitial, graph:addinport, graph:removeinport, graph:renameinport, graph:addoutport, graph:removeoutport, graph:renameoutport, graph:addgroup, graph:removegroup, graph:renamegroup, graph:changegroup]
+        outputs: [graph:clear, graph:addnode, graph:removenode, graph:renamenode, graph:changenode, graph:addedge, graph:removeedge, graph:changeedge, graph:addinitial, graph:removeinitial, graph:addinport, graph:removeinport, graph:renameinport, graph:addoutport, graph:removeoutport, graph:renameoutport, graph:addgroup, graph:removegroup, graph:renamegroup, graph:changegroup]
+
       - name: 'protocol:trace'
         description: >-
           runtime is able to record and send over flowtraces,
           used for retroactive debugging.
+        inputs: ['trace:start', trace:stop, trace:clear, trace:dump]
+        outputs: ['trace:start', trace:stop, trace:clear, trace:dump]
