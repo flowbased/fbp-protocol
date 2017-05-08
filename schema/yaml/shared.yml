@@ -114,17 +114,24 @@ capabilities:
     type: string
     enums:
       - 'protocol:network'
-      - 'protocol:component'
-      - 'protocol:runtime'
-      - 'component:getsource'
       - 'network:persist'
-      - 'protocol:graph'
+      - 'network:status'
+      - 'network:data'
+      - 'network:control'
+      - 'protocol:component'
+      - 'component:getsource'
       - 'component:setsource'
+      - 'protocol:runtime'
+      - 'protocol:graph'
+      - 'graph:readonly'
       - 'protocol:trace'
     _enumDescriptions: # Documentation
       - name: 'protocol:network'
         description: >-
-          can control and introspect its running networks using the Network protocol. Not persist.
+          can control and introspect its running networks using the Network protocol.
+          DEPRECATED. Instead the individual network:... capabilities should be used.
+          Implies capabilities network:status, network:data, network:control.
+          Does not imply capability network:persist.
         inputs: ['network:start, network:getstatus, network:stop, network:debug, network:edges']
         outputs: ['network:stopped, network:started, network:status, network:output, network:error, network:processerror, network:icon, network:connect, network:begingroup, network:data, network:endgroup, network:disconnect']
 
@@ -134,6 +141,26 @@ capabilities:
         inputs: [network:persist]
         outputs: [network:persist]
 
+      - name: 'network:status'
+        description: >-
+          can get and follow changes to network status
+        inputs: ['network:getstatus']
+        outputs: ['network:status', 'network:started', 'network:stopped']
+
+      - name: 'network:data'
+        description: >-
+          can listen to data flowing through the network and processes
+        inputs: ['network:edges']
+        outputs: [network:edges, network:output, network:error,
+          network:data, network:begingroup, network:endgroup, network:connect, network:disconnect,
+          network:icon, network:processerror]
+
+      - name: 'network:control'
+        description: >-
+          can start and stop networks
+        inputs: ['network:start', 'network:stop']
+        outputs: ['network:started', 'network:stopped']
+
       - name: 'protocol:component'
         description: >-
           can list components of the runtime using the component:list message.
@@ -142,7 +169,7 @@ capabilities:
 
       - name: 'component:getsource'
         description: >-
-          can get and follow changes in component source code
+          read and send component source code back to client
         inputs: ['component:getsource']
         outputs: ['component:source']
 
@@ -158,6 +185,12 @@ capabilities:
           can expose ports of main graph and transmit packet information to/from them
         inputs: [runtime:packet]
         outputs: [runtime:ports, runtime:packet]
+
+      - name: 'graph:readonly'
+        description: >-
+          read and follow changes to runtime graphs (but not modify)
+        inputs: []
+        outputs: [graph:clear, graph:addnode, graph:removenode, graph:renamenode, graph:changenode, graph:addedge, graph:removeedge, graph:changeedge, graph:addinitial, graph:removeinitial, graph:addinport, graph:removeinport, graph:renameinport, graph:addoutport, graph:removeoutport, graph:renameoutport, graph:addgroup, graph:removegroup, graph:renamegroup, graph:changegroup]
 
       - name: 'protocol:graph'
         description: >-
