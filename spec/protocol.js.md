@@ -90,13 +90,23 @@ Different transports can be utilized as needed. It could be interesting to imple
 
 ### Sub-protocols
 
-The FBP protocol is divided into four sub-protocols, or "channels":
+The FBP protocol is divided into sub-protocols for each of the major resources that can be manipulated:
 
 * [`runtime`](#runtime-protocol): communications about runtime capabilities and its exported ports
 * [`graph`](#graph-protocol): communications about graph changes
 * [`component`](#component-protocol): communications about available components and changes to them
 * [`network`](#network-protocol): communications related to running a FBP graph
 * [`trace`](#trace-protocol): communications related to tracing a FBP network
+
+### Capabilities
+
+Not all runtimes implementation supports all features of the protocol. Also, a runtime may restrict *access* to features, either to all clients based on configuration, or based on the *secret* provided in the messages. To support this a set of **capabilities** are defined, which are reported by the runtime in the [runtime:runtime](#runtime-runtime) message.
+
+When receiving a message, the runtime should check for the associated capability. If the capability is not supported, or the client does not have access to the capability, the runtime should respond with an `error` reply on the relevant `protocol`.
+
+A few commands do not require any capabilities: the runtime info request/response ([runtime:getruntime](#runtime-getruntime) and [runtime:runtime](#runtime-runtime)), and the error responses ([runtime:error](#runtime-error), [graph:error](#graph-error), [network:error](#network-error), [component:error](#component-error)).
+
+<%= capabilities %>
 
 ### Message structure
 
@@ -108,7 +118,21 @@ All messages consist of three parts:
 * Topic (for example, `addnode`)
 * Message payload (typically a data structure specific to the sub-protocol and topic)
 
-The keys listed in specific messages are for the message payloads. The values are strings unless stated differently.
+The keys listed in specific messages are for the message `payload`.
 
-<%= descriptions %>
+An example message
+```
+"protocol": "graph",
+"command": "addnode",
+"payload": {
+	"component": "canvas/Draw",
+	"graph": "hello-canvas-example",
+	"id": "draw",
+	"metadata": {
+		"label": "Draw onto canvas element"
+	}
+}
+```
+
+<%= messages %>
 

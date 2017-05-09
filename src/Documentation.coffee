@@ -113,13 +113,16 @@ renderProperty = (name, def, parent) ->
   example = "<code class='#{classes} example'>#{JSON.stringify(def.example)}</code>" if def.example?
   return name + type + description + example
 
-renderMessage = (messageType, message) ->
+renderMessage = (messageType, message, protocolName) ->
 
   lines = []
   p = (line) -> lines.push line
 
-  p "### #{messageType}\n"
-  p "#{message.description}\n"
+  messageId = "#{protocolName}-#{messageType}"
+  anchorUrl = '#'+messageId
+
+  p "<h3 id='#{messageId}' class='message name'><a href='#{anchorUrl}'>#{messageType}</a></h3>"
+  p "<p>#{message.description}</p>"
 
   p "<ul class='message properties'>"
   for messagePropName, messageProp of message.properties
@@ -151,23 +154,43 @@ renderMessage = (messageType, message) ->
           p "<li>#{renderProperty(itemPropName, itemProp, messageProp)}</li>"
       p "</ul>"
 
-    else if items?.type is 'string' and items?._enumDescriptions
-      line += " Valid values are:"
-      p line
-
-      p "<ul class='values'>"
-      for enumDescription in items._enumDescriptions
-        p "<li><label class='enum name'>#{enumDescription.name}</label>: #{enumDescription.description}</li>"
-      p "</ul>"
-
     else
       p line
   p "</ul>"
 
-  p '\n'
   return lines
 
-renderMarkdown = () ->
+renderCapabilities = () ->
+  tv4 = require '../schema/index.js'
+  schema = tv4.getSchema '/shared/capabilities'
+
+  lines = []
+  p = (line) -> lines.push line
+
+  p "<section class='capabilities'>"
+  for enumDescription in schema.items._enumDescriptions
+    p "<h4 class='capability name'>#{enumDescription.name}</h4>"
+    p "<p>#{enumDescription.description}</p>"
+
+    p "<h5 class='capability messages header'>input messages</h5>"
+    p "<ul class='capability messages'>"
+    for name in enumDescription.inputs
+      messageUrl = "#"+name.replace(':', '-')
+      p "<li><a href='#{messageUrl}'>#{name}</a></li>"
+    p "</ul>"
+
+    p "<h5 class='capability messages header'>output messages</h5>"
+    p "<ul class='capability messages'>"
+    for name in enumDescription.outputs
+      messageUrl = "#"+name.replace(':', '-')
+      p "<li><a href='#{messageUrl}'>#{name}</a></li>"
+    p "</ul>"
+
+  p "</section>"
+
+  return lines.join('\n')
+
+renderMessages = () ->
   schemas = getSchemas()
   descriptions = getDescriptions schemas
 
@@ -175,15 +198,16 @@ renderMarkdown = () ->
   p = (line) -> lines.push line
 
   for protocol, protocolProps of descriptions
-    p "## #{protocolProps.title}\n"
-    p "#{protocolProps.description}\n"
+    p "<h2 class='protocol name'>#{protocolProps.title}</h2>"
+    p "<p class='protocol description'>#{protocolProps.description}</p>"
 
     for messageType, message of protocolProps.messages
-      m = renderMessage messageType, message
+      m = renderMessage messageType, message, protocol
       lines = lines.concat m
 
   return lines.join('\n')
 
 module.exports =
-  renderMarkdown: renderMarkdown
+  renderMessages: renderMessages
+  renderCapabilities: renderCapabilities
   getSchemas: getSchemas
