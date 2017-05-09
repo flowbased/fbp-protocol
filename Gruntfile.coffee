@@ -29,8 +29,10 @@ module.exports = ->
         dest: 'test/schema/'
         ext: '.js'
 
-    convert:
-      yaml:
+    yaml:
+      options:
+        strict: true
+      schemas:
         files: [
           expand: true
           cwd: 'schema/yaml'
@@ -46,7 +48,7 @@ module.exports = ->
         tasks: ['test']
       yaml:
         files: ['schema/yaml/**/*.yml']
-        tasks: ['convert', 'json-to-js', 'test']
+        tasks: ['yaml', 'json-to-js', 'test']
 
     mochaTest:
       test:
@@ -98,11 +100,11 @@ module.exports = ->
   @loadNpmTasks 'grunt-gh-pages'
 
   # Create json schemas from yaml
-  @loadNpmTasks 'grunt-convert'
+  @loadNpmTasks 'grunt-yaml'
   @loadNpmTasks 'grunt-jekyll'
 
   # Our local tasks
-  @registerTask 'build', ['coffee', 'convert', 'json-to-js', 'build-markdown', 'jekyll:dist']
+  @registerTask 'build', ['coffee', 'yaml', 'json-to-js', 'build-markdown', 'jekyll:dist']
   @registerTask 'test', ['build', 'mochaTest'] # FIXME: enable 'exec:fbp_test'
   @registerTask 'default', ['test']
 
