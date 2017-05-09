@@ -32,6 +32,11 @@ The [fbp-protocol](https://github.com/flowbased/fbp-protocol) tool provides a se
 
 ## Changes
 
+* 2017-04-09:
+  - Version 0.6. No breaking changes over 0.5.
+  - Added additional capabilities `graph:readonly`, `network:control`, `network:data`, `network:status`. Especially useful for read-only access.
+  - Deprecated the `protocol:network` capability in favor of the new fine-gained `network:*` capabilities.
+  - Each capability now defines the set of messages contained in it. Available as `inputs` and `outputs` in the schema `/shared/capabilities`.
 * 2017-05-04:
   - Fixed protocol errors (`graph:error`, `component:error` and `runtime:error`) to have mandatory `message` string payload.
   - Fixed missing `required` markers in some JSON schemas for `graph` protocol. Affected messages:

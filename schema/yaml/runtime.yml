@@ -142,7 +142,7 @@ output:
                 description: >-
                   version of the runtime protocol that the runtime supports
                 type: string
-                example: '0.5'
+                example: '0.6'
               allCapabilities:
                 description: >-
                   <a href='#capabilities'>capability strings</a> for things the runtime is able to do.
