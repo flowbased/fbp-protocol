@@ -65,8 +65,20 @@
         font-family: monospace;
         font-weight: 700;
       }
-      h3 {
-        opacity: 0.75;
+      .message.name a {
+        text-decoration: none;
+      }
+      .capability.messages {
+        margin: 0px;
+      } 
+      .capability.messages li {
+        display: inline;
+      }
+      .capability.messages li::after {
+        content: ', '
+      }
+      .capability.messages.header {
+        margin: 5px;
       }
     </style>
   </head>
@@ -74,7 +86,7 @@
     <article>
       <h1>FBP Network Protocol</h1>
       <aside>
-        Last updated 2017-05-04 16:31:40 +0000
+        Last updated 2017-05-09 13:22:17 +0000
       </aside>
       <p>The Flow-Based Programming network protocol (<em>FBP protocol</em>) has been designed primarily for flow-based programming interfaces like the <a href="https://flowhub.io">Flowhub</a> to communicate with various FBP runtimes. However, it can also be utilized for communication between different runtimes, for example server-to-server or server-to-microcontroller.</p>
 
@@ -110,6 +122,14 @@
 <h2 id="changes">Changes</h2>
 
 <ul>
+  <li>2017-04-09:
+    <ul>
+      <li>Version 0.6. No breaking changes over 0.5.</li>
+      <li>Added additional capabilities <code class="highlighter-rouge">graph:readonly</code>, <code class="highlighter-rouge">network:control</code>, <code class="highlighter-rouge">network:data</code>, <code class="highlighter-rouge">network:status</code>. Especially useful for read-only access.</li>
+      <li>Deprecated the <code class="highlighter-rouge">protocol:network</code> capability in favor of the new fine-gained <code class="highlighter-rouge">network:*</code> capabilities.</li>
+      <li>Each capability now defines the set of messages contained in it. Available as <code class="highlighter-rouge">inputs</code> and <code class="highlighter-rouge">outputs</code> in the schema <code class="highlighter-rouge">/shared/capabilities</code>.</li>
+    </ul>
+  </li>
   <li>2017-05-04:
     <ul>
       <li>Fixed protocol errors (<code class="highlighter-rouge">graph:error</code>, <code class="highlighter-rouge">component:error</code> and <code class="highlighter-rouge">runtime:error</code>) to have mandatory <code class="highlighter-rouge">message</code> string payload.</li>
@@ -219,7 +239,7 @@ changegroup commands to the graph protocol</li>
 
 <h3 id="sub-protocols">Sub-protocols</h3>
 
-<p>The FBP protocol is divided into four sub-protocols, or “channels”:</p>
+<p>The FBP protocol is divided into sub-protocols for each of the major resources that can be manipulated:</p>
 
 <ul>
   <li><a href="#runtime-protocol"><code class="highlighter-rouge">runtime</code></a>: communications about runtime capabilities and its exported ports</li>
@@ -228,6 +248,229 @@ changegroup commands to the graph protocol</li>
   <li><a href="#network-protocol"><code class="highlighter-rouge">network</code></a>: communications related to running a FBP graph</li>
   <li><a href="#trace-protocol"><code class="highlighter-rouge">trace</code></a>: communications related to tracing a FBP network</li>
 </ul>
+
+<h3 id="capabilities">Capabilities</h3>
+
+<p>Not all runtimes implementation supports all features of the protocol. Also, a runtime may restrict <em>access</em> to features, either to all clients based on configuration, or based on the <em>secret</em> provided in the messages. To support this a set of <strong>capabilities</strong> are defined, which are reported by the runtime in the <a href="#runtime-runtime">runtime:runtime</a> message.</p>
+
+<p>When receiving a message, the runtime should check for the associated capability. If the capability is not supported, or the client does not have access to the capability, the runtime should respond with an <code class="highlighter-rouge">error</code> reply on the relevant <code class="highlighter-rouge">protocol</code>.</p>
+
+<p>A few commands do not require any capabilities: the runtime info request/response (<a href="#runtime-getruntime">runtime:getruntime</a> and <a href="#runtime-runtime">runtime:runtime</a>), and the error responses (<a href="#runtime-error">runtime:error</a>, <a href="#graph-error">graph:error</a>, <a href="#network-error">network:error</a>, <a href="#component-error">component:error</a>).</p>
+
+<section class="capabilities">
+<h4 class="capability name">protocol:network</h4>
+<p>can control and introspect its running networks using the Network protocol. DEPRECATED. Instead the individual network:... capabilities should be used. Implies capabilities network:status, network:data, network:control. Does not imply capability network:persist.</p>
+<h5 class="capability messages header">input messages</h5>
+<ul class="capability messages">
+<li><a href="#network-start">network:start</a></li>
+<li><a href="#network-getstatus">network:getstatus</a></li>
+<li><a href="#network-stop">network:stop</a></li>
+<li><a href="#network-debug">network:debug</a></li>
+<li><a href="#network-edges">network:edges</a></li>
+</ul>
+<h5 class="capability messages header">output messages</h5>
+<ul class="capability messages">
+<li><a href="#network-stopped">network:stopped</a></li>
+<li><a href="#network-started">network:started</a></li>
+<li><a href="#network-status">network:status</a></li>
+<li><a href="#network-output">network:output</a></li>
+<li><a href="#network-error">network:error</a></li>
+<li><a href="#network-processerror">network:processerror</a></li>
+<li><a href="#network-icon">network:icon</a></li>
+<li><a href="#network-connect">network:connect</a></li>
+<li><a href="#network-begingroup">network:begingroup</a></li>
+<li><a href="#network-data">network:data</a></li>
+<li><a href="#network-endgroup">network:endgroup</a></li>
+<li><a href="#network-disconnect">network:disconnect</a></li>
+</ul>
+<h4 class="capability name">network:persist</h4>
+<p>can *flash* a running graph setup to the runtime, making it persistent across restarts</p>
+<h5 class="capability messages header">input messages</h5>
+<ul class="capability messages">
+<li><a href="#network-persist">network:persist</a></li>
+</ul>
+<h5 class="capability messages header">output messages</h5>
+<ul class="capability messages">
+<li><a href="#network-persist">network:persist</a></li>
+</ul>
+<h4 class="capability name">network:status</h4>
+<p>can get and follow changes to network status</p>
+<h5 class="capability messages header">input messages</h5>
+<ul class="capability messages">
+<li><a href="#network-getstatus">network:getstatus</a></li>
+</ul>
+<h5 class="capability messages header">output messages</h5>
+<ul class="capability messages">
+<li><a href="#network-status">network:status</a></li>
+<li><a href="#network-started">network:started</a></li>
+<li><a href="#network-stopped">network:stopped</a></li>
+</ul>
+<h4 class="capability name">network:data</h4>
+<p>can listen to data flowing through the network and processes</p>
+<h5 class="capability messages header">input messages</h5>
+<ul class="capability messages">
+<li><a href="#network-edges">network:edges</a></li>
+</ul>
+<h5 class="capability messages header">output messages</h5>
+<ul class="capability messages">
+<li><a href="#network-edges">network:edges</a></li>
+<li><a href="#network-output">network:output</a></li>
+<li><a href="#network-error">network:error</a></li>
+<li><a href="#network-data">network:data</a></li>
+<li><a href="#network-begingroup">network:begingroup</a></li>
+<li><a href="#network-endgroup">network:endgroup</a></li>
+<li><a href="#network-connect">network:connect</a></li>
+<li><a href="#network-disconnect">network:disconnect</a></li>
+<li><a href="#network-icon">network:icon</a></li>
+<li><a href="#network-processerror">network:processerror</a></li>
+</ul>
+<h4 class="capability name">network:control</h4>
+<p>can start and stop networks</p>
+<h5 class="capability messages header">input messages</h5>
+<ul class="capability messages">
+<li><a href="#network-start">network:start</a></li>
+<li><a href="#network-stop">network:stop</a></li>
+</ul>
+<h5 class="capability messages header">output messages</h5>
+<ul class="capability messages">
+<li><a href="#network-started">network:started</a></li>
+<li><a href="#network-stopped">network:stopped</a></li>
+</ul>
+<h4 class="capability name">protocol:component</h4>
+<p>can list components of the runtime using the component:list message.</p>
+<h5 class="capability messages header">input messages</h5>
+<ul class="capability messages">
+<li><a href="#component-list">component:list</a></li>
+</ul>
+<h5 class="capability messages header">output messages</h5>
+<ul class="capability messages">
+<li><a href="#component-component">component:component</a></li>
+<li><a href="#component-componentsready">component:componentsready</a></li>
+</ul>
+<h4 class="capability name">component:getsource</h4>
+<p>read and send component source code back to client</p>
+<h5 class="capability messages header">input messages</h5>
+<ul class="capability messages">
+<li><a href="#component-getsource">component:getsource</a></li>
+</ul>
+<h5 class="capability messages header">output messages</h5>
+<ul class="capability messages">
+<li><a href="#component-source">component:source</a></li>
+</ul>
+<h4 class="capability name">component:setsource</h4>
+<p>runtime is able to compile and run custom components sent as source code strings</p>
+<h5 class="capability messages header">input messages</h5>
+<ul class="capability messages">
+<li><a href="#component-setsource">component:setsource</a></li>
+</ul>
+<h5 class="capability messages header">output messages</h5>
+<ul class="capability messages">
+<li><a href="#component-source">component:source</a></li>
+</ul>
+<h4 class="capability name">protocol:runtime</h4>
+<p>can expose ports of main graph and transmit packet information to/from them</p>
+<h5 class="capability messages header">input messages</h5>
+<ul class="capability messages">
+<li><a href="#runtime-packet">runtime:packet</a></li>
+</ul>
+<h5 class="capability messages header">output messages</h5>
+<ul class="capability messages">
+<li><a href="#runtime-ports">runtime:ports</a></li>
+<li><a href="#runtime-packet">runtime:packet</a></li>
+</ul>
+<h4 class="capability name">graph:readonly</h4>
+<p>read and follow changes to runtime graphs (but not modify)</p>
+<h5 class="capability messages header">input messages</h5>
+<ul class="capability messages">
+</ul>
+<h5 class="capability messages header">output messages</h5>
+<ul class="capability messages">
+<li><a href="#graph-clear">graph:clear</a></li>
+<li><a href="#graph-addnode">graph:addnode</a></li>
+<li><a href="#graph-removenode">graph:removenode</a></li>
+<li><a href="#graph-renamenode">graph:renamenode</a></li>
+<li><a href="#graph-changenode">graph:changenode</a></li>
+<li><a href="#graph-addedge">graph:addedge</a></li>
+<li><a href="#graph-removeedge">graph:removeedge</a></li>
+<li><a href="#graph-changeedge">graph:changeedge</a></li>
+<li><a href="#graph-addinitial">graph:addinitial</a></li>
+<li><a href="#graph-removeinitial">graph:removeinitial</a></li>
+<li><a href="#graph-addinport">graph:addinport</a></li>
+<li><a href="#graph-removeinport">graph:removeinport</a></li>
+<li><a href="#graph-renameinport">graph:renameinport</a></li>
+<li><a href="#graph-addoutport">graph:addoutport</a></li>
+<li><a href="#graph-removeoutport">graph:removeoutport</a></li>
+<li><a href="#graph-renameoutport">graph:renameoutport</a></li>
+<li><a href="#graph-addgroup">graph:addgroup</a></li>
+<li><a href="#graph-removegroup">graph:removegroup</a></li>
+<li><a href="#graph-renamegroup">graph:renamegroup</a></li>
+<li><a href="#graph-changegroup">graph:changegroup</a></li>
+</ul>
+<h4 class="capability name">protocol:graph</h4>
+<p>read &amp; modify runtime graphs using the Graph protocol.</p>
+<h5 class="capability messages header">input messages</h5>
+<ul class="capability messages">
+<li><a href="#graph-clear">graph:clear</a></li>
+<li><a href="#graph-addnode">graph:addnode</a></li>
+<li><a href="#graph-removenode">graph:removenode</a></li>
+<li><a href="#graph-renamenode">graph:renamenode</a></li>
+<li><a href="#graph-changenode">graph:changenode</a></li>
+<li><a href="#graph-addedge">graph:addedge</a></li>
+<li><a href="#graph-removeedge">graph:removeedge</a></li>
+<li><a href="#graph-changeedge">graph:changeedge</a></li>
+<li><a href="#graph-addinitial">graph:addinitial</a></li>
+<li><a href="#graph-removeinitial">graph:removeinitial</a></li>
+<li><a href="#graph-addinport">graph:addinport</a></li>
+<li><a href="#graph-removeinport">graph:removeinport</a></li>
+<li><a href="#graph-renameinport">graph:renameinport</a></li>
+<li><a href="#graph-addoutport">graph:addoutport</a></li>
+<li><a href="#graph-removeoutport">graph:removeoutport</a></li>
+<li><a href="#graph-renameoutport">graph:renameoutport</a></li>
+<li><a href="#graph-addgroup">graph:addgroup</a></li>
+<li><a href="#graph-removegroup">graph:removegroup</a></li>
+<li><a href="#graph-renamegroup">graph:renamegroup</a></li>
+<li><a href="#graph-changegroup">graph:changegroup</a></li>
+</ul>
+<h5 class="capability messages header">output messages</h5>
+<ul class="capability messages">
+<li><a href="#graph-clear">graph:clear</a></li>
+<li><a href="#graph-addnode">graph:addnode</a></li>
+<li><a href="#graph-removenode">graph:removenode</a></li>
+<li><a href="#graph-renamenode">graph:renamenode</a></li>
+<li><a href="#graph-changenode">graph:changenode</a></li>
+<li><a href="#graph-addedge">graph:addedge</a></li>
+<li><a href="#graph-removeedge">graph:removeedge</a></li>
+<li><a href="#graph-changeedge">graph:changeedge</a></li>
+<li><a href="#graph-addinitial">graph:addinitial</a></li>
+<li><a href="#graph-removeinitial">graph:removeinitial</a></li>
+<li><a href="#graph-addinport">graph:addinport</a></li>
+<li><a href="#graph-removeinport">graph:removeinport</a></li>
+<li><a href="#graph-renameinport">graph:renameinport</a></li>
+<li><a href="#graph-addoutport">graph:addoutport</a></li>
+<li><a href="#graph-removeoutport">graph:removeoutport</a></li>
+<li><a href="#graph-renameoutport">graph:renameoutport</a></li>
+<li><a href="#graph-addgroup">graph:addgroup</a></li>
+<li><a href="#graph-removegroup">graph:removegroup</a></li>
+<li><a href="#graph-renamegroup">graph:renamegroup</a></li>
+<li><a href="#graph-changegroup">graph:changegroup</a></li>
+</ul>
+<h4 class="capability name">protocol:trace</h4>
+<p>runtime is able to record and send over flowtraces, used for retroactive debugging.</p>
+<h5 class="capability messages header">input messages</h5>
+<ul class="capability messages">
+<li><a href="#trace-start">trace:start</a></li>
+<li><a href="#trace-stop">trace:stop</a></li>
+<li><a href="#trace-clear">trace:clear</a></li>
+<li><a href="#trace-dump">trace:dump</a></li>
+</ul>
+<h5 class="capability messages header">output messages</h5>
+<ul class="capability messages">
+<li><a href="#trace-start">trace:start</a></li>
+<li><a href="#trace-stop">trace:stop</a></li>
+<li><a href="#trace-clear">trace:clear</a></li>
+<li><a href="#trace-dump">trace:dump</a></li>
+</ul>
+</section>
 
 <h3 id="message-structure">Message structure</h3>
 
@@ -241,25 +484,32 @@ changegroup commands to the graph protocol</li>
   <li>Message payload (typically a data structure specific to the sub-protocol and topic)</li>
 </ul>
 
-<p>The keys listed in specific messages are for the message payloads. The values are strings unless stated differently.</p>
+<p>The keys listed in specific messages are for the message <code class="highlighter-rouge">payload</code>.</p>
 
-<h2 id="runtime-protocol">Runtime protocol</h2>
+<p>An example message</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>"protocol": "graph",
+"command": "addnode",
+"payload": {
+	"component": "canvas/Draw",
+	"graph": "hello-canvas-example",
+	"id": "draw",
+	"metadata": {
+		"label": "Draw onto canvas element"
+	}
+}
+</code></pre>
+</div>
 
-<p>When a client connects to a FBP procotol it may choose to discover the capabilities and other information about the runtime.</p>
-
-<h3 id="getruntime">getruntime</h3>
-
-<p>Request the information about the runtime. When receiving this message the runtime should response with a runtime message.</p>
-
+<h2 class="protocol name">Runtime protocol</h2>
+<p class="protocol description">When a client connects to a FBP procotol it may choose to discover the capabilities and other information about the runtime.</p>
+<h3 id="runtime-getruntime" class="message name"><a href="#runtime-getruntime">getruntime</a></h3>
+<p>Request the information about the runtime. When receiving this message the runtime should response with a runtime message. If the runtime is currently running a graph and it is able to speak the full Runtime protocol, it should follow up with a ports message.</p>
 <ul class="message properties">
 <li><label class="property name">secret</label><label class="property type">string</label><label class="property description">access token to authorize user</label></li>
 </ul>
-
-<h3 id="packet">packet</h3>
-
-<p>Runtimes that can be used as remote subgraphs (i.e. ones that have reported supporting the protocol:runtime capability) need to be able to receive and transmit information packets at their exposed ports. 
+<h3 id="runtime-packet" class="message name"><a href="#runtime-packet">packet</a></h3>
+<p>Runtimes that can be used as remote subgraphs (i.e. ones that have reported supporting the protocol:runtime capability) need to be able to receive and transmit information packets at their exposed ports.
 These packets can be send from the client to the runtimes input ports, or from runtimes output ports to the client.</p>
-
 <ul class="message properties">
 <li><label class="property name">port</label><label class="property type">string</label><label class="property description">port name for the input or output port</label></li>
 <li><label class="property name">event</label><label class="property type">string</label><label class="property description">packet event</label></li>
@@ -267,19 +517,13 @@ These packets can be send from the client to the runtimes input ports, or from r
 <li><label class="property name">payload</label><label class="property type">object</label><label class="property description">payload for the packet. Used only with begingroup (for group names) and data packets</label></li>
 <li><label class="property name">secret</label><label class="property type">string</label><label class="property description">access token to authorize user</label></li>
 </ul>
-
-<h3 id="error">error</h3>
-
+<h3 id="runtime-error" class="message name"><a href="#runtime-error">error</a></h3>
 <p>Error response to a command on runtime protocol</p>
-
 <ul class="message properties">
 <li><label class="property name">message</label><label class="property type">string</label><label class="property description">Error message describing what went wrong</label></li>
 </ul>
-
-<h3 id="ports">ports</h3>
-
+<h3 id="runtime-ports" class="message name"><a href="#runtime-ports">ports</a></h3>
 <p>Message sent by the runtime to signal its available ports. The runtime is responsible for sending the up-to-date list of available ports back to client whenever it changes.</p>
-
 <ul class="message properties">
 <li><label class="property name">graph</label><label class="property type">string</label><label class="property description">ID of the currently configured main graph running on the runtime</label></li>
 <li><label class="property name">inPorts</label><label class="property type">array</label><label class="property description">list of input ports of the runtime</label></li>Each item contains:
@@ -299,53 +543,24 @@ These packets can be send from the client to the runtimes input ports, or from r
 <li><label class="property optional name">description</label><label class="property optional type">string</label><label class="property optional description">textual description of the port</label></li>
 </ul>
 </ul>
-
-<h3 id="runtime">runtime</h3>
-
+<h3 id="runtime-runtime" class="message name"><a href="#runtime-runtime">runtime</a></h3>
 <p>Response from the runtime to the getruntime request.</p>
-
 <ul class="message properties">
 <li><label class="property name">id</label><label class="property type">string</label><label class="property description">unique runtime ID. Must be a UUID, version 4</label><code class="property example">"f18a4924-9d4f-414d-a37c-cd24b39bba10"</code></li>
 <li><label class="property name">label</label><label class="property type">string</label><label class="property description">Human-readable description of the runtime</label></li>
-<li><label class="property name">version</label><label class="property type">string</label><label class="property description">version of the runtime protocol that the runtime supports</label><code class="property example">"0.5"</code></li>
-<li><label class="property name">allCapabilities</label><label class="property type">array</label><label class="property description">array of capability strings for things the runtime is able to do. May include things not permitted for the user.</label></li> Valid values are:
-<ul class="values">
-<li><label class="enum name">protocol:network</label>: the runtime is able to control and introspect its running networks using the Network protocol</li>
-<li><label class="enum name">protocol:component</label>: the runtime is able to list and modify its components using the Component protocol</li>
-<li><label class="enum name">protocol:runtime</label>: the runtime is able to expose the ports of its main graph using the Runtime protocol and transmit packet information to/from them</li>
-<li><label class="enum name">component:getsource</label>: runtime is able to read and send component source code back to client</li>
-<li><label class="enum name">network:persist</label>: runtime is able to *flash* a running graph setup into itself, making it persistent across reboots</li>
-<li><label class="enum name">protocol:graph</label>: the runtime is able to modify its graphs using the Graph protocol</li>
-<li><label class="enum name">component:setsource</label>: runtime is able to compile and run custom components sent as source code strings</li>
-<li><label class="enum name">protocol:trace</label>: runtime is able to record and send over flowtraces, used for retroactive debugging.</li>
-</ul>
-<li><label class="property name">capabilities</label><label class="property type">array</label><label class="property description">array of capability strings for things the runtime is able to do. 
-If the runtime is currently running a graph and it is able to speak the full Runtime protocol, it should follow up with a ports message.</label></li> Valid values are:
-<ul class="values">
-<li><label class="enum name">protocol:network</label>: the runtime is able to control and introspect its running networks using the Network protocol</li>
-<li><label class="enum name">protocol:component</label>: the runtime is able to list and modify its components using the Component protocol</li>
-<li><label class="enum name">protocol:runtime</label>: the runtime is able to expose the ports of its main graph using the Runtime protocol and transmit packet information to/from them</li>
-<li><label class="enum name">component:getsource</label>: runtime is able to read and send component source code back to client</li>
-<li><label class="enum name">network:persist</label>: runtime is able to *flash* a running graph setup into itself, making it persistent across reboots</li>
-<li><label class="enum name">protocol:graph</label>: the runtime is able to modify its graphs using the Graph protocol</li>
-<li><label class="enum name">component:setsource</label>: runtime is able to compile and run custom components sent as source code strings</li>
-<li><label class="enum name">protocol:trace</label>: runtime is able to record and send over flowtraces, used for retroactive debugging.</li>
-</ul>
+<li><label class="property name">version</label><label class="property type">string</label><label class="property description">version of the runtime protocol that the runtime supports</label><code class="property example">"0.6"</code></li>
+<li><label class="property name">allCapabilities</label><label class="property type">array</label><label class="property description"><a href="#capabilities">capability strings</a> for things the runtime is able to do. May include things not permitted for this client.</label></li>
+<li><label class="property name">capabilities</label><label class="property type">array</label><label class="property description"><a href="#capabilities">capability strings</a> for things the runtime is able to do for this client.</label></li>
 <li><label class="property name">graph</label><label class="property type">string</label><label class="property description">ID of the currently configured main graph running on the runtime, if any</label><code class="property example">"service-main"</code></li>
 <li><label class="property name">type</label><label class="property type">string</label><label class="property description">type of the runtime</label><code class="property example">"microflo"</code></li>
 <li><label class="property name">namespace</label><label class="property type">string</label><label class="property description">Library namespace of the project running on the runtime, if any. Must match that of components belonging to the (top-level) of project.</label><code class="property example">"my-project-foo"</code></li>
 <li><label class="property name">repository</label><label class="property type">string</label><label class="property description">Source-code repository URL of the project running on the runtime, if any</label><code class="property example">"https://github.com/flowbased/fbp-protocol.git"</code></li>
 <li><label class="property name">repositoryVersion</label><label class="property type">string</label><label class="property description">Unique version identifier of the source code of the project, if known. The version should be available in @repository.</label><code class="property example">"0.6.3-8-g90edcfc"</code></li>
 </ul>
-
-<h2 id="graph-protocol">Graph protocol</h2>
-
-<p>This protocol is utilized for communicating about graph changes in both directions.</p>
-
-<h3 id="clear">clear</h3>
-
+<h2 class="protocol name">Graph protocol</h2>
+<p class="protocol description">This protocol is utilized for communicating about graph changes in both directions.</p>
+<h3 id="graph-clear" class="message name"><a href="#graph-clear">clear</a></h3>
 <p>Initialize an empty graph.</p>
-
 <ul class="message properties">
 <li><label class="property name">id</label><label class="property type">string</label><label class="property description">identifier for the graph being created. Used for all subsequent messages related to the graph instance</label></li>
 <li><label class="property name">name</label><label class="property type">string</label><label class="property description">Human-readable label for the graph</label></li>
@@ -356,11 +571,8 @@ Graphs registered in this way should also be available for use as subgraphs in o
 <li><label class="property name">description</label><label class="property type">string</label><label class="property description">Description to use for the graph when used as a component</label></li>
 <li><label class="property name">secret</label><label class="property type">string</label><label class="property description">access token to authorize user</label></li>
 </ul>
-
-<h3 id="addnode">addnode</h3>
-
+<h3 id="graph-addnode" class="message name"><a href="#graph-addnode">addnode</a></h3>
 <p>Add node to a graph.</p>
-
 <ul class="message properties">
 <li><label class="property name">id</label><label class="property type">string</label><label class="property description">identifier for the node</label></li>
 <li><label class="property name">component</label><label class="property type">string</label><label class="property description">component name used for the node</label></li>
@@ -368,43 +580,31 @@ Graphs registered in this way should also be available for use as subgraphs in o
 <li><label class="property name">graph</label><label class="property type">string</label><label class="property description">graph the action targets</label></li>
 <li><label class="property name">secret</label><label class="property type">string</label><label class="property description">access token to authorize user</label></li>
 </ul>
-
-<h3 id="removenode">removenode</h3>
-
+<h3 id="graph-removenode" class="message name"><a href="#graph-removenode">removenode</a></h3>
 <p>Remove a node from a graph.</p>
-
 <ul class="message properties">
 <li><label class="property name">id</label><label class="property type">string</label><label class="property description">identifier for the node</label></li>
 <li><label class="property name">graph</label><label class="property type">string</label><label class="property description">graph the action targets</label></li>
 <li><label class="property name">secret</label><label class="property type">string</label><label class="property description">access token to authorize user</label></li>
 </ul>
-
-<h3 id="renamenode">renamenode</h3>
-
+<h3 id="graph-renamenode" class="message name"><a href="#graph-renamenode">renamenode</a></h3>
 <p>Change the ID of a node in the graph</p>
-
 <ul class="message properties">
 <li><label class="property name">from</label><label class="property type">string</label><label class="property description">original identifier for the node</label></li>
 <li><label class="property name">to</label><label class="property type">string</label><label class="property description">new identifier for the node</label></li>
 <li><label class="property name">graph</label><label class="property type">string</label><label class="property description">graph the action targets</label></li>
 <li><label class="property name">secret</label><label class="property type">string</label><label class="property description">access token to authorize user</label></li>
 </ul>
-
-<h3 id="changenode">changenode</h3>
-
+<h3 id="graph-changenode" class="message name"><a href="#graph-changenode">changenode</a></h3>
 <p>Change the metadata associated to a node in the graph</p>
-
 <ul class="message properties">
 <li><label class="property name">id</label><label class="property type">string</label><label class="property description">identifier for the node</label></li>
 <li><label class="property name">metadata</label><label class="property type">object</label><label class="property description">structure of key-value pairs for node metadata</label></li>
 <li><label class="property name">graph</label><label class="property type">string</label><label class="property description">graph the action targets</label></li>
 <li><label class="property name">secret</label><label class="property type">string</label><label class="property description">access token to authorize user</label></li>
 </ul>
-
-<h3 id="addedge">addedge</h3>
-
+<h3 id="graph-addedge" class="message name"><a href="#graph-addedge">addedge</a></h3>
 <p>Add an edge to the graph</p>
-
 <ul class="message properties">
 <li><label class="property name">src</label><label class="property type">object</label><label class="property description">source node for the edge</label></li>
 <ul class="properties">
@@ -422,11 +622,8 @@ Graphs registered in this way should also be available for use as subgraphs in o
 <li><label class="property name">graph</label><label class="property type">string</label><label class="property description">graph the action targets</label></li>
 <li><label class="property name">secret</label><label class="property type">string</label><label class="property description">access token to authorize user</label></li>
 </ul>
-
-<h3 id="removeedge">removeedge</h3>
-
+<h3 id="graph-removeedge" class="message name"><a href="#graph-removeedge">removeedge</a></h3>
 <p>Remove an edge from the graph</p>
-
 <ul class="message properties">
 <li><label class="property name">graph</label><label class="property type">string</label><label class="property description">graph the action targets</label></li>
 <li><label class="property name">src</label><label class="property type">object</label><label class="property description">source node for the edge</label></li>
@@ -443,11 +640,8 @@ Graphs registered in this way should also be available for use as subgraphs in o
 </ul>
 <li><label class="property name">secret</label><label class="property type">string</label><label class="property description">access token to authorize user</label></li>
 </ul>
-
-<h3 id="changeedge">changeedge</h3>
-
-<p>Change an edge’s metadata</p>
-
+<h3 id="graph-changeedge" class="message name"><a href="#graph-changeedge">changeedge</a></h3>
+<p>Change an edge's metadata</p>
 <ul class="message properties">
 <li><label class="property name">graph</label><label class="property type">string</label><label class="property description">graph the action targets</label></li>
 <li><label class="property name">metadata</label><label class="property type">object</label><label class="property description">struct of key-value pairs for edge metadata</label></li>
@@ -465,11 +659,8 @@ Graphs registered in this way should also be available for use as subgraphs in o
 </ul>
 <li><label class="property name">secret</label><label class="property type">string</label><label class="property description">access token to authorize user</label></li>
 </ul>
-
-<h3 id="addinitial">addinitial</h3>
-
+<h3 id="graph-addinitial" class="message name"><a href="#graph-addinitial">addinitial</a></h3>
 <p>Add an IIP to the graph</p>
-
 <ul class="message properties">
 <li><label class="property name">graph</label><label class="property type">string</label><label class="property description">graph the action targets</label></li>
 <li><label class="property name">metadata</label><label class="property type">object</label><label class="property description">structure of key-value pairs for edge metadata</label></li>
@@ -485,11 +676,8 @@ Graphs registered in this way should also be available for use as subgraphs in o
 </ul>
 <li><label class="property name">secret</label><label class="property type">string</label><label class="property description">access token to authorize user</label></li>
 </ul>
-
-<h3 id="removeinitial">removeinitial</h3>
-
+<h3 id="graph-removeinitial" class="message name"><a href="#graph-removeinitial">removeinitial</a></h3>
 <p>Remove an IIP from the graph</p>
-
 <ul class="message properties">
 <li><label class="property name">src</label><label class="property type">object</label><label class="property description">source data for the edge</label></li>
 <ul class="properties">
@@ -504,11 +692,8 @@ Graphs registered in this way should also be available for use as subgraphs in o
 <li><label class="property name">graph</label><label class="property type">string</label><label class="property description">graph the action targets</label></li>
 <li><label class="property name">secret</label><label class="property type">string</label><label class="property description">access token to authorize user</label></li>
 </ul>
-
-<h3 id="addinport">addinport</h3>
-
+<h3 id="graph-addinport" class="message name"><a href="#graph-addinport">addinport</a></h3>
 <p>Add an exported inport to the graph.</p>
-
 <ul class="message properties">
 <li><label class="property name">public</label><label class="property type">string</label><label class="property description">the exported name of the port</label></li>
 <li><label class="property name">node</label><label class="property type">string</label><label class="property description">node identifier</label></li>
@@ -517,32 +702,23 @@ Graphs registered in this way should also be available for use as subgraphs in o
 <li><label class="property name">graph</label><label class="property type">string</label><label class="property description">graph the action targets</label></li>
 <li><label class="property name">secret</label><label class="property type">string</label><label class="property description">access token to authorize user</label></li>
 </ul>
-
-<h3 id="removeinport">removeinport</h3>
-
+<h3 id="graph-removeinport" class="message name"><a href="#graph-removeinport">removeinport</a></h3>
 <p>Remove an exported port from the graph</p>
-
 <ul class="message properties">
 <li><label class="property name">public</label><label class="property type">string</label><label class="property description">the exported name of the port to remove</label></li>
 <li><label class="property name">graph</label><label class="property type">string</label><label class="property description">graph the action targets</label></li>
 <li><label class="property name">secret</label><label class="property type">string</label><label class="property description">access token to authorize user</label></li>
 </ul>
-
-<h3 id="renameinport">renameinport</h3>
-
+<h3 id="graph-renameinport" class="message name"><a href="#graph-renameinport">renameinport</a></h3>
 <p>Rename an exported port in the graph</p>
-
 <ul class="message properties">
 <li><label class="property name">from</label><label class="property type">string</label><label class="property description">original exported port name</label></li>
 <li><label class="property name">to</label><label class="property type">string</label><label class="property description">new exported port name</label></li>
 <li><label class="property name">graph</label><label class="property type">string</label><label class="property description">graph the action targets</label></li>
 <li><label class="property name">secret</label><label class="property type">string</label><label class="property description">access token to authorize user</label></li>
 </ul>
-
-<h3 id="addoutport">addoutport</h3>
-
+<h3 id="graph-addoutport" class="message name"><a href="#graph-addoutport">addoutport</a></h3>
 <p>Add an exported outport to the graph.</p>
-
 <ul class="message properties">
 <li><label class="property name">public</label><label class="property type">string</label><label class="property description">the exported name of the port</label></li>
 <li><label class="property name">node</label><label class="property type">string</label><label class="property description">node identifier</label></li>
@@ -551,32 +727,23 @@ Graphs registered in this way should also be available for use as subgraphs in o
 <li><label class="property name">graph</label><label class="property type">string</label><label class="property description">graph the action targets</label></li>
 <li><label class="property name">secret</label><label class="property type">string</label><label class="property description">access token to authorize user</label></li>
 </ul>
-
-<h3 id="removeoutport">removeoutport</h3>
-
+<h3 id="graph-removeoutport" class="message name"><a href="#graph-removeoutport">removeoutport</a></h3>
 <p>Remove an exported port from the graph</p>
-
 <ul class="message properties">
 <li><label class="property name">public</label><label class="property type">string</label><label class="property description">the exported name of the port to remove</label></li>
 <li><label class="property name">graph</label><label class="property type">string</label><label class="property description">graph the action targets</label></li>
 <li><label class="property name">secret</label><label class="property type">string</label><label class="property description">access token to authorize user</label></li>
 </ul>
-
-<h3 id="renameoutport">renameoutport</h3>
-
+<h3 id="graph-renameoutport" class="message name"><a href="#graph-renameoutport">renameoutport</a></h3>
 <p>Rename an exported port in the graph</p>
-
 <ul class="message properties">
 <li><label class="property name">from</label><label class="property type">string</label><label class="property description">original exported port name</label></li>
 <li><label class="property name">to</label><label class="property type">string</label><label class="property description">new exported port name</label></li>
 <li><label class="property name">graph</label><label class="property type">string</label><label class="property description">graph the action targets</label></li>
 <li><label class="property name">secret</label><label class="property type">string</label><label class="property description">access token to authorize user</label></li>
 </ul>
-
-<h3 id="addgroup">addgroup</h3>
-
+<h3 id="graph-addgroup" class="message name"><a href="#graph-addgroup">addgroup</a></h3>
 <p>Add a group to the graph</p>
-
 <ul class="message properties">
 <li><label class="property name">name</label><label class="property type">string</label><label class="property description">the group name</label></li>
 <li><label class="property name">nodes</label><label class="property type">array</label><label class="property description">an array of node ids part of the group</label></li>
@@ -584,64 +751,44 @@ Graphs registered in this way should also be available for use as subgraphs in o
 <li><label class="property name">graph</label><label class="property type">string</label><label class="property description">graph the action targets</label></li>
 <li><label class="property name">secret</label><label class="property type">string</label><label class="property description">access token to authorize user</label></li>
 </ul>
-
-<h3 id="removegroup">removegroup</h3>
-
+<h3 id="graph-removegroup" class="message name"><a href="#graph-removegroup">removegroup</a></h3>
 <p>Remove a group from the graph</p>
-
 <ul class="message properties">
 <li><label class="property name">name</label><label class="property type">string</label><label class="property description">the group name</label></li>
 <li><label class="property name">graph</label><label class="property type">string</label><label class="property description">graph the action targets</label></li>
 <li><label class="property name">secret</label><label class="property type">string</label><label class="property description">access token to authorize user</label></li>
 </ul>
-
-<h3 id="renamegroup">renamegroup</h3>
-
+<h3 id="graph-renamegroup" class="message name"><a href="#graph-renamegroup">renamegroup</a></h3>
 <p>Rename a group in the graph.</p>
-
 <ul class="message properties">
 <li><label class="property name">from</label><label class="property type">string</label><label class="property description">original group name</label></li>
 <li><label class="property name">to</label><label class="property type">string</label><label class="property description">new group name</label></li>
 <li><label class="property name">graph</label><label class="property type">string</label><label class="property description">graph the action targets</label></li>
 <li><label class="property name">secret</label><label class="property type">string</label><label class="property description">access token to authorize user</label></li>
 </ul>
-
-<h3 id="changegroup">changegroup</h3>
-
-<p>Change a group’s metadata</p>
-
+<h3 id="graph-changegroup" class="message name"><a href="#graph-changegroup">changegroup</a></h3>
+<p>Change a group's metadata</p>
 <ul class="message properties">
 <li><label class="property name">name</label><label class="property type">string</label><label class="property description">the group name</label></li>
 <li><label class="property name">metadata</label><label class="property type">object</label><label class="property description">structure of key-value pairs for group metadata</label></li>
 <li><label class="property name">graph</label><label class="property type">string</label><label class="property description">graph the action targets</label></li>
 <li><label class="property name">secret</label><label class="property type">string</label><label class="property description">access token to authorize user</label></li>
 </ul>
-
-<h2 id="component-protocol">Component protocol</h2>
-
-<p>Protocol for handling the component registry.</p>
-
-<h3 id="list">list</h3>
-
-<p>Request a list of currently available components. Will be responded with a set of <code class="highlighter-rouge">component</code> messages.</p>
-
+<h2 class="protocol name">Component protocol</h2>
+<p class="protocol description">Protocol for handling the component registry.</p>
+<h3 id="component-list" class="message name"><a href="#component-list">list</a></h3>
+<p>Request a list of currently available components. Will be responded with a set of `component` messages.</p>
 <ul class="message properties">
 <li><label class="property name">secret</label><label class="property type">string</label><label class="property description">access token to authorize user</label></li>
 </ul>
-
-<h3 id="getsource">getsource</h3>
-
-<p>Request for the source code of a given component. Will be responded with a <code class="highlighter-rouge">source</code> message.</p>
-
+<h3 id="component-getsource" class="message name"><a href="#component-getsource">getsource</a></h3>
+<p>Request for the source code of a given component. Will be responded with a `source` message.</p>
 <ul class="message properties">
 <li><label class="property name">name</label><label class="property type">string</label><label class="property description">Name of the component to for which to get source code. Should contain the library prefix</label><code class="property example">"my-project/SomeComponent"</code></li>
 <li><label class="property name">secret</label><label class="property type">string</label><label class="property description">access token to authorize user</label></li>
 </ul>
-
-<h3 id="source">source</h3>
-
-<p>Source code for a component. In cases where a runtime receives a <code class="highlighter-rouge">source</code> message, it should do whatever operations are needed for making that component available for graphs, including possible compilation.</p>
-
+<h3 id="component-source" class="message name"><a href="#component-source">source</a></h3>
+<p>Source code for a component. In cases where a runtime receives a `source` message, it should do whatever operations are needed for making that component available for graphs, including possible compilation.</p>
 <ul class="message properties">
 <li><label class="property name">name</label><label class="property type">string</label><label class="property description">Name of the component. Must not contain library prefix</label><code class="property example">"MyComponent"</code></li>
 <li><label class="property name">language</label><label class="property type">string</label><label class="property description">The programming language used for the component code</label><code class="property example">"c++"</code></li>
@@ -649,19 +796,13 @@ Graphs registered in this way should also be available for use as subgraphs in o
 <li><label class="property name">code</label><label class="property type">string</label><label class="property description">Component source code</label></li>
 <li><label class="property name">tests</label><label class="property type">string</label><label class="property description">unit tests for the component</label></li>
 </ul>
-
-<h3 id="error-1">error</h3>
-
+<h3 id="component-error" class="message name"><a href="#component-error">error</a></h3>
 <p>Error response to a command on component protocol</p>
-
 <ul class="message properties">
 <li><label class="property name">message</label><label class="property type">string</label><label class="property description">Error message describing what went wrong</label></li>
 </ul>
-
-<h3 id="component">component</h3>
-
+<h3 id="component-component" class="message name"><a href="#component-component">component</a></h3>
 <p>Transmit the metadata about a component instance.</p>
-
 <ul class="message properties">
 <li><label class="property name">name</label><label class="property type">string</label><label class="property description">component name in format that can be used in graphs. Should contain the component library prefix.</label><code class="property example">"my-project/MyComponent"</code></li>
 <li><label class="property name">description</label><label class="property type">string</label><label class="property description">textual description on what the component does</label></li>
@@ -684,60 +825,40 @@ Graphs registered in this way should also be available for use as subgraphs in o
 <li><label class="property optional name">description</label><label class="property optional type">string</label><label class="property optional description">textual description of the port</label></li>
 </ul>
 </ul>
-
-<h2 id="network-protocol">Network protocol</h2>
-
-<p>Protocol for starting and stopping FBP networks, and finding out about their state.</p>
-
-<h3 id="start">start</h3>
-
+<h2 class="protocol name">Network protocol</h2>
+<p class="protocol description">Protocol for starting and stopping FBP networks, and finding out about their state.</p>
+<h3 id="network-start" class="message name"><a href="#network-start">start</a></h3>
 <p>Start execution of a FBP network based on a given graph.</p>
-
 <ul class="message properties">
 <li><label class="property name">graph</label><label class="property type">string</label><label class="property description">graph the action targets</label></li>
 <li><label class="property name">secret</label><label class="property type">string</label><label class="property description">access token to authorize user</label></li>
 </ul>
-
-<h3 id="getstatus">getstatus</h3>
-
+<h3 id="network-getstatus" class="message name"><a href="#network-getstatus">getstatus</a></h3>
 <p>Get the current status of the runtime. The runtime should respond with a status message.</p>
-
 <ul class="message properties">
 <li><label class="property name">graph</label><label class="property type">string</label><label class="property description">graph the action targets</label></li>
 <li><label class="property name">secret</label><label class="property type">string</label><label class="property description">access token to authorize user</label></li>
 </ul>
-
-<h3 id="stop">stop</h3>
-
+<h3 id="network-stop" class="message name"><a href="#network-stop">stop</a></h3>
 <p>Stop execution of a FBP network based on a given graph.</p>
-
 <ul class="message properties">
 <li><label class="property name">graph</label><label class="property type">string</label><label class="property description">graph the action targets</label></li>
 <li><label class="property name">secret</label><label class="property type">string</label><label class="property description">access token to authorize user</label></li>
 </ul>
-
-<h3 id="persist">persist</h3>
-
+<h3 id="network-persist" class="message name"><a href="#network-persist">persist</a></h3>
 <p>Tells the runtime to persist the current state of graphs and components so that they are available between restarts. Requires the network:persist capability.</p>
-
 <ul class="message properties">
 <li><label class="property name">secret</label><label class="property type">string</label><label class="property description">access token to authorize user</label></li>
 </ul>
-
-<h3 id="debug">debug</h3>
-
+<h3 id="network-debug" class="message name"><a href="#network-debug">debug</a></h3>
 <p>Set a network into debug mode</p>
-
 <ul class="message properties">
 <li><label class="property name">enable</label><label class="property type">boolean</label><label class="property description">tells whether to put the network in debug mode</label></li>
 <li><label class="property name">graph</label><label class="property type">string</label><label class="property description">graph the action targets</label></li>
 <li><label class="property name">secret</label><label class="property type">string</label><label class="property description">access token to authorize the user</label></li>
 </ul>
-
-<h3 id="edges">edges</h3>
-
+<h3 id="network-edges" class="message name"><a href="#network-edges">edges</a></h3>
 <p>List of edges user has selected for inspection in a user interface or debugger, sent from UI to a runtime.</p>
-
 <ul class="message properties">
 <li><label class="property name">graph</label><label class="property type">string</label><label class="property description">graph the action targets</label></li>
 <li><label class="property name">edges</label><label class="property type">array</label><label class="property description">list of selected edges</label></li>Each item contains:
@@ -757,11 +878,8 @@ Graphs registered in this way should also be available for use as subgraphs in o
 </ul>
 <li><label class="property name">secret</label><label class="property type">string</label><label class="property description">access token to authorize user</label></li>
 </ul>
-
-<h3 id="stopped">stopped</h3>
-
+<h3 id="network-stopped" class="message name"><a href="#network-stopped">stopped</a></h3>
 <p>Inform that a given network has stopped.</p>
-
 <ul class="message properties">
 <li><label class="property name">time</label><label class="property type">string</label><label class="property description">time when the network was stopped</label></li>
 <li><label class="property name">uptime</label><label class="property type">number</label><label class="property description">time the network was running, in seconds</label></li>
@@ -770,11 +888,8 @@ Graphs registered in this way should also be available for use as subgraphs in o
 <li><label class="property name">started</label><label class="property type">boolean</label><label class="property description">whether or not network has been started</label></li>
 <li><label class="property name">debug</label><label class="property type">boolean</label><label class="property description">whether or not network is in debug mode</label></li>
 </ul>
-
-<h3 id="started">started</h3>
-
+<h3 id="network-started" class="message name"><a href="#network-started">started</a></h3>
 <p>Inform that a given network has been started.</p>
-
 <ul class="message properties">
 <li><label class="property name">time</label><label class="property type">string</label><label class="property description">time when the network was started</label></li>
 <li><label class="property name">graph</label><label class="property type">string</label><label class="property description">graph the action targets</label></li>
@@ -782,11 +897,8 @@ Graphs registered in this way should also be available for use as subgraphs in o
 <li><label class="property name">running</label><label class="property type">boolean</label><label class="property description">whether or not network is currently running</label></li>
 <li><label class="property name">debug</label><label class="property type">boolean</label><label class="property description">whether or not network is in debug mode</label></li>
 </ul>
-
-<h3 id="status">status</h3>
-
+<h3 id="network-status" class="message name"><a href="#network-status">status</a></h3>
 <p>Response to a getstatus message.</p>
-
 <ul class="message properties">
 <li><label class="property name">graph</label><label class="property type">string</label><label class="property description">graph the action targets</label></li>
 <li><label class="property name">uptime</label><label class="property type">number</label><label class="property description">time the network has been running, in seconds</label></li>
@@ -794,50 +906,35 @@ Graphs registered in this way should also be available for use as subgraphs in o
 <li><label class="property name">running</label><label class="property type">boolean</label><label class="property description">boolean tells whether the network is running or not</label></li>
 <li><label class="property name">debug</label><label class="property type">boolean</label><label class="property description">whether or not network is in debug mode</label></li>
 </ul>
-
-<h3 id="output">output</h3>
-
-<p>An output message from a running network, roughly similar to STDOUT output of a Unix process, or a line of console.log in JavaScript. Output can also be used for passing images from the runtime to the UI.’</p>
-
+<h3 id="network-output" class="message name"><a href="#network-output">output</a></h3>
+<p>An output message from a running network, roughly similar to STDOUT output of a Unix process, or a line of console.log in JavaScript. Output can also be used for passing images from the runtime to the UI.'</p>
 <ul class="message properties">
 <li><label class="property name">message</label><label class="property type">string</label><label class="property description">contents of the output line</label></li>
 <li><label class="property name">type</label><label class="property type">string</label><label class="property description">type of output, either message or previewurl</label></li>
 <li><label class="property name">url</label><label class="property type">string</label><label class="property description">URL for an image generated by the runtime</label></li>
 </ul>
-
-<h3 id="error-2">error</h3>
-
-<p>An error from a running network, roughly similar to STDERR output of a Unix process, or a line of console.error in JavaScript.’</p>
-
+<h3 id="network-error" class="message name"><a href="#network-error">error</a></h3>
+<p>An error from a running network, roughly similar to STDERR output of a Unix process, or a line of console.error in JavaScript.'</p>
 <ul class="message properties">
 <li><label class="property name">message</label><label class="property type">string</label><label class="property description">contents of the error message</label></li>
 <li><label class="property name">stack</label><label class="property type">string</label><label class="property description">stack trace</label></li>
 </ul>
-
-<h3 id="processerror">processerror</h3>
-
+<h3 id="network-processerror" class="message name"><a href="#network-processerror">processerror</a></h3>
 <p>When in debug mode, a network can signal an error happening inside a process.</p>
-
 <ul class="message properties">
 <li><label class="property name">id</label><label class="property type">string</label><label class="property description">identifier of the node</label></li>
 <li><label class="property name">error</label><label class="property type">string</label><label class="property description">error from the component</label></li>
 <li><label class="property name">graph</label><label class="property type">string</label><label class="property description">graph the action targets</label></li>
 </ul>
-
-<h3 id="icon">icon</h3>
-
+<h3 id="network-icon" class="message name"><a href="#network-icon">icon</a></h3>
 <p>Icon of a component instance has changed.</p>
-
 <ul class="message properties">
 <li><label class="property name">id</label><label class="property type">string</label><label class="property description">identifier of the node</label></li>
 <li><label class="property name">icon</label><label class="property type">string</label><label class="property description">new icon for the component instance</label></li>
 <li><label class="property name">graph</label><label class="property type">string</label><label class="property description">graph the action targets</label></li>
 </ul>
-
-<h3 id="connect">connect</h3>
-
+<h3 id="network-connect" class="message name"><a href="#network-connect">connect</a></h3>
 <p>Beginning of transmission on an edge.</p>
-
 <ul class="message properties">
 <li><label class="property name">id</label><label class="property type">string</label><label class="property description">textual edge identifier, usually in form of a FBP language line</label></li>
 <li><label class="property name">src</label><label class="property type">object</label><label class="property description">source node for the edge</label></li>
@@ -855,11 +952,8 @@ Graphs registered in this way should also be available for use as subgraphs in o
 <li><label class="property name">graph</label><label class="property type">string</label><label class="property description">graph the action targets</label></li>
 <li><label class="property name">subgraph</label><label class="property type">string</label><label class="property description">Subgraph identifier for the event. An array of node IDs.</label></li>
 </ul>
-
-<h3 id="begingroup">begingroup</h3>
-
+<h3 id="network-begingroup" class="message name"><a href="#network-begingroup">begingroup</a></h3>
 <p>Beginning of a group (bracket IP) on an edge.</p>
-
 <ul class="message properties">
 <li><label class="property name">id</label><label class="property type">string</label><label class="property description">textual edge identifier, usually in form of a FBP language line</label></li>
 <li><label class="property name">src</label><label class="property type">object</label><label class="property description">source node for the edge</label></li>
@@ -877,11 +971,8 @@ Graphs registered in this way should also be available for use as subgraphs in o
 <li><label class="property name">graph</label><label class="property type">string</label><label class="property description">graph the action targets</label></li>
 <li><label class="property name">subgraph</label><label class="property type">string</label><label class="property description">Subgraph identifier for the event. An array of node IDs.</label></li>
 </ul>
-
-<h3 id="data">data</h3>
-
+<h3 id="network-data" class="message name"><a href="#network-data">data</a></h3>
 <p>Data transmission on an edge.</p>
-
 <ul class="message properties">
 <li><label class="property name">id</label><label class="property type">string</label><label class="property description">textual edge identifier, usually in form of a FBP language line</label></li>
 <li><label class="property name">src</label><label class="property type">object</label><label class="property description">source node for the edge</label></li>
@@ -899,11 +990,8 @@ Graphs registered in this way should also be available for use as subgraphs in o
 <li><label class="property name">graph</label><label class="property type">string</label><label class="property description">graph the action targets</label></li>
 <li><label class="property name">subgraph</label><label class="property type">string</label><label class="property description">Subgraph identifier for the event. An array of node IDs.</label></li>
 </ul>
-
-<h3 id="endgroup">endgroup</h3>
-
+<h3 id="network-endgroup" class="message name"><a href="#network-endgroup">endgroup</a></h3>
 <p>Ending of a group (bracket IP) on an edge.</p>
-
 <ul class="message properties">
 <li><label class="property name">id</label><label class="property type">string</label><label class="property description">textual edge identifier, usually in form of a FBP language line</label></li>
 <li><label class="property name">src</label><label class="property type">object</label><label class="property description">source node for the edge</label></li>
@@ -921,11 +1009,8 @@ Graphs registered in this way should also be available for use as subgraphs in o
 <li><label class="property name">graph</label><label class="property type">string</label><label class="property description">graph the action targets</label></li>
 <li><label class="property name">subgraph</label><label class="property type">string</label><label class="property description">Subgraph identifier for the event. An array of node IDs.</label></li>
 </ul>
-
-<h3 id="disconnect">disconnect</h3>
-
+<h3 id="network-disconnect" class="message name"><a href="#network-disconnect">disconnect</a></h3>
 <p>End of transmission on an edge.</p>
-
 <ul class="message properties">
 <li><label class="property name">id</label><label class="property type">string</label><label class="property description">textual edge identifier, usually in form of a FBP language line</label></li>
 <li><label class="property name">src</label><label class="property type">object</label><label class="property description">source node for the edge</label></li>
@@ -943,42 +1028,27 @@ Graphs registered in this way should also be available for use as subgraphs in o
 <li><label class="property name">graph</label><label class="property type">string</label><label class="property description">graph the action targets</label></li>
 <li><label class="property name">subgraph</label><label class="property type">string</label><label class="property description">Subgraph identifier for the event. An array of node IDs.</label></li>
 </ul>
-
-<h2 id="trace-protocol">Trace protocol</h2>
-
-<p>This protocol is utilized for triggering and transmitting <a href="https://github.com/flowbased/flowtrace">Flowtrace</a>s</p>
-
-<h3 id="start-1">start</h3>
-
+<h2 class="protocol name">Trace protocol</h2>
+<p class="protocol description">This protocol is utilized for triggering and transmitting [Flowtrace](https://github.com/flowbased/flowtrace)s</p>
+<h3 id="trace-start" class="message name"><a href="#trace-start">start</a></h3>
 <p>Tracing was started</p>
-
 <ul class="message properties">
 </ul>
-
-<h3 id="stop-1">stop</h3>
-
+<h3 id="trace-stop" class="message name"><a href="#trace-stop">stop</a></h3>
 <p>Tracing was stopped</p>
-
 <ul class="message properties">
 </ul>
-
-<h3 id="dump">dump</h3>
-
+<h3 id="trace-dump" class="message name"><a href="#trace-dump">dump</a></h3>
 <p>undefined</p>
-
 <ul class="message properties">
 <li><label class="property name">graph</label><label class="property type">string</label><label class="property description">Graph identifier the message targets</label></li>
 <li><label class="property name">type</label><label class="property type">string</label><label class="property description">String describing type of trace.</label></li>
 <li><label class="property name">flowtrace</label><label class="property type">string</label><label class="property description">A Flowtrace file of `type`</label></li>
 </ul>
-
-<h3 id="clear-1">clear</h3>
-
+<h3 id="trace-clear" class="message name"><a href="#trace-clear">clear</a></h3>
 <p>Tracing buffer was cleared</p>
-
 <ul class="message properties">
 </ul>
-
 
     </article>
   </body>
