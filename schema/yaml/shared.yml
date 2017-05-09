@@ -132,8 +132,8 @@ capabilities:
           DEPRECATED. Instead the individual network:... capabilities should be used.
           Implies capabilities network:status, network:data, network:control.
           Does not imply capability network:persist.
-        inputs: ['network:start, network:getstatus, network:stop, network:debug, network:edges']
-        outputs: ['network:stopped, network:started, network:status, network:output, network:error, network:processerror, network:icon, network:connect, network:begingroup, network:data, network:endgroup, network:disconnect']
+        inputs: [network:start, network:getstatus, network:stop, network:debug, network:edges]
+        outputs: [network:stopped, network:started, network:status, network:output, network:error, network:processerror, network:icon, network:connect, network:begingroup, network:data, network:endgroup, network:disconnect]
 
       - name: 'network:persist'
         description: >-
