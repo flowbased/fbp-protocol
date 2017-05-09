@@ -169,7 +169,37 @@ renderMessage = (messageType, message, protocolName) ->
 
   return lines
 
-renderMarkdown = () ->
+renderCapabilities = () ->
+  tv4 = require '../schema/index.js'
+  schema = tv4.getSchema '/shared/capabilities'
+
+  lines = []
+  p = (line) -> lines.push line
+
+  p "<section class='capabilities'>"
+  for enumDescription in schema.items._enumDescriptions
+    p "<h4 class='capability name'>#{enumDescription.name}</h4>"
+    p "<p>#{enumDescription.description}</p>"
+
+    p "<h5 class='capability messages header'>input messages</h5>"
+    p "<ul class='capability messages'>"
+    for name in enumDescription.inputs
+      messageUrl = "#"+name.replace(':', '-')
+      p "<li><a href='#{messageUrl}'>#{name}</a></li>"
+    p "</ul>"
+
+    p "<h5 class='capability messages header'>output messages</h5>"
+    p "<ul class='capability messages'>"
+    for name in enumDescription.outputs
+      messageUrl = "#"+name.replace(':', '-')
+      p "<li><a href='#{messageUrl}'>#{name}</a></li>"
+    p "</ul>"
+
+  p "</section>"
+
+  return lines.join('\n')
+
+renderMessages = () ->
   schemas = getSchemas()
   descriptions = getDescriptions schemas
 
@@ -187,5 +217,6 @@ renderMarkdown = () ->
   return lines.join('\n')
 
 module.exports =
-  renderMarkdown: renderMarkdown
+  renderMessages: renderMessages
+  renderCapabilities: renderCapabilities
   getSchemas: getSchemas

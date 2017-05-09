@@ -106,6 +106,8 @@ When receiving a message, the runtime should check for the associated capability
 
 A few commands do not require any capabilities: the runtime info request/response ([runtime:getruntime](#runtime-getruntime) and [runtime:runtime](#runtime-runtime)), and the error responses ([runtime:error](#runtime-error), [graph:error](#graph-error), [network:error](#network-error), [component:error](#component-error)).
 
+<%= capabilities %>
+
 ### Message structure
 
 This document describes all messages as the data structures that are passed. The way these are encoded depends on the transport being used. For example, with WebSockets all messages are encoded as stringified JSON.
@@ -132,5 +134,5 @@ An example message
 }
 ```
 
-<%= descriptions %>
+<%= messages %>
 

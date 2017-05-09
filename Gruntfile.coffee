@@ -113,10 +113,11 @@ module.exports = ->
     fs.writeFileSync './schema/schemas.js', schemaJs, 'utf8'
 
   @registerTask 'build-markdown', ->
-    markup = documentation.renderMarkdown() 
-
-    marker = "<%= descriptions %>\n"
+    messages = documentation.renderMessages() 
+    capabilities = documentation.renderCapabilities()
+    
     file = fs.readFileSync 'spec/protocol.js.md', 'utf8'
-    file = file.replace marker, markup
+    file = file.replace '<%= messages %>\n', messages
+    file = file.replace '<%= capabilities %>', capabilities
     fs.writeFileSync 'spec/protocol.md', file, 'utf8'
 
