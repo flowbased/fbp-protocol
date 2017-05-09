@@ -154,15 +154,6 @@ renderMessage = (messageType, message, protocolName) ->
           p "<li>#{renderProperty(itemPropName, itemProp, messageProp)}</li>"
       p "</ul>"
 
-    else if items?.type is 'string' and items?._enumDescriptions
-      line += " Valid values are:"
-      p line
-
-      p "<ul class='values'>"
-      for enumDescription in items._enumDescriptions
-        p "<li><label class='enum name'>#{enumDescription.name}</label>: #{enumDescription.description}</li>"
-      p "</ul>"
-
     else
       p line
   p "</ul>"

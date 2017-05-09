@@ -142,16 +142,12 @@ output:
                 example: '0.5'
               allCapabilities:
                 description: >-
-                  array of capability strings for things the runtime is able to do.
-                  May include things not permitted for the user.
+                  <a href='#capabilities'>capability strings</a> for things the runtime is able to do.
+                  May include things not permitted for this client.
                 $ref: '/shared/capabilities'
               capabilities:
                 description: >-
-                  array of capability strings for things the runtime is able to do.
-
-                  If the runtime is currently running a graph and it is
-                  able to speak the full Runtime protocol, it should follow up
-                  with a ports message.
+                  <a href='#capabilities'>capability strings</a> for things the runtime is able to do for this client.
                 $ref: '/shared/capabilities'
               graph:
                 description: >-
