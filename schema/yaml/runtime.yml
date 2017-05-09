@@ -9,6 +9,9 @@ input:
     description: >-
       Request the information about the runtime. When receiving this message
       the runtime should response with a runtime message.
+      If the runtime is currently running a graph and it is
+      able to speak the full Runtime protocol, it should follow up
+      with a ports message.
     allOf:
       - $ref: '/shared/message'
       - properties:
