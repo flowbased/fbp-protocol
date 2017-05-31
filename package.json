@@ -30,7 +30,7 @@
     "websocket": "~1.0.8"
   },
   "devDependencies": {
-    "chai": "^3.5.0",
+    "chai": "^4.0.1",
     "grunt": "~1.0.1",
     "grunt-contrib-coffee": "~1.0.0",
     "grunt-contrib-watch": "~1.0.0",
