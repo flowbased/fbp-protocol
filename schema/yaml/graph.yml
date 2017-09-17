@@ -178,8 +178,8 @@ input:
                 type: string
                 description: 'component name used for the node'
               metadata:
-                type: object
                 description: 'structure of key-value pairs for node metadata'
+                $ref: '/shared/metadata_node'
               graph:
                 type: string
                 description: 'graph the action targets'
@@ -256,8 +256,8 @@ input:
                 type: string
                 description: 'identifier for the node'
               metadata:
-                type: object
                 description: 'structure of key-value pairs for node metadata'
+                $ref: '/shared/metadata_node'
               graph:
                 type: string
                 description: 'graph the action targets'
@@ -286,8 +286,8 @@ input:
                 $ref: '/shared/port'
                 description: 'target node for the edge'
               metadata:
-                type: object
                 description: 'Structure of key-value pairs for edge metadata'
+                $ref: '/shared/metadata_edge'
               graph:
                 type: string
                 description: 'graph the action targets'
@@ -340,8 +340,8 @@ input:
                 type: string
                 description: 'graph the action targets'
               metadata:
-                type: object
                 description: 'struct of key-value pairs for edge metadata'
+                $ref: '/shared/metadata_edge'
               src:
                 description: 'source node for the edge'
                 $ref: '/shared/port'
@@ -370,8 +370,8 @@ input:
                 type: string
                 description: 'graph the action targets'
               metadata:
-                type: object
                 description: 'structure of key-value pairs for edge metadata'
+                $ref: '/shared/metadata_edge'
               src:
                 description: 'source data for the edge'
                 $ref: '/shared/iip'
@@ -433,8 +433,8 @@ input:
                 type: string
                 description: 'internal port name'
               metadata:
-                type: object
                 description: 'structure of key-value pairs for node metadata'
+                $ref: '/shared/metadata_node'
               graph:
                 type: string
                 description: 'graph the action targets'
@@ -517,8 +517,8 @@ input:
                 type: string
                 description: 'internal port name'
               metadata:
-                type: object
                 description: 'structure of key-value pairs for port metadata'
+                $ref: '/shared/metadata_node'
               graph:
                 type: string
                 description: 'graph the action targets'
@@ -598,8 +598,8 @@ input:
                 type: array
                 description: 'an array of node ids part of the group'
               metadata:
-                type: object
                 description: 'structure of key-value pairs for group metadata'
+                $ref: '/shared/metadata_group'
               graph:
                 type: string
                 description: 'graph the action targets'
@@ -675,8 +675,8 @@ input:
                 type: string
                 description: 'the group name'
               metadata:
-                type: object
                 description: 'structure of key-value pairs for group metadata'
+                $ref: '/shared/metadata_group'
               graph:
                 type: string
                 description: 'graph the action targets'

@@ -124,7 +124,7 @@ describe 'Test graph protocol schema on event', ->
           graph: 'mygraph'
           metadata:
             x: 5
-            y: -1000.1
+            y: -1000
 
       chai.expect(tv4.validate event, schema).to.be.true
 
