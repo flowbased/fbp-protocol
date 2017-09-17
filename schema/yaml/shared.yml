@@ -49,6 +49,9 @@ metadata:
       type: string
       format: "uri"
       description: "JSON schema associated with a graph entity"
+    secure:
+      type: boolean
+      description: "Whether graph entity data should be treated as secure"
 
 port:
   id: 'port'
