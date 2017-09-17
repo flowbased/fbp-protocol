@@ -86,7 +86,7 @@
     <article>
       <h1>FBP Network Protocol</h1>
       <aside>
-        Last updated 2017-05-09 13:22:17 +0000
+        Last updated 2017-09-17 17:33:08 +0000
       </aside>
       <p>The Flow-Based Programming network protocol (<em>FBP protocol</em>) has been designed primarily for flow-based programming interfaces like the <a href="https://flowhub.io">Flowhub</a> to communicate with various FBP runtimes. However, it can also be utilized for communication between different runtimes, for example server-to-server or server-to-microcontroller.</p>
 
@@ -122,6 +122,12 @@
 <h2 id="changes">Changes</h2>
 
 <ul>
+  <li>2017-09-17:
+    <ul>
+      <li>Added <code class="highlighter-rouge">schema</code> support for ports and packets</li>
+      <li>Documented known metadata keys for various graph entities</li>
+    </ul>
+  </li>
   <li>2017-04-09:
     <ul>
       <li>Version 0.6. No breaking changes over 0.5.</li>
@@ -513,6 +519,8 @@ These packets can be send from the client to the runtimes input ports, or from r
 <ul class="message properties">
 <li><label class="property name">port</label><label class="property type">string</label><label class="property description">port name for the input or output port</label></li>
 <li><label class="property name">event</label><label class="property type">string</label><label class="property description">packet event</label></li>
+<li><label class="property name">type</label><label class="property type">string</label><label class="property description">The basic datatype sent</label><code class="property example">"array"</code></li>
+<li><label class="property name">schema</label><label class="property type">string</label><label class="property description">Link to JSON schema describing the format of the data</label><code class="property example">"https://example.net/schemas/person.json"</code></li>
 <li><label class="property name">graph</label><label class="property type">string</label><label class="property description">graph the action targets</label></li>
 <li><label class="property name">payload</label><label class="property type">object</label><label class="property description">payload for the packet. Used only with begingroup (for group names) and data packets</label></li>
 <li><label class="property name">secret</label><label class="property type">string</label><label class="property description">access token to authorize user</label></li>
@@ -533,6 +541,7 @@ These packets can be send from the client to the runtimes input ports, or from r
 <li><label class="property name">type</label><label class="property type">string</label><label class="property description">port datatype</label><code class="property example">"boolean"</code></li>
 <li><label class="property optional name">required</label><label class="property optional type">boolean</label><label class="property optional description">whether the port needs to be connected for the component to work</label><code class="property optional example">true</code></li>
 <li><label class="property optional name">description</label><label class="property optional type">string</label><label class="property optional description">textual description of the port</label></li>
+<li><label class="property optional name">schema</label><label class="property optional type">string</label><label class="property optional description">Link to JSON schema for data on this port</label><code class="property optional example">"https://example.net/schemas/person.json"</code></li>
 </ul>
 <li><label class="property name">outPorts</label><label class="property type">array</label><label class="property description">list of output ports of the runtime</label></li>Each item contains:
 <ul class="properties">
@@ -541,6 +550,7 @@ These packets can be send from the client to the runtimes input ports, or from r
 <li><label class="property name">type</label><label class="property type">string</label><label class="property description">port datatype</label><code class="property example">"boolean"</code></li>
 <li><label class="property optional name">required</label><label class="property optional type">boolean</label><label class="property optional description">whether the port needs to be connected for the component to work</label><code class="property optional example">true</code></li>
 <li><label class="property optional name">description</label><label class="property optional type">string</label><label class="property optional description">textual description of the port</label></li>
+<li><label class="property optional name">schema</label><label class="property optional type">string</label><label class="property optional description">Link to JSON schema for data on this port</label><code class="property optional example">"https://example.net/schemas/person.json"</code></li>
 </ul>
 </ul>
 <h3 id="runtime-runtime" class="message name"><a href="#runtime-runtime">runtime</a></h3>
@@ -576,7 +586,11 @@ Graphs registered in this way should also be available for use as subgraphs in o
 <ul class="message properties">
 <li><label class="property name">id</label><label class="property type">string</label><label class="property description">identifier for the node</label></li>
 <li><label class="property name">component</label><label class="property type">string</label><label class="property description">component name used for the node</label></li>
-<li><label class="property name">metadata</label><label class="property type">object</label><label class="property description">structure of key-value pairs for node metadata</label></li>
+<li><label class="property name">metadata</label><label class="property type">object</label><label class="property description">structure of key-value pairs for graph node metadata</label></li>
+<ul class="properties">
+<li><label class="property name">x</label><label class="property type">integer</label><label class="property description">X coordinate of a graph entity</label></li>
+<li><label class="property name">y</label><label class="property type">integer</label><label class="property description">Y coordinate of a graph entity</label></li>
+</ul>
 <li><label class="property name">graph</label><label class="property type">string</label><label class="property description">graph the action targets</label></li>
 <li><label class="property name">secret</label><label class="property type">string</label><label class="property description">access token to authorize user</label></li>
 </ul>
@@ -599,7 +613,11 @@ Graphs registered in this way should also be available for use as subgraphs in o
 <p>Change the metadata associated to a node in the graph</p>
 <ul class="message properties">
 <li><label class="property name">id</label><label class="property type">string</label><label class="property description">identifier for the node</label></li>
-<li><label class="property name">metadata</label><label class="property type">object</label><label class="property description">structure of key-value pairs for node metadata</label></li>
+<li><label class="property name">metadata</label><label class="property type">object</label><label class="property description">structure of key-value pairs for graph node metadata</label></li>
+<ul class="properties">
+<li><label class="property name">x</label><label class="property type">integer</label><label class="property description">X coordinate of a graph entity</label></li>
+<li><label class="property name">y</label><label class="property type">integer</label><label class="property description">Y coordinate of a graph entity</label></li>
+</ul>
 <li><label class="property name">graph</label><label class="property type">string</label><label class="property description">graph the action targets</label></li>
 <li><label class="property name">secret</label><label class="property type">string</label><label class="property description">access token to authorize user</label></li>
 </ul>
@@ -618,7 +636,12 @@ Graphs registered in this way should also be available for use as subgraphs in o
 <li><label class="property name">port</label><label class="property type">string</label><label class="property description">port name</label></li>
 <li><label class="property name">index</label><label class="property type">string,number</label><label class="property description">connection index, for addressable ports</label></li>
 </ul>
-<li><label class="property name">metadata</label><label class="property type">object</label><label class="property description">Structure of key-value pairs for edge metadata</label></li>
+<li><label class="property name">metadata</label><label class="property type">object</label><label class="property description">structure of key-value pairs for graph edge metadata</label></li>
+<ul class="properties">
+<li><label class="property name">route</label><label class="property type">integer</label><label class="property description">Route identifier of a graph entity</label></li>
+<li><label class="property name">schema</label><label class="property type">string</label><label class="property description">JSON schema associated with a graph entity</label></li>
+<li><label class="property name">secure</label><label class="property type">boolean</label><label class="property description">Whether graph entity data should be treated as secure</label></li>
+</ul>
 <li><label class="property name">graph</label><label class="property type">string</label><label class="property description">graph the action targets</label></li>
 <li><label class="property name">secret</label><label class="property type">string</label><label class="property description">access token to authorize user</label></li>
 </ul>
@@ -644,7 +667,12 @@ Graphs registered in this way should also be available for use as subgraphs in o
 <p>Change an edge's metadata</p>
 <ul class="message properties">
 <li><label class="property name">graph</label><label class="property type">string</label><label class="property description">graph the action targets</label></li>
-<li><label class="property name">metadata</label><label class="property type">object</label><label class="property description">struct of key-value pairs for edge metadata</label></li>
+<li><label class="property name">metadata</label><label class="property type">object</label><label class="property description">structure of key-value pairs for graph edge metadata</label></li>
+<ul class="properties">
+<li><label class="property name">route</label><label class="property type">integer</label><label class="property description">Route identifier of a graph entity</label></li>
+<li><label class="property name">schema</label><label class="property type">string</label><label class="property description">JSON schema associated with a graph entity</label></li>
+<li><label class="property name">secure</label><label class="property type">boolean</label><label class="property description">Whether graph entity data should be treated as secure</label></li>
+</ul>
 <li><label class="property name">src</label><label class="property type">object</label><label class="property description">source node for the edge</label></li>
 <ul class="properties">
 <li><label class="property name">node</label><label class="property type">string</label><label class="property description">node identifier</label></li>
@@ -663,12 +691,17 @@ Graphs registered in this way should also be available for use as subgraphs in o
 <p>Add an IIP to the graph</p>
 <ul class="message properties">
 <li><label class="property name">graph</label><label class="property type">string</label><label class="property description">graph the action targets</label></li>
-<li><label class="property name">metadata</label><label class="property type">object</label><label class="property description">structure of key-value pairs for edge metadata</label></li>
+<li><label class="property name">metadata</label><label class="property type">object</label><label class="property description">structure of key-value pairs for graph edge metadata</label></li>
+<ul class="properties">
+<li><label class="property name">route</label><label class="property type">integer</label><label class="property description">Route identifier of a graph entity</label></li>
+<li><label class="property name">schema</label><label class="property type">string</label><label class="property description">JSON schema associated with a graph entity</label></li>
+<li><label class="property name">secure</label><label class="property type">boolean</label><label class="property description">Whether graph entity data should be treated as secure</label></li>
+</ul>
 <li><label class="property name">src</label><label class="property type">object</label><label class="property description">source data for the edge</label></li>
 <ul class="properties">
 <li><label class="property name">data</label><label class="property type">object,array,string,number,integer,boolean,null</label><label class="property description">IIP value in its actual data type</label></li>
 </ul>
-<li><label class="property name">tgt</label><label class="property type">object</label><label class="property description">target node for the edge</label></li>
+<li><label class="property name">tgt</label><label class="property type">object</label><label class="property description">target node/port for the edge</label></li>
 <ul class="properties">
 <li><label class="property name">node</label><label class="property type">string</label><label class="property description">node identifier</label></li>
 <li><label class="property name">port</label><label class="property type">string</label><label class="property description">port name</label></li>
@@ -679,11 +712,11 @@ Graphs registered in this way should also be available for use as subgraphs in o
 <h3 id="graph-removeinitial" class="message name"><a href="#graph-removeinitial">removeinitial</a></h3>
 <p>Remove an IIP from the graph</p>
 <ul class="message properties">
-<li><label class="property name">src</label><label class="property type">object</label><label class="property description">source data for the edge</label></li>
+<li><label class="property name">src</label><label class="property type">object</label><label class="property description">IIP data</label></li>
 <ul class="properties">
 <li><label class="property name">data</label><label class="property type">object,array,string,number,integer,boolean,null</label><label class="property description">IIP value in its actual data type</label></li>
 </ul>
-<li><label class="property name">tgt</label><label class="property type">object</label><label class="property description">target node for the edge</label></li>
+<li><label class="property name">tgt</label><label class="property type">object</label><label class="property description">target node/port for the edge</label></li>
 <ul class="properties">
 <li><label class="property name">node</label><label class="property type">string</label><label class="property description">node identifier</label></li>
 <li><label class="property name">port</label><label class="property type">string</label><label class="property description">port name</label></li>
@@ -698,7 +731,11 @@ Graphs registered in this way should also be available for use as subgraphs in o
 <li><label class="property name">public</label><label class="property type">string</label><label class="property description">the exported name of the port</label></li>
 <li><label class="property name">node</label><label class="property type">string</label><label class="property description">node identifier</label></li>
 <li><label class="property name">port</label><label class="property type">string</label><label class="property description">internal port name</label></li>
-<li><label class="property name">metadata</label><label class="property type">object</label><label class="property description">structure of key-value pairs for node metadata</label></li>
+<li><label class="property name">metadata</label><label class="property type">object</label><label class="property description">structure of key-value pairs for graph node metadata</label></li>
+<ul class="properties">
+<li><label class="property name">x</label><label class="property type">integer</label><label class="property description">X coordinate of a graph entity</label></li>
+<li><label class="property name">y</label><label class="property type">integer</label><label class="property description">Y coordinate of a graph entity</label></li>
+</ul>
 <li><label class="property name">graph</label><label class="property type">string</label><label class="property description">graph the action targets</label></li>
 <li><label class="property name">secret</label><label class="property type">string</label><label class="property description">access token to authorize user</label></li>
 </ul>
@@ -723,7 +760,11 @@ Graphs registered in this way should also be available for use as subgraphs in o
 <li><label class="property name">public</label><label class="property type">string</label><label class="property description">the exported name of the port</label></li>
 <li><label class="property name">node</label><label class="property type">string</label><label class="property description">node identifier</label></li>
 <li><label class="property name">port</label><label class="property type">string</label><label class="property description">internal port name</label></li>
-<li><label class="property name">metadata</label><label class="property type">object</label><label class="property description">structure of key-value pairs for port metadata</label></li>
+<li><label class="property name">metadata</label><label class="property type">object</label><label class="property description">structure of key-value pairs for graph node metadata</label></li>
+<ul class="properties">
+<li><label class="property name">x</label><label class="property type">integer</label><label class="property description">X coordinate of a graph entity</label></li>
+<li><label class="property name">y</label><label class="property type">integer</label><label class="property description">Y coordinate of a graph entity</label></li>
+</ul>
 <li><label class="property name">graph</label><label class="property type">string</label><label class="property description">graph the action targets</label></li>
 <li><label class="property name">secret</label><label class="property type">string</label><label class="property description">access token to authorize user</label></li>
 </ul>
@@ -747,7 +788,10 @@ Graphs registered in this way should also be available for use as subgraphs in o
 <ul class="message properties">
 <li><label class="property name">name</label><label class="property type">string</label><label class="property description">the group name</label></li>
 <li><label class="property name">nodes</label><label class="property type">array</label><label class="property description">an array of node ids part of the group</label></li>
-<li><label class="property name">metadata</label><label class="property type">object</label><label class="property description">structure of key-value pairs for group metadata</label></li>
+<li><label class="property name">metadata</label><label class="property type">object</label><label class="property description">structure of key-value pairs for graph group metadata</label></li>
+<ul class="properties">
+<li><label class="property name">description</label><label class="property type">string</label><label class="property description">Longer textual description of the group</label></li>
+</ul>
 <li><label class="property name">graph</label><label class="property type">string</label><label class="property description">graph the action targets</label></li>
 <li><label class="property name">secret</label><label class="property type">string</label><label class="property description">access token to authorize user</label></li>
 </ul>
@@ -770,7 +814,10 @@ Graphs registered in this way should also be available for use as subgraphs in o
 <p>Change a group's metadata</p>
 <ul class="message properties">
 <li><label class="property name">name</label><label class="property type">string</label><label class="property description">the group name</label></li>
-<li><label class="property name">metadata</label><label class="property type">object</label><label class="property description">structure of key-value pairs for group metadata</label></li>
+<li><label class="property name">metadata</label><label class="property type">object</label><label class="property description">structure of key-value pairs for graph group metadata</label></li>
+<ul class="properties">
+<li><label class="property name">description</label><label class="property type">string</label><label class="property description">Longer textual description of the group</label></li>
+</ul>
 <li><label class="property name">graph</label><label class="property type">string</label><label class="property description">graph the action targets</label></li>
 <li><label class="property name">secret</label><label class="property type">string</label><label class="property description">access token to authorize user</label></li>
 </ul>
@@ -815,6 +862,7 @@ Graphs registered in this way should also be available for use as subgraphs in o
 <li><label class="property name">type</label><label class="property type">string</label><label class="property description">port datatype</label><code class="property example">"boolean"</code></li>
 <li><label class="property optional name">required</label><label class="property optional type">boolean</label><label class="property optional description">whether the port needs to be connected for the component to work</label><code class="property optional example">true</code></li>
 <li><label class="property optional name">description</label><label class="property optional type">string</label><label class="property optional description">textual description of the port</label></li>
+<li><label class="property optional name">schema</label><label class="property optional type">string</label><label class="property optional description">Link to JSON schema for data on this port</label><code class="property optional example">"https://example.net/schemas/person.json"</code></li>
 </ul>
 <li><label class="property name">outPorts</label><label class="property type">array</label><label class="property description">list of output ports of the component</label></li>Each item contains:
 <ul class="properties">
@@ -823,6 +871,7 @@ Graphs registered in this way should also be available for use as subgraphs in o
 <li><label class="property name">type</label><label class="property type">string</label><label class="property description">port datatype</label><code class="property example">"boolean"</code></li>
 <li><label class="property optional name">required</label><label class="property optional type">boolean</label><label class="property optional description">whether the port needs to be connected for the component to work</label><code class="property optional example">true</code></li>
 <li><label class="property optional name">description</label><label class="property optional type">string</label><label class="property optional description">textual description of the port</label></li>
+<li><label class="property optional name">schema</label><label class="property optional type">string</label><label class="property optional description">Link to JSON schema for data on this port</label><code class="property optional example">"https://example.net/schemas/person.json"</code></li>
 </ul>
 </ul>
 <h2 class="protocol name">Network protocol</h2>
