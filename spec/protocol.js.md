@@ -32,6 +32,9 @@ The [fbp-protocol](https://github.com/flowbased/fbp-protocol) tool provides a se
 
 ## Changes
 
+* 2017-09-17:
+  - Added `schema` support for ports and packets
+  - Documented known metadata keys for various graph entities
 * 2017-04-09:
   - Version 0.6. No breaking changes over 0.5.
   - Added additional capabilities `graph:readonly`, `network:control`, `network:data`, `network:status`. Especially useful for read-only access.
