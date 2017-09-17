@@ -370,13 +370,14 @@ input:
                 type: string
                 description: 'graph the action targets'
               metadata:
-                description: 'structure of key-value pairs for edge metadata'
+                type: object
+                description: 'structure of key-value pairs for IIP metadata'
                 $ref: '/shared/metadata_edge'
               src:
                 description: 'source data for the edge'
                 $ref: '/shared/iip'
               tgt:
-                description: 'target node for the edge'
+                description: 'target node/port for the edge'
                 $ref: '/shared/port'
               secret:
                 type: string
@@ -397,11 +398,11 @@ input:
             additionalProperties: false
             properties:
               src:
-                description: 'source data for the edge'
+                description: 'IIP data'
                 $ref: '/shared/iip'
               tgt:
                 $ref: '/shared/port'
-                description: 'target node for the edge'
+                description: 'target node/port for the edge'
               graph:
                 type: string
                 description: 'graph the action targets'

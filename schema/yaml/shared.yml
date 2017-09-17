@@ -115,6 +115,11 @@ port_definition:
       description:
         type: string
         description: 'textual description of the port'
+      schema:
+        type: string
+        format: uri
+        description: 'Link to JSON schema for data on this port'
+        example: 'https://example.net/schemas/person.json'
 
 iip:
   id: 'iip'
