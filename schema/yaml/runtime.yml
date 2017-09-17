@@ -58,6 +58,15 @@ input:
                   - endgroup
                   - disconnect
                 description: 'packet event'
+              type:
+                type: string
+                description: 'The basic datatype sent'
+                example: 'array'
+              schema:
+                type: string
+                format: uri
+                description: 'Link to JSON schema for data on this port'
+                example: 'https://example.net/schemas/person.json'
               graph:
                 type: string
                 description: 'graph the action targets'

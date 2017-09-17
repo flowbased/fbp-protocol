@@ -261,6 +261,15 @@ output:
                     description: >-
                       actual data being transmitted, encoded in a way
                       that can be carried over the protocol transport
+                  type:
+                    type: string
+                    description: 'The basic datatype sent'
+                    example: 'array'
+                  schema:
+                    type: string
+                    format: uri
+                    description: 'Link to JSON schema describing the format of the data'
+                    example: 'https://example.net/schemas/person.json'
               - additionalProperties: false
                 properties:
                   data: true
