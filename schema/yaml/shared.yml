@@ -29,9 +29,9 @@ message:
       type: object
       description: 'content of message'
 
-metadata:
-  id: 'metadata'
-  description: 'structure of key-value pairs for graph entity metadata'
+metadata_node:
+  id: 'metadata_node'
+  description: 'structure of key-value pairs for graph node metadata'
   type: object
   additionalProperties: true
   required: []
@@ -42,6 +42,14 @@ metadata:
     y:
       type: integer
       description: "Y coordinate of a graph entity"
+
+metadata_edge:
+  id: 'metadata_edge'
+  description: 'structure of key-value pairs for graph edge metadata'
+  type: object
+  additionalProperties: true
+  required: []
+  properties:
     route:
       type: integer
       description: "Route identifier of a graph entity"
@@ -52,6 +60,17 @@ metadata:
     secure:
       type: boolean
       description: "Whether graph entity data should be treated as secure"
+
+metadata_group:
+  id: 'metadata_group'
+  description: 'structure of key-value pairs for graph group metadata'
+  type: object
+  additionalProperties: true
+  required: []
+  properties:
+    description:
+      type: string
+      description: "Longer textual description of the group"
 
 port:
   id: 'port'
