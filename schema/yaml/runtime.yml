@@ -65,7 +65,7 @@ input:
               schema:
                 type: string
                 format: uri
-                description: 'Link to JSON schema for data on this port'
+                description: 'Link to JSON schema describing the format of the data'
                 example: 'https://example.net/schemas/person.json'
               graph:
                 type: string
