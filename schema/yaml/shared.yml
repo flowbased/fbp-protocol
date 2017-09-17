@@ -29,6 +29,27 @@ message:
       type: object
       description: 'content of message'
 
+metadata:
+  id: 'metadata'
+  description: 'structure of key-value pairs for graph entity metadata'
+  type: object
+  additionalProperties: true
+  required: []
+  properties:
+    x:
+      type: integer
+      description: "X coordinate of a graph entity"
+    y:
+      type: integer
+      description: "Y coordinate of a graph entity"
+    route:
+      type: integer
+      description: "Route identifier of a graph entity"
+    schema:
+      type: string
+      format: "uri"
+      description: "JSON schema associated with a graph entity"
+
 port:
   id: 'port'
   type: object
