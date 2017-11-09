@@ -19,20 +19,20 @@
     "test": "grunt test"
   },
   "dependencies": {
-    "chai": "~4.1.2",
+    "chai": "^4.1.2",
     "commander": "^2.1.0",
-    "mocha": "~4.0.1",
+    "mocha": "^4.0.1",
     "moment": "^2.13.0",
     "semver": "^5.3.0",
     "tv4": "^1.2.7",
-    "websocket": "~1.0.8"
+    "websocket": "^1.0.8"
   },
   "devDependencies": {
     "chai": "^3.5.0",
-    "grunt": "~1.0.1",
-    "grunt-contrib-coffee": "~2.0.0",
-    "grunt-contrib-watch": "~1.0.0",
-    "grunt-exec": "~3.0.0",
+    "grunt": "^1.0.1",
+    "grunt-contrib-coffee": "^2.0.0",
+    "grunt-contrib-watch": "^1.0.0",
+    "grunt-exec": "^3.0.0",
     "grunt-gh-pages": "^2.0.0",
     "grunt-jekyll": "^0.4.4",
     "grunt-mocha-test": "^0.13.2",
