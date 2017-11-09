@@ -27,22 +27,33 @@ exports.testRuntime = (runtimeType, startServer, stopServer, host='localhost', p
       it 'should succeed', (done) ->
         @timeout 4000
         tries = 10
-        startServer ->
+        startServer (err) ->
+          return done err if err
           client = new WebSocketClient
-          client.on 'connect', (conn) ->
+          onConnected = (conn) ->
             connection = conn
             connection.setMaxListeners(1000)
+            client.removeListener 'connectFailed', onFailed
             done()
-          client.on 'connectFailed', (err) ->
+          onFailed = (err) ->
             tries--
-            chai.expect(tries, 'Connection retry limit must not be exceeded').to.be.above 0
-            setTimeout(
-              ->
-                client.connect address, 'noflo'
-              200
-            )
+            unless tries
+              client.removeListener 'connect', onConnected
+              done err
+              return
+            setTimeout ->
+              client.connect address, 'noflo'
+            , 100
+          client.once 'connect', onConnected
+          client.on 'connectFailed', onFailed
           client.connect address, 'noflo'
-    after stopServer
+    after (done) ->
+      unless connection
+        stopServer done
+        return
+      connection.once 'close', ->
+        stopServer done
+      connection.close()
 
     send = (protocol, command, payload) ->
       payload = {} unless payload
@@ -679,7 +690,7 @@ exports.testRuntimeCommand = (runtimeType, command=null, host='localhost', port=
         done = ->
     (done) ->
       return done() unless child
-      child.on 'exit', ->
+      child.once 'exit', ->
         done()
       child.kill 'SIGTERM'
     host
