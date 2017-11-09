@@ -208,7 +208,7 @@ exports.testRuntime = (runtimeType, startServer, stopServer, host='localhost', p
                 route: 5
               graph: 'foo'
           ]
-          receive expects, done
+          receive expects, done, true
           send 'graph', 'addedge', expects[0].payload
       # describe 'adding an edge to a non-existent node', ->
       #   it 'should return an error', (done) ->
@@ -334,7 +334,7 @@ exports.testRuntime = (runtimeType, startServer, stopServer, host='localhost', p
               metadata: {}
               graph: 'foo'
           ]
-          receive expects, done
+          receive expects, done, true
           send 'graph', 'addinitial', expects[0].payload
 
       describe 'removing a node', ->
@@ -377,7 +377,7 @@ exports.testRuntime = (runtimeType, startServer, stopServer, host='localhost', p
                 port: 'in'
               graph: 'foo'
           ]
-          receive expects, done
+          receive expects, done, true
           send 'graph', 'removeinitial',
             tgt:
               node: 'Repeat1'
@@ -394,7 +394,7 @@ exports.testRuntime = (runtimeType, startServer, stopServer, host='localhost', p
               to: 'RepeatRenamed'
               graph: 'foo'
           ]
-          receive expects, done
+          receive expects, done, true
           send 'graph', 'renamenode', expects[0].payload
 
       describe 'adding a node to a non-existent graph', ->
@@ -405,7 +405,7 @@ exports.testRuntime = (runtimeType, startServer, stopServer, host='localhost', p
             payload:
               message: 'Requested graph not found'
           ]
-          receive expects, done
+          receive expects, done, true
           send 'graph', 'addnode',
             id: 'Repeat1'
             component: "#{collection}/Repeat"
@@ -419,7 +419,7 @@ exports.testRuntime = (runtimeType, startServer, stopServer, host='localhost', p
             payload:
               message: 'No graph specified'
           ]
-          receive expects, done
+          receive expects, done, true
           send 'graph', 'addnode',
             id: 'Repeat1'
             component: "#{collection}/Repeat"
@@ -435,7 +435,7 @@ exports.testRuntime = (runtimeType, startServer, stopServer, host='localhost', p
               public: 'in'
               port: 'in'
           ]
-          receive expects, done
+          receive expects, done, true
           send 'graph', 'addinport',
             public: 'in'
             node: 'RepeatRenamed'
@@ -466,7 +466,7 @@ exports.testRuntime = (runtimeType, startServer, stopServer, host='localhost', p
               port: 'out'
               public: 'out'
           ]
-          receive expects, done
+          receive expects, done, true
           send 'graph', 'addoutport',
             public: 'out'
             node: 'RepeatRenamed'
@@ -508,7 +508,7 @@ exports.testRuntime = (runtimeType, startServer, stopServer, host='localhost', p
               graph: 'foo'
               public: 'out'
           ]
-          receive expects, done
+          receive expects, done, true
           send 'graph', 'removeoutport',
             public: 'out'
             graph: 'foo'
@@ -616,7 +616,7 @@ exports.testRuntime = (runtimeType, startServer, stopServer, host='localhost', p
               running: false
               started: false
           ]
-          receive expects, done
+          receive expects, done, true
           send 'network', 'stop',
             graph: 'bar'
 
