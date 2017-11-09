@@ -674,22 +674,35 @@ exports.testRuntime = (runtimeType, startServer, stopServer, host='localhost', p
 
 exports.testRuntimeCommand = (runtimeType, command=null, host='localhost', port=8080, collection='core', version='0.6') ->
   child = null
+  prefix = '      '
   exports.testRuntime( runtimeType,
     (done) ->
       unless command
-        console.log "not running a command. runtime is assumed to be started"
+        console.log "#{prefix}not running a command. runtime is assumed to be started"
         done()
-      console.log "running '#{command}'"
+      console.log "#{prefix}'#{command}' starting"
+      returned = false
       child = spawn command, [],
         cwd: process.cwd()
         shell: true
-      child.on 'error', (err) ->
+      child.once 'error', (err) ->
         child = null
+        return if returned
+        returned = true
         done err
-        done = ->
-      child.stdout.once 'data', ->
-        done()
-        done = ->
+      child.stdout.once 'data', (data) ->
+        console.log "#{prefix}'#{command}' has started"
+        setTimeout ->
+          return if returned
+          returned = true
+          done()
+        , 100
+      child.once 'exit', ->
+        console.log "#{prefix}'#{command}' exited"
+        child = null
+        return if returned
+        returned = true
+        done new Error 'Child exited'
     (done) ->
       return done() unless child
       child.once 'exit', ->
