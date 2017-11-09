@@ -73,6 +73,7 @@ module.exports = ->
 
     # FBP Network Protocol tests
     exec:
+      preheat_noflo_cache: './node_modules/.bin/noflo-cache-preheat'
       fbp_init_noflo: "node bin/fbp-init --command \"noflo-nodejs --secret=#{runtimeSecret} --port=8080 --register=false\""
       fbp_test:
         command: 'node bin/fbp-test --colors'
@@ -135,6 +136,7 @@ module.exports = ->
   @registerTask 'test', [
     'build'
     'mochaTest'
+    'exec:preheat_noflo_cache'
     'exec:fbp_init_noflo'
     'exec:fbp_test'
   ]

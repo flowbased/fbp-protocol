@@ -1,4 +1,5 @@
 fbp-config.json
+fbp.json
 *.tgz
 node_modules
 npm-debug.log
