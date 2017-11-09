@@ -1,6 +1,6 @@
 language: node_js
 node_js:
-- '4.2'
+- '6'
 dist: trusty
 sudo: false
 before_install:
@@ -9,16 +9,15 @@ before_script:
 - npm install -g grunt-cli
 after_deploy:
 - grunt gh-pages
-sudo: false
 env:
   global:
     secure: hylkH4bQkZDzSK+i39lMzrii99GsKJCkBHw1fu5HzGd+PdxCLOoWJeSlYFVyGpW4dBnzyRtX0S2iNO+71tU4KYEeSdi/wI/0Hb5r5nPZpyAyqcvQcqKPg28Zo0aChS4yDonXm8GquyarGrbTSxUgYTyQ8vd/quQzl04pgIRXLww=
 deploy:
   provider: npm
   email: henri.bergius@iki.fi
-  api_key:
-    secure: kWKXkgv9GjyoYkerxpcUk3pJew7V33iPdToZhxtfbUeLwDMduL9ULZYOh1WHb4YqkHWuMCEMpQxG5fAybuPXwHMwDYd0E/CDtTdHlbB9nYWhKDbRSjSy6Mcw9EdTNGngX+KpmeSOSMtODhYef1j6kMDNn/LPqSJBLjL/+vcxdpg=
   skip_cleanup: true
+  api_key:
+    secure: R1QwlQKZ3i6sJqhxV33vzasjw3h0OuDPZzTqfX1u16jGXVH3/xhKe0aOJo/OAoLrWzdDDEFBqJOpLsALnqe847RVKivpvTkF/AFFTazVMq8xNeqOjtLS2/5IA6ZZAalr+edDeWPGc+BasvCzHXm+tjxOIi+zgdoJ20Ln7QJGH9k=
   on:
     tags: true
     repo: flowbased/fbp-protocol
