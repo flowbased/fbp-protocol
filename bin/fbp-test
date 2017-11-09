@@ -10,7 +10,6 @@ var spawn = require('child_process').spawn,
 var args = [
   path.resolve(process.cwd(), './node_modules/.bin/_mocha'),
   path.resolve(__dirname, '../test/*.js'),
-  '--exit',
   '--reporter',
   'spec'
 ];

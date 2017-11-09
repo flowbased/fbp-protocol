@@ -685,6 +685,11 @@ exports.testRuntimeCommand = (runtimeType, command=null, host='localhost', port=
       child = spawn command, [],
         cwd: process.cwd()
         shell: true
+        stdio: [
+          'ignore'
+          'pipe'
+          'ignore'
+        ]
       child.once 'error', (err) ->
         child = null
         return if returned
@@ -697,7 +702,7 @@ exports.testRuntimeCommand = (runtimeType, command=null, host='localhost', port=
           returned = true
           done()
         , 100
-      child.once 'exit', ->
+      child.once 'close', ->
         console.log "#{prefix}'#{command}' exited"
         child = null
         return if returned
@@ -705,9 +710,15 @@ exports.testRuntimeCommand = (runtimeType, command=null, host='localhost', port=
         done new Error 'Child exited'
     (done) ->
       return done() unless child
-      child.once 'exit', ->
+      child.once 'close', ->
         done()
-      child.kill 'SIGTERM'
+      child.stdout.destroy()
+      child.kill()
+      setTimeout ->
+        # If SIGTERM didn't do it, try harder
+        return unless child
+        child.kill 'SIGKILL'
+      , 100
     host
     port
     collection
