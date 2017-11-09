@@ -1,7 +1,6 @@
 chai = require 'chai'
 path = require 'path'
-# spawn = require('child_process').spawn
-shelljs = require 'shelljs'
+{ spawn } = require 'child_process'
 WebSocketClient = require('websocket').client
 semver = require 'semver'
 tv4 = require '../schema/index.js'
@@ -664,15 +663,25 @@ exports.testRuntimeCommand = (runtimeType, command=null, host='localhost', port=
   child = null
   exports.testRuntime( runtimeType,
     (done) ->
-      if command
-        console.log "running '#{command}'"
-        child = shelljs.exec command, {async: true}
-      else
+      unless command
         console.log "not running a command. runtime is assumed to be started"
-      done()
-    ->
-      if child
-        child.kill "SIGKILL"
+        done()
+      console.log "running '#{command}'"
+      child = spawn command, [],
+        cwd: process.cwd()
+        shell: true
+      child.on 'error', (err) ->
+        child = null
+        done err
+        done = ->
+      child.stdout.once 'data', ->
+        done()
+        done = ->
+    (done) ->
+      return done() unless child
+      child.on 'exit', ->
+        done()
+      child.kill 'SIGTERM'
     host
     port
     collection
