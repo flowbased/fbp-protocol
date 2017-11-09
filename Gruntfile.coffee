@@ -11,18 +11,32 @@ module.exports = ->
     # CoffeeScript compilation
     coffee:
       src:
+        options:
+          bare: true
         expand: true
         cwd: 'src'
         src: ['**.coffee']
         dest: 'src'
         ext: '.js'
       schema:
+        options:
+          bare: true
         expand: true
         cwd: 'schema'
         src: ['**.coffee']
         dest: 'schema'
         ext: '.js'
       test:
+        options:
+          bare: true
+        expand: true
+        cwd: 'test'
+        src: ['**.coffee']
+        dest: 'test'
+        ext: '.js'
+      test_schema:
+        options:
+          bare: true
         expand: true
         cwd: 'test/schema/'
         src: ['**.coffee']
