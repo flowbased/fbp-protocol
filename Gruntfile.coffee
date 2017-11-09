@@ -74,7 +74,7 @@ module.exports = ->
     # FBP Network Protocol tests
     exec:
       preheat_noflo_cache: './node_modules/.bin/noflo-cache-preheat'
-      fbp_init_noflo: "node bin/fbp-init --command \"noflo-nodejs --secret=#{runtimeSecret} --port=8080 --register=false\""
+      fbp_init_noflo: "node bin/fbp-init --command \"noflo-nodejs --secret=#{runtimeSecret} --host localhost --port=8080 --register=false\" --name=\"NoFlo Node.js\""
       fbp_test:
         command: 'node bin/fbp-test --colors'
         options:
