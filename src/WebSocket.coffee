@@ -39,6 +39,7 @@ exports.testRuntime = (runtimeType, startServer, stopServer, host='localhost', p
             tries--
             unless tries
               client.removeListener 'connect', onConnected
+              client.removeListener 'connectFailed', onFailed
               done err
               return
             setTimeout ->
@@ -52,8 +53,9 @@ exports.testRuntime = (runtimeType, startServer, stopServer, host='localhost', p
         stopServer done
         return
       connection.once 'close', ->
+        connection = null
         stopServer done
-      connection.close()
+      connection.drop()
 
     send = (protocol, command, payload) ->
       payload = {} unless payload
