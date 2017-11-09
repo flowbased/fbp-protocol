@@ -7,10 +7,12 @@
 var spawn = require('child_process').spawn,
      path = require('path');
 // TODO: handle -h/--help
-var args = [path.resolve(process.cwd(), './node_modules/.bin/_mocha'),
-            path.resolve(__dirname, '../test/*.coffee'),
-            '--reporter', 'spec',
-            '--compilers', 'coffee:coffee-script/register'];
+var args = [
+  path.resolve(process.cwd(), './node_modules/.bin/_mocha'),
+  path.resolve(__dirname, '../test/*.js'),
+  '--reporter',
+  'spec'
+];
 args = args.concat(process.argv.slice(2));
 
 // code below is taken from the mocha executable:

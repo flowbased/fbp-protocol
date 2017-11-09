@@ -1,4 +1,5 @@
 fbp-config.json
+fbp.json
 *.tgz
 node_modules
 npm-debug.log
@@ -8,6 +9,7 @@ schema/schemas.js
 schema/json/*json
 spec/protocol.md
 test/**/*.js
+test/*.js
 src/*.js
 /dist/index.html
 Gemfile.lock

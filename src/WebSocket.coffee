@@ -1,7 +1,6 @@
 chai = require 'chai'
 path = require 'path'
-# spawn = require('child_process').spawn
-shelljs = require 'shelljs'
+{ spawn } = require 'child_process'
 WebSocketClient = require('websocket').client
 semver = require 'semver'
 tv4 = require '../schema/index.js'
@@ -28,22 +27,35 @@ exports.testRuntime = (runtimeType, startServer, stopServer, host='localhost', p
       it 'should succeed', (done) ->
         @timeout 4000
         tries = 10
-        startServer ->
+        startServer (err) ->
+          return done err if err
           client = new WebSocketClient
-          client.on 'connect', (conn) ->
+          onConnected = (conn) ->
             connection = conn
             connection.setMaxListeners(1000)
+            client.removeListener 'connectFailed', onFailed
             done()
-          client.on 'connectFailed', (err) ->
+          onFailed = (err) ->
             tries--
-            chai.expect(tries, 'Connection retry limit must not be exceeded').to.be.above 0
-            setTimeout(
-              ->
-                client.connect address, 'noflo'
-              200
-            )
+            unless tries
+              client.removeListener 'connect', onConnected
+              client.removeListener 'connectFailed', onFailed
+              done err
+              return
+            setTimeout ->
+              client.connect address, 'noflo'
+            , 100
+          client.once 'connect', onConnected
+          client.on 'connectFailed', onFailed
           client.connect address, 'noflo'
-    after stopServer
+    after (done) ->
+      unless connection
+        stopServer done
+        return
+      connection.once 'close', ->
+        connection = null
+        stopServer done
+      connection.drop()
 
     send = (protocol, command, payload) ->
       payload = {} unless payload
@@ -196,7 +208,7 @@ exports.testRuntime = (runtimeType, startServer, stopServer, host='localhost', p
                 route: 5
               graph: 'foo'
           ]
-          receive expects, done
+          receive expects, done, true
           send 'graph', 'addedge', expects[0].payload
       # describe 'adding an edge to a non-existent node', ->
       #   it 'should return an error', (done) ->
@@ -250,7 +262,7 @@ exports.testRuntime = (runtimeType, startServer, stopServer, host='localhost', p
                   sort: 1
                 graph: 'foo'
             ]
-            receive expects, done
+            receive expects, done, true
             send 'graph', 'changenode', expects[0].payload
 
         describe 'to a node with existing metadata', ->
@@ -265,7 +277,7 @@ exports.testRuntime = (runtimeType, startServer, stopServer, host='localhost', p
                   tag: 'awesome'
                 graph: 'foo'
             ]
-            receive expects, done
+            receive expects, done, true
             send 'graph', 'changenode',
               id: 'Drop1'
               metadata:
@@ -284,7 +296,7 @@ exports.testRuntime = (runtimeType, startServer, stopServer, host='localhost', p
                   tag: 'awesome'
                 graph: 'foo'
             ]
-            receive expects, done
+            receive expects, done, true
             send 'graph', 'changenode',
               id: 'Drop1'
               metadata: {}
@@ -300,7 +312,7 @@ exports.testRuntime = (runtimeType, startServer, stopServer, host='localhost', p
                 metadata: {}
                 graph: 'foo'
             ]
-            receive expects, done
+            receive expects, done, true
             send 'graph', 'changenode',
               id: 'Drop1'
               metadata:
@@ -322,7 +334,7 @@ exports.testRuntime = (runtimeType, startServer, stopServer, host='localhost', p
               metadata: {}
               graph: 'foo'
           ]
-          receive expects, done
+          receive expects, done, true
           send 'graph', 'addinitial', expects[0].payload
 
       describe 'removing a node', ->
@@ -365,7 +377,7 @@ exports.testRuntime = (runtimeType, startServer, stopServer, host='localhost', p
                 port: 'in'
               graph: 'foo'
           ]
-          receive expects, done
+          receive expects, done, true
           send 'graph', 'removeinitial',
             tgt:
               node: 'Repeat1'
@@ -382,7 +394,7 @@ exports.testRuntime = (runtimeType, startServer, stopServer, host='localhost', p
               to: 'RepeatRenamed'
               graph: 'foo'
           ]
-          receive expects, done
+          receive expects, done, true
           send 'graph', 'renamenode', expects[0].payload
 
       describe 'adding a node to a non-existent graph', ->
@@ -393,7 +405,7 @@ exports.testRuntime = (runtimeType, startServer, stopServer, host='localhost', p
             payload:
               message: 'Requested graph not found'
           ]
-          receive expects, done
+          receive expects, done, true
           send 'graph', 'addnode',
             id: 'Repeat1'
             component: "#{collection}/Repeat"
@@ -407,7 +419,7 @@ exports.testRuntime = (runtimeType, startServer, stopServer, host='localhost', p
             payload:
               message: 'No graph specified'
           ]
-          receive expects, done
+          receive expects, done, true
           send 'graph', 'addnode',
             id: 'Repeat1'
             component: "#{collection}/Repeat"
@@ -423,7 +435,7 @@ exports.testRuntime = (runtimeType, startServer, stopServer, host='localhost', p
               public: 'in'
               port: 'in'
           ]
-          receive expects, done
+          receive expects, done, true
           send 'graph', 'addinport',
             public: 'in'
             node: 'RepeatRenamed'
@@ -454,7 +466,7 @@ exports.testRuntime = (runtimeType, startServer, stopServer, host='localhost', p
               port: 'out'
               public: 'out'
           ]
-          receive expects, done
+          receive expects, done, true
           send 'graph', 'addoutport',
             public: 'out'
             node: 'RepeatRenamed'
@@ -496,7 +508,7 @@ exports.testRuntime = (runtimeType, startServer, stopServer, host='localhost', p
               graph: 'foo'
               public: 'out'
           ]
-          receive expects, done
+          receive expects, done, true
           send 'graph', 'removeoutport',
             public: 'out'
             graph: 'foo'
@@ -604,7 +616,7 @@ exports.testRuntime = (runtimeType, startServer, stopServer, host='localhost', p
               running: false
               started: false
           ]
-          receive expects, done
+          receive expects, done, true
           send 'network', 'stop',
             graph: 'bar'
 
@@ -662,17 +674,51 @@ exports.testRuntime = (runtimeType, startServer, stopServer, host='localhost', p
 
 exports.testRuntimeCommand = (runtimeType, command=null, host='localhost', port=8080, collection='core', version='0.6') ->
   child = null
+  prefix = '      '
   exports.testRuntime( runtimeType,
     (done) ->
-      if command
-        console.log "running '#{command}'"
-        child = shelljs.exec command, {async: true}
-      else
-        console.log "not running a command. runtime is assumed to be started"
-      done()
-    ->
-      if child
-        child.kill "SIGKILL"
+      unless command
+        console.log "#{prefix}not running a command. runtime is assumed to be started"
+        done()
+      console.log "#{prefix}'#{command}' starting"
+      returned = false
+      child = spawn command, [],
+        cwd: process.cwd()
+        shell: true
+        stdio: [
+          'ignore'
+          'pipe'
+          'ignore'
+        ]
+      child.once 'error', (err) ->
+        child = null
+        return if returned
+        returned = true
+        done err
+      child.stdout.once 'data', (data) ->
+        console.log "#{prefix}'#{command}' has started"
+        setTimeout ->
+          return if returned
+          returned = true
+          done()
+        , 100
+      child.once 'close', ->
+        console.log "#{prefix}'#{command}' exited"
+        child = null
+        return if returned
+        returned = true
+        done new Error 'Child exited'
+    (done) ->
+      return done() unless child
+      child.once 'close', ->
+        done()
+      child.stdout.destroy()
+      child.kill()
+      setTimeout ->
+        # If SIGTERM didn't do it, try harder
+        return unless child
+        child.kill 'SIGKILL'
+      , 100
     host
     port
     collection
