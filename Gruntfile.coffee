@@ -1,6 +1,7 @@
 fs = require 'fs'
 path = require 'path'
 documentation = require './src/Documentation'
+runtimeSecret  = process.env.FBP_PROTOCOL_SECRET or 'noflo'
 
 module.exports = ->
   pkg = @file.readJSON 'package.json'
@@ -72,7 +73,13 @@ module.exports = ->
 
     # FBP Network Protocol tests
     exec:
-      fbp_test: 'node bin/fbp-test --colors'
+      fbp_init_noflo: "node bin/fbp-init --command \"noflo-nodejs --secret=#{runtimeSecret} --port=8080 --register=false\""
+      fbp_test:
+        command: 'node bin/fbp-test --colors'
+        options:
+          env:
+            FBP_PROTOCOL_SECRET: runtimeSecret
+            PATH: process.env.PATH
 
     # Building the website
     jekyll:
@@ -118,8 +125,19 @@ module.exports = ->
   @loadNpmTasks 'grunt-jekyll'
 
   # Our local tasks
-  @registerTask 'build', ['coffee', 'yaml', 'json-to-js', 'build-markdown', 'jekyll:dist']
-  @registerTask 'test', ['build', 'mochaTest'] # FIXME: enable 'exec:fbp_test'
+  @registerTask 'build', [
+    'coffee'
+    'yaml'
+    'json-to-js'
+    'build-markdown'
+    'jekyll:dist'
+  ]
+  @registerTask 'test', [
+    'build'
+    'mochaTest'
+    'exec:fbp_init_noflo'
+    'exec:fbp_test'
+  ]
   @registerTask 'default', ['test']
 
   @registerTask 'json-to-js', ->
