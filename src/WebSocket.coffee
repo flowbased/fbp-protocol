@@ -262,7 +262,7 @@ exports.testRuntime = (runtimeType, startServer, stopServer, host='localhost', p
                   sort: 1
                 graph: 'foo'
             ]
-            receive expects, done
+            receive expects, done, true
             send 'graph', 'changenode', expects[0].payload
 
         describe 'to a node with existing metadata', ->
@@ -277,7 +277,7 @@ exports.testRuntime = (runtimeType, startServer, stopServer, host='localhost', p
                   tag: 'awesome'
                 graph: 'foo'
             ]
-            receive expects, done
+            receive expects, done, true
             send 'graph', 'changenode',
               id: 'Drop1'
               metadata:
@@ -296,7 +296,7 @@ exports.testRuntime = (runtimeType, startServer, stopServer, host='localhost', p
                   tag: 'awesome'
                 graph: 'foo'
             ]
-            receive expects, done
+            receive expects, done, true
             send 'graph', 'changenode',
               id: 'Drop1'
               metadata: {}
@@ -312,7 +312,7 @@ exports.testRuntime = (runtimeType, startServer, stopServer, host='localhost', p
                 metadata: {}
                 graph: 'foo'
             ]
-            receive expects, done
+            receive expects, done, true
             send 'graph', 'changenode',
               id: 'Drop1'
               metadata:
