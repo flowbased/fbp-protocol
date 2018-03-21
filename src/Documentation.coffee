@@ -93,7 +93,7 @@ getDescriptions = (schemas) ->
 
 renderProperty = (name, def, parent) ->
   throw new Error("Property #{name} is missing .description") if not def.description
-  unless parent.type is 'object' name is 'default'
+  unless parent.id is '/shared/port_definition' and name is 'default'
     throw new Error("Property #{name} is missing .type") if not def.type
   throw new Error("Parent schema not specified for #{name}") if not parent
   if parent.type == 'array'
@@ -108,7 +108,7 @@ renderProperty = (name, def, parent) ->
   classes = "property"
   classes += " optional" if isOptional
   name = "<label class='#{classes} name'>#{name}</label>"
-  type = "<label class='#{classes} type'>#{def.type}</label>"
+  type = "<label class='#{classes} type'>#{def.type or 'any'}</label>"
   description = "<label class='#{classes} description'>#{def.description}</label>"
   example = ""
   example = "<code class='#{classes} example'>#{JSON.stringify(def.example)}</code>" if def.example?
