@@ -93,7 +93,8 @@ getDescriptions = (schemas) ->
 
 renderProperty = (name, def, parent) ->
   throw new Error("Property #{name} is missing .description") if not def.description
-  throw new Error("Property #{name} is missing .type") if not def.type
+  unless parent.type is 'object' name is 'default'
+    throw new Error("Property #{name} is missing .type") if not def.type
   throw new Error("Parent schema not specified for #{name}") if not parent
   if parent.type == 'array'
     if not parent.items?.required?.length
