@@ -11,7 +11,8 @@ Clients
 
 * [noflo-ui](https://github.com/noflo/noflo-ui) is an open source visual IDE, which powers [Flowhub](http://flowhub.io)
 * [fbp-spec](https://github.com/flowbased/fbp-spec) is a data-driven testing tool for FBP components/graphs.
-* [fbp-protocol-client](https://github.com/flowbased/fbp-protocol-client) is a JavaScript client library supporting all the common FBP protocol transports
+* [fbp-protocol-client](https://github.com/flowbased/fbp-protocol-client) is a low-level JavaScript client library supporting all the common FBP protocol transports
+* [fbp-client](https://github.com/flowbased/fbp-client) is a higher-level JavaScript client library supporting all the common FBP protocol transports
 
 Runtimes
 
