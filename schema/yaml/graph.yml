@@ -22,6 +22,11 @@ output:
                 type: 'string'
                 description: 'Error message describing what went wrong'
 
+  clear:
+    id: 'output/clear'
+    description: 'An empty graph was initialized'
+    $ref: '../input/clear'
+
   addnode:
     id: 'output/addnode'
     description: 'Add node to a graph.'
@@ -128,7 +133,7 @@ input:
           protocol:
             enum: ['graph']
           command:
-            enum: ['addnode']
+            enum: ['clear']
           payload:
             required: ['id']
             additionalProperties: false
