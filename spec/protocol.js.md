@@ -35,6 +35,7 @@ The [fbp-protocol](https://github.com/flowbased/fbp-protocol) tool provides a se
 
 * 2018-03-21:
   - Added `values` and `default` keys for port definitions
+  - Added schema for `component:componentsready` output message
 * 2017-09-17:
   - Added `schema` support for ports and packets
   - Documented known metadata keys for various graph entities

@@ -54,6 +54,22 @@ output:
               outPorts:
                 description: 'list of output ports of the component'
                 $ref: '/shared/port_definition'
+  componentsready:
+    id: 'output/componentsready'
+    description: Indication that a component listing has finished
+    properties:
+      protocol:
+        enum: ['component']
+        type: string
+        description: 'type of protocol'
+      command:
+        enum: ['componentsready']
+        description: 'command to be executed'
+        example: 'addnode'
+      payload:
+        type: 'integer'
+        description: 'number of components transmitted in this batch'
+        example: 42
 
   source:
     id: 'output/source'
