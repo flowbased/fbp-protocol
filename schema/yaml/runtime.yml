@@ -71,7 +71,6 @@ input:
                 type: string
                 description: 'graph the action targets'
               payload:
-                type: object
                 description: >-
                   payload for the packet. Used only with begingroup
                   (for group names) and data packets
