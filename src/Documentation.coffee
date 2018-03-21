@@ -15,24 +15,27 @@ getSchemas = ->
 
   return schemas
 
-fillRefs = (obj) ->
+fillRefs = (obj, baseUrl) ->
   tv4 = require '../schema/index.js'
 
   if typeof obj isnt 'object'
     return obj
 
   else if (typeof obj) is 'object' and obj.length?
-    return obj.map (item) -> fillRefs item
+    return obj.map (item) -> fillRefs item, baseUrl
 
   newObj = {}
   for own key, value of obj
     if key is '$ref'
-      refObj = fillRefs tv4.getSchema(value)
+      schemaPath = value
+      if schemaPath.indexOf('../') isnt -1
+        schemaPath = path.resolve path.dirname("#{baseUrl}#{obj.id}"), value
+      refObj = fillRefs tv4.getSchema(schemaPath), baseUrl
       for own refKey, refValue of refObj
         newObj[refKey] = refValue
 
     else
-      newObj[key] = fillRefs value
+      newObj[key] = fillRefs value, baseUrl
 
   return newObj
 
@@ -75,7 +78,7 @@ getDescriptions = (schemas) ->
 
     for category in categories
       for event, schema of schemas[protocol][category]
-        schema = fillRefs schema
+        schema = fillRefs schema, "/#{protocol}/"
         message =
           id: schema.id
           description: schema.description
@@ -93,7 +96,11 @@ getDescriptions = (schemas) ->
 
 isAllowedTypeless = (name, parent) ->
   return true if parent.id is '/shared/port_definition' and name is 'default'
+  return true if parent.id is '/runtime/input/packet' and name is 'payload'
   return true if parent.id is 'input/packet' and name is 'payload'
+  return true if parent.id is '/runtime/output/packet' and name is 'payload'
+  return true if parent.id is 'output/packet' and name is 'payload'
+  return true if parent.id is 'output/packetsent' and name is 'payload'
   false
 
 renderProperty = (name, def, parent) ->

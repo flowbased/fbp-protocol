@@ -238,7 +238,7 @@ capabilities:
         description: >-
           can expose ports of main graph and transmit packet information to/from them
         inputs: [runtime:packet]
-        outputs: [runtime:ports, runtime:packet]
+        outputs: [runtime:ports, runtime:packetsent, runtime:packet]
 
       - name: 'graph:readonly'
         description: >-

@@ -188,3 +188,57 @@ output:
                   if known. The version should be available in @repository.
                 type: string
                 example: '0.6.3-8-g90edcfc'
+
+  packetsent:
+    id: 'output/packetsent'
+    description: Confirmation that a packet has been sent
+    allOf:
+      - $ref: '/shared/message'
+      - properties:
+          protocol:
+            enum: ['runtime']
+          command:
+            enum: ['packetsent']
+          payload:
+            required: ['port', 'event', 'graph']
+            additionalProperties: false
+            properties:
+              port:
+                type: string
+                description: 'port name for the input port'
+              event:
+                type: string
+                enum:
+                  - connect
+                  - begingroup
+                  - data
+                  - endgroup
+                  - disconnect
+                description: 'packet event'
+              type:
+                type: string
+                description: 'The basic datatype sent'
+                example: 'array'
+              schema:
+                type: string
+                format: uri
+                description: 'Link to JSON schema describing the format of the data'
+                example: 'https://example.net/schemas/person.json'
+              graph:
+                type: string
+                description: 'graph the action targeted'
+              payload:
+                description: >-
+                  payload for the packet. Used only with begingroup
+                  (for group names) and data packets
+
+  packet:
+    id: 'output/packet'
+    description: >-
+      Runtimes that can be used as remote subgraphs (i.e. ones that have
+      reported supporting the protocol:runtime capability) need to be able to
+      receive and transmit information packets at their exposed ports.
+
+      These packets can be send from the client to the runtimes input ports, or from
+      runtimes output ports to the client.
+    $ref: '../input/packet'
