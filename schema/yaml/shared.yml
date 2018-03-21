@@ -96,9 +96,6 @@ port_definition:
     required: ['id', 'type']
     additionalProperties: false
     properties:
-      addressable:
-        type: boolean
-        description: 'whether the port is an ArrayPort'
       id:
         type: string
         description: 'port name'
@@ -106,20 +103,29 @@ port_definition:
         description: 'port datatype'
         type: string
         example: boolean
+      schema:
+        type: string
+        format: uri
+        description: 'Link to JSON schema for data on this port'
+        example: 'https://example.net/schemas/person.json'
       required:
         description: >-
           whether the port needs to be
           connected for the component to work
         type: boolean
         example: true
+      addressable:
+        type: boolean
+        description: 'whether the port is an ArrayPort'
+        example: false
       description:
         type: string
         description: 'textual description of the port'
-      schema:
-        type: string
-        format: uri
-        description: 'Link to JSON schema for data on this port'
-        example: 'https://example.net/schemas/person.json'
+      values:
+        type: array
+        description: 'list of values accepted for the port'
+      default:
+        description: 'default value for the port'
 
 iip:
   id: 'iip'
