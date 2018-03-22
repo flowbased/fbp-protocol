@@ -34,13 +34,15 @@ The [fbp-protocol](https://github.com/flowbased/fbp-protocol) tool provides a se
 ## Changes
 
 * 2018-03-21:
+  - Fixed signature of `runtime:packet.payload`, `runtime:packetsent.payload`, and port definition `default` to accept any payload type
   - Added `values` and `default` keys for port definitions
   - Added schema for `component:componentsready` output message
+  - Added schema for `graph:clear` output message
   - Added `packetsent` response for `runtime:packet` input message
 * 2017-09-17:
   - Added `schema` support for ports and packets
   - Documented known metadata keys for various graph entities
-* 2017-04-09:
+* 2017-04-09: **Version 0.6**
   - Version 0.6. No breaking changes over 0.5.
   - Added additional capabilities `graph:readonly`, `network:control`, `network:data`, `network:status`. Especially useful for read-only access.
   - Deprecated the `protocol:network` capability in favor of the new fine-gained `network:*` capabilities.
@@ -66,7 +68,7 @@ The [fbp-protocol](https://github.com/flowbased/fbp-protocol) tool provides a se
   - Initial `trace` subprotocol, for [Flowtrace](https://github.com/flowbased/flowtrace) support
 * 2015-03-27:
   - Documented `network` `persist` and `component` `componentsready` messages
-* 2015-03-26: Version 0.5
+* 2015-03-26: **Version 0.5**
   - All messages sent to runtime should include the `secret` in payload
   - Runtime description message includes an `allCapabilities` array describing capabilities of the runtime, including ones not available to current user
 * 2014-10-23
@@ -79,12 +81,12 @@ The [fbp-protocol](https://github.com/flowbased/fbp-protocol) tool provides a se
 * 2014-07-15:
   - Add changenode, changeedge, addgroup, removegroup, renamegroup,
     changegroup commands to the graph protocol
-* 2014-03-13: Version 0.4
+* 2014-03-13: **Version 0.4**
   - Capability discovery support
   - Network exported port messaging for remote subgraphs
-* 2014-02-18: Version 0.3
+* 2014-02-18: **Version 0.3**
   - Support for exported graph ports
-* 2014-01-09: Version 0.2
+* 2014-01-09: **Version 0.2**
   - Multi-graph support via the `graph` key in payload
   - Harmonization with [JSON format](http://noflojs.org/documentation/json/) by renaming `from`/`to` in edges to `src`/`tgt`
   - Network `edges` message
