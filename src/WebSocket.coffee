@@ -11,7 +11,7 @@ validateSchema = (payload, schema) ->
   chai.expect(res.valid, "#{schema} should validate").to.equal true
   return res.valid
 
-exports.testRuntime = (runtimeType, startServer, stopServer, host='localhost', port=8080, collection='core', version='0.6') ->
+exports.testRuntime = (runtimeType, startServer, stopServer, host='localhost', port=8080, collection='core', version='0.7') ->
   if version.length is 3
     semanticVersion = "#{version}.0"
   else
@@ -672,7 +672,7 @@ exports.testRuntime = (runtimeType, startServer, stopServer, host='localhost', p
       # TODO:
       # getsource => source
 
-exports.testRuntimeCommand = (runtimeType, command=null, host='localhost', port=8080, collection='core', version='0.6') ->
+exports.testRuntimeCommand = (runtimeType, command=null, host='localhost', port=8080, collection='core', version='0.7') ->
   child = null
   prefix = '      '
   exports.testRuntime( runtimeType,
