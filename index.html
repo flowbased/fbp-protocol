@@ -86,7 +86,7 @@
     <article>
       <h1>FBP Network Protocol</h1>
       <aside>
-        Last updated 2017-09-17 17:33:08 +0000
+        Last updated 2018-03-22 15:03:43 +0000
       </aside>
       <p>The Flow-Based Programming network protocol (<em>FBP protocol</em>) has been designed primarily for flow-based programming interfaces like the <a href="https://flowhub.io">Flowhub</a> to communicate with various FBP runtimes. However, it can also be utilized for communication between different runtimes, for example server-to-server or server-to-microcontroller.</p>
 
@@ -97,7 +97,8 @@
 <ul>
   <li><a href="https://github.com/noflo/noflo-ui">noflo-ui</a> is an open source visual IDE, which powers <a href="http://flowhub.io">Flowhub</a></li>
   <li><a href="https://github.com/flowbased/fbp-spec">fbp-spec</a> is a data-driven testing tool for FBP components/graphs.</li>
-  <li><a href="https://github.com/flowbased/fbp-protocol-client">fbp-protocol-client</a> is a JavaScript client library supporting all the common FBP protocol transports</li>
+  <li><a href="https://github.com/flowbased/fbp-protocol-client">fbp-protocol-client</a> is a low-level JavaScript client library supporting all the common FBP protocol transports</li>
+  <li><a href="https://github.com/flowbased/fbp-client">fbp-client</a> is a higher-level JavaScript client library supporting all the common FBP protocol transports</li>
 </ul>
 
 <p>Runtimes</p>
@@ -122,13 +123,27 @@
 <h2 id="changes">Changes</h2>
 
 <ul>
+  <li>2018-03-22: <strong>Version 0.7</strong>
+    <ul>
+      <li>Added <code class="highlighter-rouge">network:debug</code> and <code class="highlighter-rouge">network:getstatus</code> to the <code class="highlighter-rouge">network:control</code> permission</li>
+    </ul>
+  </li>
+  <li>2018-03-21:
+    <ul>
+      <li>Fixed signature of <code class="highlighter-rouge">runtime:packet.payload</code>, <code class="highlighter-rouge">runtime:packetsent.payload</code>, and port definition <code class="highlighter-rouge">default</code> to accept any payload type</li>
+      <li>Added <code class="highlighter-rouge">values</code> and <code class="highlighter-rouge">default</code> keys for port definitions</li>
+      <li>Added schema for <code class="highlighter-rouge">component:componentsready</code> output message</li>
+      <li>Added schema for <code class="highlighter-rouge">graph:clear</code> output message</li>
+      <li>Added <code class="highlighter-rouge">packetsent</code> response for <code class="highlighter-rouge">runtime:packet</code> input message</li>
+    </ul>
+  </li>
   <li>2017-09-17:
     <ul>
       <li>Added <code class="highlighter-rouge">schema</code> support for ports and packets</li>
       <li>Documented known metadata keys for various graph entities</li>
     </ul>
   </li>
-  <li>2017-04-09:
+  <li>2017-04-09: <strong>Version 0.6</strong>
     <ul>
       <li>Version 0.6. No breaking changes over 0.5.</li>
       <li>Added additional capabilities <code class="highlighter-rouge">graph:readonly</code>, <code class="highlighter-rouge">network:control</code>, <code class="highlighter-rouge">network:data</code>, <code class="highlighter-rouge">network:status</code>. Especially useful for read-only access.</li>
@@ -181,7 +196,7 @@
       <li>Documented <code class="highlighter-rouge">network</code> <code class="highlighter-rouge">persist</code> and <code class="highlighter-rouge">component</code> <code class="highlighter-rouge">componentsready</code> messages</li>
     </ul>
   </li>
-  <li>2015-03-26: Version 0.5
+  <li>2015-03-26: <strong>Version 0.5</strong>
     <ul>
       <li>All messages sent to runtime should include the <code class="highlighter-rouge">secret</code> in payload</li>
       <li>Runtime description message includes an <code class="highlighter-rouge">allCapabilities</code> array describing capabilities of the runtime, including ones not available to current user</li>
@@ -209,18 +224,18 @@
 changegroup commands to the graph protocol</li>
     </ul>
   </li>
-  <li>2014-03-13: Version 0.4
+  <li>2014-03-13: <strong>Version 0.4</strong>
     <ul>
       <li>Capability discovery support</li>
       <li>Network exported port messaging for remote subgraphs</li>
     </ul>
   </li>
-  <li>2014-02-18: Version 0.3
+  <li>2014-02-18: <strong>Version 0.3</strong>
     <ul>
       <li>Support for exported graph ports</li>
     </ul>
   </li>
-  <li>2014-01-09: Version 0.2
+  <li>2014-01-09: <strong>Version 0.2</strong>
     <ul>
       <li>Multi-graph support via the <code class="highlighter-rouge">graph</code> key in payload</li>
       <li>Harmonization with <a href="http://noflojs.org/documentation/json/">JSON format</a> by renaming <code class="highlighter-rouge">from</code>/<code class="highlighter-rouge">to</code> in edges to <code class="highlighter-rouge">src</code>/<code class="highlighter-rouge">tgt</code></li>
@@ -336,11 +351,14 @@ changegroup commands to the graph protocol</li>
 <ul class="capability messages">
 <li><a href="#network-start">network:start</a></li>
 <li><a href="#network-stop">network:stop</a></li>
+<li><a href="#network-getstatus">network:getstatus</a></li>
+<li><a href="#network-debug">network:debug</a></li>
 </ul>
 <h5 class="capability messages header">output messages</h5>
 <ul class="capability messages">
 <li><a href="#network-started">network:started</a></li>
 <li><a href="#network-stopped">network:stopped</a></li>
+<li><a href="#network-status">network:status</a></li>
 </ul>
 <h4 class="capability name">protocol:component</h4>
 <p>can list components of the runtime using the component:list message.</p>
@@ -382,6 +400,7 @@ changegroup commands to the graph protocol</li>
 <h5 class="capability messages header">output messages</h5>
 <ul class="capability messages">
 <li><a href="#runtime-ports">runtime:ports</a></li>
+<li><a href="#runtime-packetsent">runtime:packetsent</a></li>
 <li><a href="#runtime-packet">runtime:packet</a></li>
 </ul>
 <h4 class="capability name">graph:readonly</h4>
@@ -493,7 +512,7 @@ changegroup commands to the graph protocol</li>
 <p>The keys listed in specific messages are for the message <code class="highlighter-rouge">payload</code>.</p>
 
 <p>An example message</p>
-<div class="highlighter-rouge"><pre class="highlight"><code>"protocol": "graph",
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>"protocol": "graph",
 "command": "addnode",
 "payload": {
 	"component": "canvas/Draw",
@@ -503,8 +522,7 @@ changegroup commands to the graph protocol</li>
 		"label": "Draw onto canvas element"
 	}
 }
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <h2 class="protocol name">Runtime protocol</h2>
 <p class="protocol description">When a client connects to a FBP procotol it may choose to discover the capabilities and other information about the runtime.</p>
@@ -522,7 +540,7 @@ These packets can be send from the client to the runtimes input ports, or from r
 <li><label class="property name">type</label><label class="property type">string</label><label class="property description">The basic datatype sent</label><code class="property example">"array"</code></li>
 <li><label class="property name">schema</label><label class="property type">string</label><label class="property description">Link to JSON schema describing the format of the data</label><code class="property example">"https://example.net/schemas/person.json"</code></li>
 <li><label class="property name">graph</label><label class="property type">string</label><label class="property description">graph the action targets</label></li>
-<li><label class="property name">payload</label><label class="property type">object</label><label class="property description">payload for the packet. Used only with begingroup (for group names) and data packets</label></li>
+<li><label class="property name">payload</label><label class="property type">any</label><label class="property description">payload for the packet. Used only with begingroup (for group names) and data packets</label></li>
 <li><label class="property name">secret</label><label class="property type">string</label><label class="property description">access token to authorize user</label></li>
 </ul>
 <h3 id="runtime-error" class="message name"><a href="#runtime-error">error</a></h3>
@@ -536,21 +554,25 @@ These packets can be send from the client to the runtimes input ports, or from r
 <li><label class="property name">graph</label><label class="property type">string</label><label class="property description">ID of the currently configured main graph running on the runtime</label></li>
 <li><label class="property name">inPorts</label><label class="property type">array</label><label class="property description">list of input ports of the runtime</label></li>Each item contains:
 <ul class="properties">
-<li><label class="property optional name">addressable</label><label class="property optional type">boolean</label><label class="property optional description">whether the port is an ArrayPort</label></li>
 <li><label class="property name">id</label><label class="property type">string</label><label class="property description">port name</label></li>
 <li><label class="property name">type</label><label class="property type">string</label><label class="property description">port datatype</label><code class="property example">"boolean"</code></li>
-<li><label class="property optional name">required</label><label class="property optional type">boolean</label><label class="property optional description">whether the port needs to be connected for the component to work</label><code class="property optional example">true</code></li>
-<li><label class="property optional name">description</label><label class="property optional type">string</label><label class="property optional description">textual description of the port</label></li>
 <li><label class="property optional name">schema</label><label class="property optional type">string</label><label class="property optional description">Link to JSON schema for data on this port</label><code class="property optional example">"https://example.net/schemas/person.json"</code></li>
+<li><label class="property optional name">required</label><label class="property optional type">boolean</label><label class="property optional description">whether the port needs to be connected for the component to work</label><code class="property optional example">true</code></li>
+<li><label class="property optional name">addressable</label><label class="property optional type">boolean</label><label class="property optional description">whether the port is an ArrayPort</label><code class="property optional example">false</code></li>
+<li><label class="property optional name">description</label><label class="property optional type">string</label><label class="property optional description">textual description of the port</label></li>
+<li><label class="property optional name">values</label><label class="property optional type">array</label><label class="property optional description">list of values accepted for the port</label></li>
+<li><label class="property optional name">default</label><label class="property optional type">any</label><label class="property optional description">default value for the port</label></li>
 </ul>
 <li><label class="property name">outPorts</label><label class="property type">array</label><label class="property description">list of output ports of the runtime</label></li>Each item contains:
 <ul class="properties">
-<li><label class="property optional name">addressable</label><label class="property optional type">boolean</label><label class="property optional description">whether the port is an ArrayPort</label></li>
 <li><label class="property name">id</label><label class="property type">string</label><label class="property description">port name</label></li>
 <li><label class="property name">type</label><label class="property type">string</label><label class="property description">port datatype</label><code class="property example">"boolean"</code></li>
-<li><label class="property optional name">required</label><label class="property optional type">boolean</label><label class="property optional description">whether the port needs to be connected for the component to work</label><code class="property optional example">true</code></li>
-<li><label class="property optional name">description</label><label class="property optional type">string</label><label class="property optional description">textual description of the port</label></li>
 <li><label class="property optional name">schema</label><label class="property optional type">string</label><label class="property optional description">Link to JSON schema for data on this port</label><code class="property optional example">"https://example.net/schemas/person.json"</code></li>
+<li><label class="property optional name">required</label><label class="property optional type">boolean</label><label class="property optional description">whether the port needs to be connected for the component to work</label><code class="property optional example">true</code></li>
+<li><label class="property optional name">addressable</label><label class="property optional type">boolean</label><label class="property optional description">whether the port is an ArrayPort</label><code class="property optional example">false</code></li>
+<li><label class="property optional name">description</label><label class="property optional type">string</label><label class="property optional description">textual description of the port</label></li>
+<li><label class="property optional name">values</label><label class="property optional type">array</label><label class="property optional description">list of values accepted for the port</label></li>
+<li><label class="property optional name">default</label><label class="property optional type">any</label><label class="property optional description">default value for the port</label></li>
 </ul>
 </ul>
 <h3 id="runtime-runtime" class="message name"><a href="#runtime-runtime">runtime</a></h3>
@@ -566,6 +588,16 @@ These packets can be send from the client to the runtimes input ports, or from r
 <li><label class="property name">namespace</label><label class="property type">string</label><label class="property description">Library namespace of the project running on the runtime, if any. Must match that of components belonging to the (top-level) of project.</label><code class="property example">"my-project-foo"</code></li>
 <li><label class="property name">repository</label><label class="property type">string</label><label class="property description">Source-code repository URL of the project running on the runtime, if any</label><code class="property example">"https://github.com/flowbased/fbp-protocol.git"</code></li>
 <li><label class="property name">repositoryVersion</label><label class="property type">string</label><label class="property description">Unique version identifier of the source code of the project, if known. The version should be available in @repository.</label><code class="property example">"0.6.3-8-g90edcfc"</code></li>
+</ul>
+<h3 id="runtime-packetsent" class="message name"><a href="#runtime-packetsent">packetsent</a></h3>
+<p>Confirmation that a packet has been sent</p>
+<ul class="message properties">
+<li><label class="property name">port</label><label class="property type">string</label><label class="property description">port name for the input port</label></li>
+<li><label class="property name">event</label><label class="property type">string</label><label class="property description">packet event</label></li>
+<li><label class="property name">type</label><label class="property type">string</label><label class="property description">The basic datatype sent</label><code class="property example">"array"</code></li>
+<li><label class="property name">schema</label><label class="property type">string</label><label class="property description">Link to JSON schema describing the format of the data</label><code class="property example">"https://example.net/schemas/person.json"</code></li>
+<li><label class="property name">graph</label><label class="property type">string</label><label class="property description">graph the action targeted</label></li>
+<li><label class="property name">payload</label><label class="property type">any</label><label class="property description">payload for the packet. Used only with begingroup (for group names) and data packets</label></li>
 </ul>
 <h2 class="protocol name">Graph protocol</h2>
 <p class="protocol description">This protocol is utilized for communicating about graph changes in both directions.</p>
@@ -857,22 +889,30 @@ Graphs registered in this way should also be available for use as subgraphs in o
 <li><label class="property name">subgraph</label><label class="property type">boolean</label><label class="property description">boolean telling whether the component is a subgraph</label></li>
 <li><label class="property name">inPorts</label><label class="property type">array</label><label class="property description">list of input ports of the component</label></li>Each item contains:
 <ul class="properties">
-<li><label class="property optional name">addressable</label><label class="property optional type">boolean</label><label class="property optional description">whether the port is an ArrayPort</label></li>
 <li><label class="property name">id</label><label class="property type">string</label><label class="property description">port name</label></li>
 <li><label class="property name">type</label><label class="property type">string</label><label class="property description">port datatype</label><code class="property example">"boolean"</code></li>
-<li><label class="property optional name">required</label><label class="property optional type">boolean</label><label class="property optional description">whether the port needs to be connected for the component to work</label><code class="property optional example">true</code></li>
-<li><label class="property optional name">description</label><label class="property optional type">string</label><label class="property optional description">textual description of the port</label></li>
 <li><label class="property optional name">schema</label><label class="property optional type">string</label><label class="property optional description">Link to JSON schema for data on this port</label><code class="property optional example">"https://example.net/schemas/person.json"</code></li>
+<li><label class="property optional name">required</label><label class="property optional type">boolean</label><label class="property optional description">whether the port needs to be connected for the component to work</label><code class="property optional example">true</code></li>
+<li><label class="property optional name">addressable</label><label class="property optional type">boolean</label><label class="property optional description">whether the port is an ArrayPort</label><code class="property optional example">false</code></li>
+<li><label class="property optional name">description</label><label class="property optional type">string</label><label class="property optional description">textual description of the port</label></li>
+<li><label class="property optional name">values</label><label class="property optional type">array</label><label class="property optional description">list of values accepted for the port</label></li>
+<li><label class="property optional name">default</label><label class="property optional type">any</label><label class="property optional description">default value for the port</label></li>
 </ul>
 <li><label class="property name">outPorts</label><label class="property type">array</label><label class="property description">list of output ports of the component</label></li>Each item contains:
 <ul class="properties">
-<li><label class="property optional name">addressable</label><label class="property optional type">boolean</label><label class="property optional description">whether the port is an ArrayPort</label></li>
 <li><label class="property name">id</label><label class="property type">string</label><label class="property description">port name</label></li>
 <li><label class="property name">type</label><label class="property type">string</label><label class="property description">port datatype</label><code class="property example">"boolean"</code></li>
-<li><label class="property optional name">required</label><label class="property optional type">boolean</label><label class="property optional description">whether the port needs to be connected for the component to work</label><code class="property optional example">true</code></li>
-<li><label class="property optional name">description</label><label class="property optional type">string</label><label class="property optional description">textual description of the port</label></li>
 <li><label class="property optional name">schema</label><label class="property optional type">string</label><label class="property optional description">Link to JSON schema for data on this port</label><code class="property optional example">"https://example.net/schemas/person.json"</code></li>
+<li><label class="property optional name">required</label><label class="property optional type">boolean</label><label class="property optional description">whether the port needs to be connected for the component to work</label><code class="property optional example">true</code></li>
+<li><label class="property optional name">addressable</label><label class="property optional type">boolean</label><label class="property optional description">whether the port is an ArrayPort</label><code class="property optional example">false</code></li>
+<li><label class="property optional name">description</label><label class="property optional type">string</label><label class="property optional description">textual description of the port</label></li>
+<li><label class="property optional name">values</label><label class="property optional type">array</label><label class="property optional description">list of values accepted for the port</label></li>
+<li><label class="property optional name">default</label><label class="property optional type">any</label><label class="property optional description">default value for the port</label></li>
 </ul>
+</ul>
+<h3 id="component-componentsready" class="message name"><a href="#component-componentsready">componentsready</a></h3>
+<p>Indication that a component listing has finished</p>
+<ul class="message properties">
 </ul>
 <h2 class="protocol name">Network protocol</h2>
 <p class="protocol description">Protocol for starting and stopping FBP networks, and finding out about their state.</p>
@@ -1080,12 +1120,17 @@ Graphs registered in this way should also be available for use as subgraphs in o
 <h2 class="protocol name">Trace protocol</h2>
 <p class="protocol description">This protocol is utilized for triggering and transmitting [Flowtrace](https://github.com/flowbased/flowtrace)s</p>
 <h3 id="trace-start" class="message name"><a href="#trace-start">start</a></h3>
-<p>Tracing was started</p>
+<p>Enable/start tracing of a network.</p>
 <ul class="message properties">
+<li><label class="property name">secret</label><label class="property type">string</label><label class="property description">access token to authorize the client</label></li>
+<li><label class="property name">graph</label><label class="property type">string</label><label class="property description">Graph identifier the message targets</label></li>
+<li><label class="property name">buffersize</label><label class="property type">integer</label><label class="property description">Size of tracing buffer to keep. In bytes</label></li>
 </ul>
 <h3 id="trace-stop" class="message name"><a href="#trace-stop">stop</a></h3>
-<p>Tracing was stopped</p>
+<p>Stop/disable tracing of a network.</p>
 <ul class="message properties">
+<li><label class="property name">secret</label><label class="property type">string</label><label class="property description">access token to authorize the client</label></li>
+<li><label class="property name">graph</label><label class="property type">string</label><label class="property description">Graph identifier the message targets</label></li>
 </ul>
 <h3 id="trace-dump" class="message name"><a href="#trace-dump">dump</a></h3>
 <p>undefined</p>
@@ -1095,8 +1140,10 @@ Graphs registered in this way should also be available for use as subgraphs in o
 <li><label class="property name">flowtrace</label><label class="property type">string</label><label class="property description">A Flowtrace file of `type`</label></li>
 </ul>
 <h3 id="trace-clear" class="message name"><a href="#trace-clear">clear</a></h3>
-<p>Tracing buffer was cleared</p>
+<p>Clear current tracing buffer.</p>
 <ul class="message properties">
+<li><label class="property name">secret</label><label class="property type">string</label><label class="property description">access token to authorize the client</label></li>
+<li><label class="property name">graph</label><label class="property type">string</label><label class="property description">Graph identifier the message targets</label></li>
 </ul>
 
     </article>
