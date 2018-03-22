@@ -680,7 +680,8 @@ exports.testRuntimeCommand = (runtimeType, command=null, host='localhost', port=
       unless command
         console.log "#{prefix}not running a command. runtime is assumed to be started"
         done()
-      console.log "#{prefix}'#{command}' starting"
+        return
+      console.log "#{prefix}\"#{command}\" starting"
       returned = false
       child = spawn command, [],
         cwd: process.cwd()
@@ -696,14 +697,14 @@ exports.testRuntimeCommand = (runtimeType, command=null, host='localhost', port=
         returned = true
         done err
       child.stdout.once 'data', (data) ->
-        console.log "#{prefix}'#{command}' has started"
+        console.log "#{prefix}\"#{command}\" has started"
         setTimeout ->
           return if returned
           returned = true
           done()
         , 100
       child.once 'close', ->
-        console.log "#{prefix}'#{command}' exited"
+        console.log "#{prefix}\"#{command}\" exited"
         child = null
         return if returned
         returned = true
