@@ -212,8 +212,8 @@ capabilities:
       - name: 'network:control'
         description: >-
           can start and stop networks
-        inputs: ['network:start', 'network:stop']
-        outputs: ['network:started', 'network:stopped']
+        inputs: ['network:start', 'network:stop', 'network:getstatus', 'network:debug']
+        outputs: ['network:started', 'network:stopped', 'network:status']
 
       - name: 'protocol:component'
         description: >-

@@ -33,6 +33,8 @@ The [fbp-protocol](https://github.com/flowbased/fbp-protocol) tool provides a se
 
 ## Changes
 
+* 2018-03-22
+  - Added `network:debug` and `network:getstatus` to the `network:control` permission
 * 2018-03-21:
   - Fixed signature of `runtime:packet.payload`, `runtime:packetsent.payload`, and port definition `default` to accept any payload type
   - Added `values` and `default` keys for port definitions
