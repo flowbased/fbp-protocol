@@ -33,6 +33,8 @@ The [fbp-protocol](https://github.com/flowbased/fbp-protocol) tool provides a se
 
 ## Changes
 
+* 2018-03-23:
+  - Added optional `graph` key to `network:error` payloads
 * 2018-03-22: **Version 0.7**
   - Added `network:debug` and `network:getstatus` to the `network:control` permission
 * 2018-03-21:

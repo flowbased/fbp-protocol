@@ -151,6 +151,9 @@ output:
               stack:
                 description: 'stack trace'
                 type: 'string'
+              graph:
+                type: string
+                description: graph the action targets
 
   processerror:
     id: 'output/processerror'
