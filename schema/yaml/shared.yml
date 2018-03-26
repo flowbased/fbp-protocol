@@ -193,13 +193,13 @@ capabilities:
         description: >-
           can *flash* a running graph setup to the runtime, making it persistent across restarts
         inputs: [network:persist]
-        outputs: [network:persist]
+        outputs: [network:persist, network:error]
 
       - name: 'network:status'
         description: >-
           can get and follow changes to network status
         inputs: ['network:getstatus']
-        outputs: ['network:status', 'network:started', 'network:stopped']
+        outputs: ['network:status', 'network:started', 'network:stopped', 'network:error']
 
       - name: 'network:data'
         description: >-
@@ -207,38 +207,38 @@ capabilities:
         inputs: ['network:edges']
         outputs: [network:edges, network:output, network:error,
           network:data, network:begingroup, network:endgroup, network:connect, network:disconnect,
-          network:icon, network:processerror]
+          network:icon, network:processerror, network:error]
 
       - name: 'network:control'
         description: >-
           can start and stop networks
         inputs: ['network:start', 'network:stop', 'network:getstatus', 'network:debug']
-        outputs: ['network:started', 'network:stopped', 'network:status']
+        outputs: ['network:started', 'network:stopped', 'network:status', 'network:error']
 
       - name: 'protocol:component'
         description: >-
           can list components of the runtime using the component:list message.
         inputs: ['component:list']
-        outputs: ['component:component', 'component:componentsready']
+        outputs: ['component:component', 'component:componentsready', 'component:error']
 
       - name: 'component:getsource'
         description: >-
           read and send component source code back to client
         inputs: ['component:getsource']
-        outputs: ['component:source']
+        outputs: ['component:source', 'component:error']
 
       - name: 'component:setsource'
         description: >-
           runtime is able to compile and run custom components
           sent as source code strings
         inputs: ['component:source']
-        outputs: ['component:component']
+        outputs: ['component:component', 'component:error']
 
       - name: 'protocol:runtime'
         description: >-
           can expose ports of main graph and transmit packet information to/from them
         inputs: [runtime:packet]
-        outputs: [runtime:ports, runtime:packetsent, runtime:packet]
+        outputs: [runtime:ports, runtime:packetsent, runtime:packet, runtime:error]
 
       - name: 'graph:readonly'
         description: >-
@@ -250,7 +250,7 @@ capabilities:
         description: >-
           read & modify runtime graphs using the Graph protocol.
         inputs: [graph:clear, graph:addnode, graph:removenode, graph:renamenode, graph:changenode, graph:addedge, graph:removeedge, graph:changeedge, graph:addinitial, graph:removeinitial, graph:addinport, graph:removeinport, graph:renameinport, graph:addoutport, graph:removeoutport, graph:renameoutport, graph:addgroup, graph:removegroup, graph:renamegroup, graph:changegroup]
-        outputs: [graph:clear, graph:addnode, graph:removenode, graph:renamenode, graph:changenode, graph:addedge, graph:removeedge, graph:changeedge, graph:addinitial, graph:removeinitial, graph:addinport, graph:removeinport, graph:renameinport, graph:addoutport, graph:removeoutport, graph:renameoutport, graph:addgroup, graph:removegroup, graph:renamegroup, graph:changegroup]
+        outputs: [graph:clear, graph:addnode, graph:removenode, graph:renamenode, graph:changenode, graph:addedge, graph:removeedge, graph:changeedge, graph:addinitial, graph:removeinitial, graph:addinport, graph:removeinport, graph:renameinport, graph:addoutport, graph:removeoutport, graph:renameoutport, graph:addgroup, graph:removegroup, graph:renamegroup, graph:changegroup, graph:error]
 
       - name: 'protocol:trace'
         description: >-
