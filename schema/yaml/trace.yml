@@ -41,6 +41,23 @@ output:
                 description: A Flowtrace file of `type`
                 type: string
 
+  error:
+    id: 'output/error'
+    description: 'Error response to a command on trace protocol'
+    allOf:
+      - $ref: '/shared/message'
+      - properties:
+          protocol:
+            enum: ['trace']
+          command:
+            enum: ['error']
+          payload:
+            required: ['message']
+            properties:
+              message:
+                type: 'string'
+                description: 'Error message describing what went wrong'
+
 input:
   start:
     id: 'input/start'

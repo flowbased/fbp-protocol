@@ -257,4 +257,4 @@ capabilities:
           runtime is able to record and send over flowtraces,
           used for retroactive debugging.
         inputs: ['trace:start', trace:stop, trace:clear, trace:dump]
-        outputs: ['trace:start', trace:stop, trace:clear, trace:dump]
+        outputs: ['trace:start', trace:stop, trace:clear, trace:dump, trace:error]
