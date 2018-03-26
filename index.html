@@ -86,7 +86,7 @@
     <article>
       <h1>FBP Network Protocol</h1>
       <aside>
-        Last updated 2018-03-22 15:50:02 +0000
+        Last updated 2018-03-26 16:51:08 +0000
       </aside>
       <p>The Flow-Based Programming network protocol (<em>FBP protocol</em>) has been designed primarily for flow-based programming interfaces like the <a href="https://flowhub.io">Flowhub</a> to communicate with various FBP runtimes. However, it can also be utilized for communication between different runtimes, for example server-to-server or server-to-microcontroller.</p>
 
@@ -123,6 +123,18 @@
 <h2 id="changes">Changes</h2>
 
 <ul>
+  <li>2018-03-26:
+    <ul>
+      <li>Fixed documentation for <code class="highlighter-rouge">component:setsource</code> to use <code class="highlighter-rouge">component:source</code> input, and <code class="highlighter-rouge">component:component</code> output</li>
+      <li>Added schema for <code class="highlighter-rouge">trace:error</code> message</li>
+      <li>Added <code class="highlighter-rouge">:error</code> output to all capabilities where user can perform actions that may fail</li>
+    </ul>
+  </li>
+  <li>2018-03-23:
+    <ul>
+      <li>Added optional <code class="highlighter-rouge">graph</code> key to <code class="highlighter-rouge">network:error</code> payloads</li>
+    </ul>
+  </li>
   <li>2018-03-22: <strong>Version 0.7</strong>
     <ul>
       <li>Added <code class="highlighter-rouge">network:debug</code> and <code class="highlighter-rouge">network:getstatus</code> to the <code class="highlighter-rouge">network:control</code> permission</li>
@@ -313,6 +325,7 @@ changegroup commands to the graph protocol</li>
 <h5 class="capability messages header">output messages</h5>
 <ul class="capability messages">
 <li><a href="#network-persist">network:persist</a></li>
+<li><a href="#network-error">network:error</a></li>
 </ul>
 <h4 class="capability name">network:status</h4>
 <p>can get and follow changes to network status</p>
@@ -325,6 +338,7 @@ changegroup commands to the graph protocol</li>
 <li><a href="#network-status">network:status</a></li>
 <li><a href="#network-started">network:started</a></li>
 <li><a href="#network-stopped">network:stopped</a></li>
+<li><a href="#network-error">network:error</a></li>
 </ul>
 <h4 class="capability name">network:data</h4>
 <p>can listen to data flowing through the network and processes</p>
@@ -344,6 +358,7 @@ changegroup commands to the graph protocol</li>
 <li><a href="#network-disconnect">network:disconnect</a></li>
 <li><a href="#network-icon">network:icon</a></li>
 <li><a href="#network-processerror">network:processerror</a></li>
+<li><a href="#network-error">network:error</a></li>
 </ul>
 <h4 class="capability name">network:control</h4>
 <p>can start and stop networks</p>
@@ -359,6 +374,7 @@ changegroup commands to the graph protocol</li>
 <li><a href="#network-started">network:started</a></li>
 <li><a href="#network-stopped">network:stopped</a></li>
 <li><a href="#network-status">network:status</a></li>
+<li><a href="#network-error">network:error</a></li>
 </ul>
 <h4 class="capability name">protocol:component</h4>
 <p>can list components of the runtime using the component:list message.</p>
@@ -370,6 +386,7 @@ changegroup commands to the graph protocol</li>
 <ul class="capability messages">
 <li><a href="#component-component">component:component</a></li>
 <li><a href="#component-componentsready">component:componentsready</a></li>
+<li><a href="#component-error">component:error</a></li>
 </ul>
 <h4 class="capability name">component:getsource</h4>
 <p>read and send component source code back to client</p>
@@ -380,16 +397,18 @@ changegroup commands to the graph protocol</li>
 <h5 class="capability messages header">output messages</h5>
 <ul class="capability messages">
 <li><a href="#component-source">component:source</a></li>
+<li><a href="#component-error">component:error</a></li>
 </ul>
 <h4 class="capability name">component:setsource</h4>
 <p>runtime is able to compile and run custom components sent as source code strings</p>
 <h5 class="capability messages header">input messages</h5>
 <ul class="capability messages">
-<li><a href="#component-setsource">component:setsource</a></li>
+<li><a href="#component-source">component:source</a></li>
 </ul>
 <h5 class="capability messages header">output messages</h5>
 <ul class="capability messages">
-<li><a href="#component-source">component:source</a></li>
+<li><a href="#component-component">component:component</a></li>
+<li><a href="#component-error">component:error</a></li>
 </ul>
 <h4 class="capability name">protocol:runtime</h4>
 <p>can expose ports of main graph and transmit packet information to/from them</p>
@@ -402,6 +421,7 @@ changegroup commands to the graph protocol</li>
 <li><a href="#runtime-ports">runtime:ports</a></li>
 <li><a href="#runtime-packetsent">runtime:packetsent</a></li>
 <li><a href="#runtime-packet">runtime:packet</a></li>
+<li><a href="#runtime-error">runtime:error</a></li>
 </ul>
 <h4 class="capability name">graph:readonly</h4>
 <p>read and follow changes to runtime graphs (but not modify)</p>
@@ -478,6 +498,7 @@ changegroup commands to the graph protocol</li>
 <li><a href="#graph-removegroup">graph:removegroup</a></li>
 <li><a href="#graph-renamegroup">graph:renamegroup</a></li>
 <li><a href="#graph-changegroup">graph:changegroup</a></li>
+<li><a href="#graph-error">graph:error</a></li>
 </ul>
 <h4 class="capability name">protocol:trace</h4>
 <p>runtime is able to record and send over flowtraces, used for retroactive debugging.</p>
@@ -494,6 +515,7 @@ changegroup commands to the graph protocol</li>
 <li><a href="#trace-stop">trace:stop</a></li>
 <li><a href="#trace-clear">trace:clear</a></li>
 <li><a href="#trace-dump">trace:dump</a></li>
+<li><a href="#trace-error">trace:error</a></li>
 </ul>
 </section>
 
@@ -1007,6 +1029,7 @@ Graphs registered in this way should also be available for use as subgraphs in o
 <ul class="message properties">
 <li><label class="property name">message</label><label class="property type">string</label><label class="property description">contents of the error message</label></li>
 <li><label class="property name">stack</label><label class="property type">string</label><label class="property description">stack trace</label></li>
+<li><label class="property name">graph</label><label class="property type">string</label><label class="property description">graph the action targets</label></li>
 </ul>
 <h3 id="network-processerror" class="message name"><a href="#network-processerror">processerror</a></h3>
 <p>When in debug mode, a network can signal an error happening inside a process.</p>
@@ -1144,6 +1167,11 @@ Graphs registered in this way should also be available for use as subgraphs in o
 <ul class="message properties">
 <li><label class="property name">secret</label><label class="property type">string</label><label class="property description">access token to authorize the client</label></li>
 <li><label class="property name">graph</label><label class="property type">string</label><label class="property description">Graph identifier the message targets</label></li>
+</ul>
+<h3 id="trace-error" class="message name"><a href="#trace-error">error</a></h3>
+<p>Error response to a command on trace protocol</p>
+<ul class="message properties">
+<li><label class="property name">message</label><label class="property type">string</label><label class="property description">Error message describing what went wrong</label></li>
 </ul>
 
     </article>
