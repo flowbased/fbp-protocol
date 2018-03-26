@@ -231,8 +231,8 @@ capabilities:
         description: >-
           runtime is able to compile and run custom components
           sent as source code strings
-        inputs: ['component:setsource']
-        outputs: ['component:source']
+        inputs: ['component:source']
+        outputs: ['component:component']
 
       - name: 'protocol:runtime'
         description: >-

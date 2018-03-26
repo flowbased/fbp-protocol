@@ -33,6 +33,8 @@ The [fbp-protocol](https://github.com/flowbased/fbp-protocol) tool provides a se
 
 ## Changes
 
+* 2018-03-26:
+  - Fixed documentation for `component:setsource` to use `component:source` input, and `component:component` output
 * 2018-03-23:
   - Added optional `graph` key to `network:error` payloads
 * 2018-03-22: **Version 0.7**
