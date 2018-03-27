@@ -86,7 +86,7 @@
     <article>
       <h1>FBP Network Protocol</h1>
       <aside>
-        Last updated 2018-03-26 16:51:08 +0000
+        Last updated 2018-03-27 16:08:25 +0000
       </aside>
       <p>The Flow-Based Programming network protocol (<em>FBP protocol</em>) has been designed primarily for flow-based programming interfaces like the <a href="https://flowhub.io">Flowhub</a> to communicate with various FBP runtimes. However, it can also be utilized for communication between different runtimes, for example server-to-server or server-to-microcontroller.</p>
 
@@ -123,6 +123,11 @@
 <h2 id="changes">Changes</h2>
 
 <ul>
+  <li>2018-03-27:
+    <ul>
+      <li>Added schema for <code class="highlighter-rouge">network:edges</code> output message</li>
+    </ul>
+  </li>
   <li>2018-03-26:
     <ul>
       <li>Fixed documentation for <code class="highlighter-rouge">component:setsource</code> to use <code class="highlighter-rouge">component:source</code> input, and <code class="highlighter-rouge">component:component</code> output</li>
@@ -315,6 +320,7 @@ changegroup commands to the graph protocol</li>
 <li><a href="#network-data">network:data</a></li>
 <li><a href="#network-endgroup">network:endgroup</a></li>
 <li><a href="#network-disconnect">network:disconnect</a></li>
+<li><a href="#network-edges">network:edges</a></li>
 </ul>
 <h4 class="capability name">network:persist</h4>
 <p>can *flash* a running graph setup to the runtime, making it persistent across restarts</p>
