@@ -35,6 +35,7 @@ The [fbp-protocol](https://github.com/flowbased/fbp-protocol) tool provides a se
 
 * 2018-03-27:
   - Added schema for `network:edges` output message
+  - Modified `subgraph` key of `network:data` and other network packet events to be an array as specified in the text
 * 2018-03-26:
   - Fixed documentation for `component:setsource` to use `component:source` input, and `component:component` output
   - Added schema for `trace:error` message

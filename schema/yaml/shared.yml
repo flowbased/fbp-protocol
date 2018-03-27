@@ -156,10 +156,12 @@ network_event:
       type: 'string'
       description: 'graph the action targets'
     subgraph:
-      type: 'string'
+      type: 'array'
       description: >-
         Subgraph identifier for the event.
         An array of node IDs.
+      items:
+        type: string
 
 capabilities:
   id: 'capabilities'
