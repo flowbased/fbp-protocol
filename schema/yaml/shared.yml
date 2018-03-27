@@ -187,7 +187,7 @@ capabilities:
           Implies capabilities network:status, network:data, network:control.
           Does not imply capability network:persist.
         inputs: [network:start, network:getstatus, network:stop, network:debug, network:edges]
-        outputs: [network:stopped, network:started, network:status, network:output, network:error, network:processerror, network:icon, network:connect, network:begingroup, network:data, network:endgroup, network:disconnect]
+        outputs: [network:stopped, network:started, network:status, network:output, network:error, network:processerror, network:icon, network:connect, network:begingroup, network:data, network:endgroup, network:disconnect, network:edges]
 
       - name: 'network:persist'
         description: >-

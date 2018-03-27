@@ -323,6 +323,13 @@ output:
             $ref: '/shared/network_event'
             additionalProperties: false
 
+  edges:
+    id: 'output/edges'
+    description: >-
+      List of edges user has selected for inspection in a user
+      interface or debugger, sent from runtime to UI.
+    $ref: '../input/edges'
+
 input:
 
   start:
