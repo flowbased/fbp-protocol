@@ -86,7 +86,7 @@
     <article>
       <h1>FBP Network Protocol</h1>
       <aside>
-        Last updated 2018-03-27 16:08:25 +0000
+        Last updated 2018-03-30 21:25:14 +0000
       </aside>
       <p>The Flow-Based Programming network protocol (<em>FBP protocol</em>) has been designed primarily for flow-based programming interfaces like the <a href="https://flowhub.io">Flowhub</a> to communicate with various FBP runtimes. However, it can also be utilized for communication between different runtimes, for example server-to-server or server-to-microcontroller.</p>
 
@@ -126,6 +126,7 @@
   <li>2018-03-27:
     <ul>
       <li>Added schema for <code class="highlighter-rouge">network:edges</code> output message</li>
+      <li>Modified <code class="highlighter-rouge">subgraph</code> key of <code class="highlighter-rouge">network:data</code> and other network packet events to be an array as specified in the text</li>
     </ul>
   </li>
   <li>2018-03-26:
@@ -1068,7 +1069,7 @@ Graphs registered in this way should also be available for use as subgraphs in o
 <li><label class="property name">index</label><label class="property type">string,number</label><label class="property description">connection index, for addressable ports</label></li>
 </ul>
 <li><label class="property name">graph</label><label class="property type">string</label><label class="property description">graph the action targets</label></li>
-<li><label class="property name">subgraph</label><label class="property type">string</label><label class="property description">Subgraph identifier for the event. An array of node IDs.</label></li>
+<li><label class="property name">subgraph</label><label class="property type">array</label><label class="property description">Subgraph identifier for the event. An array of node IDs.</label></li>
 </ul>
 <h3 id="network-begingroup" class="message name"><a href="#network-begingroup">begingroup</a></h3>
 <p>Beginning of a group (bracket IP) on an edge.</p>
@@ -1087,7 +1088,7 @@ Graphs registered in this way should also be available for use as subgraphs in o
 <li><label class="property name">index</label><label class="property type">string,number</label><label class="property description">connection index, for addressable ports</label></li>
 </ul>
 <li><label class="property name">graph</label><label class="property type">string</label><label class="property description">graph the action targets</label></li>
-<li><label class="property name">subgraph</label><label class="property type">string</label><label class="property description">Subgraph identifier for the event. An array of node IDs.</label></li>
+<li><label class="property name">subgraph</label><label class="property type">array</label><label class="property description">Subgraph identifier for the event. An array of node IDs.</label></li>
 </ul>
 <h3 id="network-data" class="message name"><a href="#network-data">data</a></h3>
 <p>Data transmission on an edge.</p>
@@ -1106,7 +1107,7 @@ Graphs registered in this way should also be available for use as subgraphs in o
 <li><label class="property name">index</label><label class="property type">string,number</label><label class="property description">connection index, for addressable ports</label></li>
 </ul>
 <li><label class="property name">graph</label><label class="property type">string</label><label class="property description">graph the action targets</label></li>
-<li><label class="property name">subgraph</label><label class="property type">string</label><label class="property description">Subgraph identifier for the event. An array of node IDs.</label></li>
+<li><label class="property name">subgraph</label><label class="property type">array</label><label class="property description">Subgraph identifier for the event. An array of node IDs.</label></li>
 </ul>
 <h3 id="network-endgroup" class="message name"><a href="#network-endgroup">endgroup</a></h3>
 <p>Ending of a group (bracket IP) on an edge.</p>
@@ -1125,7 +1126,7 @@ Graphs registered in this way should also be available for use as subgraphs in o
 <li><label class="property name">index</label><label class="property type">string,number</label><label class="property description">connection index, for addressable ports</label></li>
 </ul>
 <li><label class="property name">graph</label><label class="property type">string</label><label class="property description">graph the action targets</label></li>
-<li><label class="property name">subgraph</label><label class="property type">string</label><label class="property description">Subgraph identifier for the event. An array of node IDs.</label></li>
+<li><label class="property name">subgraph</label><label class="property type">array</label><label class="property description">Subgraph identifier for the event. An array of node IDs.</label></li>
 </ul>
 <h3 id="network-disconnect" class="message name"><a href="#network-disconnect">disconnect</a></h3>
 <p>End of transmission on an edge.</p>
@@ -1144,7 +1145,7 @@ Graphs registered in this way should also be available for use as subgraphs in o
 <li><label class="property name">index</label><label class="property type">string,number</label><label class="property description">connection index, for addressable ports</label></li>
 </ul>
 <li><label class="property name">graph</label><label class="property type">string</label><label class="property description">graph the action targets</label></li>
-<li><label class="property name">subgraph</label><label class="property type">string</label><label class="property description">Subgraph identifier for the event. An array of node IDs.</label></li>
+<li><label class="property name">subgraph</label><label class="property type">array</label><label class="property description">Subgraph identifier for the event. An array of node IDs.</label></li>
 </ul>
 <h2 class="protocol name">Trace protocol</h2>
 <p class="protocol description">This protocol is utilized for triggering and transmitting [Flowtrace](https://github.com/flowbased/flowtrace)s</p>
