@@ -182,7 +182,7 @@ renderMessages = (callback) ->
     p = (line) -> lines.push line
 
     for protocol, protocolProps of descriptions
-      p "<h2 class='protocol name'>#{protocolProps.title}</h2>"
+      p "<h2 class='protocol name' id='#{protocol}-protocol'>#{protocolProps.title}</h2>"
       p "<p class='protocol description'>#{protocolProps.description}</p>"
 
       for messageType, message of protocolProps.messages
