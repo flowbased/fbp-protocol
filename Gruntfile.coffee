@@ -156,9 +156,11 @@ module.exports = ->
       return done err if err
       capabilities = documentation.renderCapabilities (err, capabilities) ->
 
+      changelog = fs.readFileSync 'CHANGES.md', 'utf8'
       file = fs.readFileSync 'spec/protocol.js.md', 'utf8'
       file = file.replace '<%= messages %>\n', messages
       file = file.replace '<%= capabilities %>', capabilities
+      file = file.replace '<%= changelog %>', changelog
       fs.writeFileSync 'spec/protocol.md', file, 'utf8'
       done()
 
