@@ -1,8 +1,9 @@
 fs = require 'fs'
 path = require 'path'
+refParser = require 'json-schema-ref-parser'
 
 schemas = null
-getSchemas = ->
+getSchemas = (callback) ->
   unless schemas
     schemas = {}
     dir = './schema/json/'
@@ -12,34 +13,10 @@ getSchemas = ->
         filename = path.join dir, jsonFile
         schema = JSON.parse fs.readFileSync filename
         schemas[name] = schema
-
-  return schemas
-
-fillRefs = (obj, baseUrl) ->
-  tv4 = require '../schema/index.js'
-
-  if typeof obj isnt 'object'
-    return obj
-
-  else if (typeof obj) is 'object' and obj.length?
-    return obj.map (item) -> fillRefs item, baseUrl
-
-  newObj = {}
-  for own key, value of obj
-    if key is '$ref'
-      schemaPath = value
-      if schemaPath.indexOf('../') isnt -1
-        schemaPath = path.resolve path.dirname("#{baseUrl}#{obj.id}"), value
-      refObj = fillRefs tv4.getSchema(schemaPath), baseUrl
-      for own refKey, refValue of refObj
-        newObj[refKey] = refValue
-
-    else
-      newObj[key] = fillRefs value, baseUrl
-
-  return newObj
+  refParser.dereference schemas, callback
 
 mergeAllOf = (obj) ->
+  return obj unless obj
   unless typeof obj is "object" and not obj.length?
     return obj
 
@@ -50,11 +27,7 @@ mergeAllOf = (obj) ->
         for propName, prop of mergeObj
           newObj[propName] ?= prop
 
-    else if typeof value is "object" and not value.length?
-      newObj[key] = mergeAllOf value
-
-    else
-      newObj[key] = value
+    newObj[key] = mergeAllOf value
 
   return newObj
 
@@ -78,7 +51,6 @@ getDescriptions = (schemas) ->
 
     for category in categories
       for event, schema of schemas[protocol][category]
-        schema = fillRefs schema, "/#{protocol}/"
         message =
           id: schema.id
           description: schema.description
@@ -95,10 +67,8 @@ getDescriptions = (schemas) ->
   return desc
 
 isAllowedTypeless = (name, parent) ->
-  return true if parent.id is '/shared/port_definition' and name is 'default'
-  return true if parent.id is '/runtime/input/packet' and name is 'payload'
+  return true if parent.id is 'port_definition' and name is 'default'
   return true if parent.id is 'input/packet' and name is 'payload'
-  return true if parent.id is '/runtime/output/packet' and name is 'payload'
   return true if parent.id is 'output/packet' and name is 'payload'
   return true if parent.id is 'output/packetsent' and name is 'payload'
   false
@@ -203,22 +173,23 @@ renderCapabilities = () ->
 
   return lines.join('\n')
 
-renderMessages = () ->
-  schemas = getSchemas()
-  descriptions = getDescriptions schemas
+renderMessages = (callback) ->
+  getSchemas (err, schemas) ->
+    return callback err if err
+    descriptions = getDescriptions schemas
 
-  lines = []
-  p = (line) -> lines.push line
+    lines = []
+    p = (line) -> lines.push line
 
-  for protocol, protocolProps of descriptions
-    p "<h2 class='protocol name'>#{protocolProps.title}</h2>"
-    p "<p class='protocol description'>#{protocolProps.description}</p>"
+    for protocol, protocolProps of descriptions
+      p "<h2 class='protocol name'>#{protocolProps.title}</h2>"
+      p "<p class='protocol description'>#{protocolProps.description}</p>"
 
-    for messageType, message of protocolProps.messages
-      m = renderMessage messageType, message, protocol
-      lines = lines.concat m
+      for messageType, message of protocolProps.messages
+        m = renderMessage messageType, message, protocol
+        lines = lines.concat m
 
-  return lines.join('\n')
+    callback null, lines.join('\n')
 
 module.exports =
   renderMessages: renderMessages

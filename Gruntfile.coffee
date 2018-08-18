@@ -143,15 +143,22 @@ module.exports = ->
   @registerTask 'default', ['test']
 
   @registerTask 'json-to-js', ->
-    schemaJs = "module.exports = #{JSON.stringify documentation.getSchemas()}"
-    fs.writeFileSync './schema/schemas.js', schemaJs, 'utf8'
+    done = @async()
+    documentation.getSchemas (err, schemas) ->
+      return done err if err
+      schemaJs = "module.exports = #{JSON.stringify schemas}"
+      fs.writeFileSync './schema/schemas.js', schemaJs, 'utf8'
+      done()
 
   @registerTask 'build-markdown', ->
-    messages = documentation.renderMessages() 
-    capabilities = documentation.renderCapabilities()
-    
-    file = fs.readFileSync 'spec/protocol.js.md', 'utf8'
-    file = file.replace '<%= messages %>\n', messages
-    file = file.replace '<%= capabilities %>', capabilities
-    fs.writeFileSync 'spec/protocol.md', file, 'utf8'
+    done = @async()
+    documentation.renderMessages (err, messages) ->
+      return done err if err
+      capabilities = documentation.renderCapabilities (err, capabilities) ->
+
+      file = fs.readFileSync 'spec/protocol.js.md', 'utf8'
+      file = file.replace '<%= messages %>\n', messages
+      file = file.replace '<%= capabilities %>', capabilities
+      fs.writeFileSync 'spec/protocol.md', file, 'utf8'
+      done()
 
