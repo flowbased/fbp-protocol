@@ -117,6 +117,63 @@ There are currently three transports utilized commonly:
 
 Different transports can be utilized as needed. It could be interesting to implement the FBP protocol using [MQTT](http://en.wikipedia.org/wiki/MQ_Telemetry_Transport), for instance.
 
+### Message structure
+
+There are three types of messages in FBP Protocol:
+
+1. Requests sent by client to runtime
+2. Responses sent by runtime to client
+3. Events sent by runtime to client unrelated to any request
+
+This document describes all messages as the data structures that are passed. The way these are encoded depends on the transport being used. For example, with WebSockets all messages are encoded as stringified JSON.
+
+All messages consist of three parts:
+
+* Sub-protocol identifier (`graph`, `component`, or `network`)
+* Topic (for example, `addnode`)
+* Message payload (typically a data structure specific to the sub-protocol and topic)
+
+Additionally requests made by clients include a unique `requestId` and optionally a `secret`. Responses sent by runtime include a `responseTo` referring to a request ID. Runtimes may also send messages on events that happen on the runtime without referring to a request ID.
+
+The keys listed in specific messages are for the message `payload`.
+
+An example message sent by a client:
+
+```json
+{
+  "protocol": "graph",
+  "command": "addnode",
+  "payload": {
+    "component": "canvas/Draw",
+    "graph": "hello-canvas-example",
+    "id": "draw",
+    "metadata": {
+      "label": "Draw onto canvas element"
+    }
+  },
+  "secret": "fbp rocks",
+  "requestId: "10259710-bc70-4d2c-b0b3-e78075d9b960"
+}
+```
+
+Response to this could look like:
+
+```json
+{
+  "protocol": "graph",
+  "command": "addnode",
+  "payload": {
+    "component": "canvas/Draw",
+    "graph": "hello-canvas-example",
+    "id": "draw",
+    "metadata": {
+      "label": "Draw onto canvas element"
+    }
+  },
+  "responseTo: "10259710-bc70-4d2c-b0b3-e78075d9b960"
+}
+```
+
 ### Sub-protocols
 
 The FBP protocol is divided into sub-protocols for each of the major resources that can be manipulated:
@@ -137,31 +194,4 @@ A few commands do not require any capabilities: the runtime info request/respons
 
 <%= capabilities %>
 
-### Message structure
-
-This document describes all messages as the data structures that are passed. The way these are encoded depends on the transport being used. For example, with WebSockets all messages are encoded as stringified JSON.
-
-All messages consist of three parts:
-
-* Sub-protocol identifier (`graph`, `component`, or `network`)
-* Topic (for example, `addnode`)
-* Message payload (typically a data structure specific to the sub-protocol and topic)
-
-The keys listed in specific messages are for the message `payload`.
-
-An example message
-```
-"protocol": "graph",
-"command": "addnode",
-"payload": {
-	"component": "canvas/Draw",
-	"graph": "hello-canvas-example",
-	"id": "draw",
-	"metadata": {
-		"label": "Draw onto canvas element"
-	}
-}
-```
-
 <%= messages %>
-
