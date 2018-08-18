@@ -7,6 +7,18 @@ graph_id:
   description: Graph identifier the message targets
   type: string
 
+node_id:
+  id: node_id
+  description: Node identifier in a graph
+  type: string
+  example: Repeat
+
+port_id:
+  id: port_id
+  description: Port identifier in a component or process
+  type: string
+  example: in
+
 input_message:
   id: 'message'
   description: 'protocol message sent by a client'
@@ -102,11 +114,9 @@ port:
   additionalProperties: false
   properties:
     node:
-      type: string
-      description: 'node identifier'
+      $ref: '#/shared/node_id'
     port:
-      type: string
-      description: 'port name'
+      $ref: '#/shared/port_id'
     index:
       type: ["string", "number"]
       description: 'connection index, for addressable ports'
@@ -120,8 +130,7 @@ port_definition:
     additionalProperties: false
     properties:
       id:
-        type: string
-        description: 'port name'
+        $ref: '#/shared/port_id'
       type:
         description: 'port datatype'
         type: string
@@ -176,15 +185,14 @@ network_event:
       description: 'target node for the edge'
       $ref: '#/shared/port'
     graph:
-      type: 'string'
-      description: 'graph the action targets'
+      $ref: '#/shared/graph_id'
     subgraph:
       type: 'array'
       description: >-
         Subgraph identifier for the event.
         An array of node IDs.
       items:
-        type: string
+        $ref: '#/shared/node_id'
 
 capabilities:
   id: 'capabilities'

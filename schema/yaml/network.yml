@@ -163,8 +163,7 @@ output:
             additionalProperties: false
             properties:
               id:
-                type: string
-                description: identifier of the node
+                $ref: '#/shared/node_id'
               error:
                 type: string
                 description: error from the component
@@ -185,8 +184,7 @@ output:
             additionalProperties: false
             properties:
               id:
-                type: "string"
-                description: 'identifier of the node'
+                $ref: '#/shared/node_id'
               icon:
                 type: "string"
                 description: 'new icon for the component instance'

@@ -224,14 +224,13 @@ messages:
         required: ['public', 'port', 'node', 'graph']
         properties:
           public:
-            type: string
             description: 'the exported name of the port'
+            $ref: '#/shared/port_id'
           node:
-            type: string
-            description: 'node identifier'
+            $ref: '#/shared/node_id'
           port:
-            type: string
-            description: 'internal port name'
+            description: 'internal port name in the graph'
+            $ref: '#/shared/port_id'
           metadata:
             description: 'structure of key-value pairs for node metadata'
             $ref: '#/shared/metadata_node'
@@ -247,8 +246,8 @@ messages:
         additionalProperties: false
         properties:
           public:
-            type: string
             description: 'the exported name of the port to remove'
+            $ref: '#/shared/port_id'
           graph: { $ref: '#/shared/graph_id' }
   renameinport:
     properties:
@@ -261,11 +260,11 @@ messages:
         additionalProperties: false
         properties:
           from:
-            type: string
             description: 'original exported port name'
+            $ref: '#/shared/port_id'
           to:
-            type: string
             description: 'new exported port name'
+            $ref: '#/shared/port_id'
           graph: { $ref: '#/shared/graph_id' }
   addoutport:
     properties:
@@ -278,14 +277,16 @@ messages:
         additionalProperties: false
         properties:
           public:
-            type: string
             description: 'the exported name of the port'
+            $ref: '#/shared/port_id'
+            example: out
           node:
-            type: string
             description: 'node identifier'
+            $ref: '#/shared/node_id'
           port:
-            type: string
             description: 'internal port name'
+            $ref: '#/shared/port_id'
+            example: 'out[2]'
           metadata:
             description: 'structure of key-value pairs for port metadata'
             $ref: '#/shared/metadata_node'
@@ -301,8 +302,9 @@ messages:
         additionalProperties: false
         properties:
           public:
-            type: string
             description: 'the exported name of the port to remove'
+            $ref: '#/shared/port_id'
+            example: out
           graph: { $ref: '#/shared/graph_id' }
   renameoutport:
     properties:
@@ -315,11 +317,11 @@ messages:
         additionalProperties: false
         properties:
           from:
-            type: string
             description: 'original exported port name'
+            $ref: '#/shared/port_id'
           to:
-            type: string
             description: 'new exported port name'
+            $ref: '#/shared/port_id'
           graph: { $ref: '#/shared/graph_id' }
   addgroup:
     properties:
@@ -337,6 +339,8 @@ messages:
           nodes:
             type: array
             description: 'an array of node ids part of the group'
+            items:
+              $ref: '#/shared/node_id'
           metadata:
             description: 'structure of key-value pairs for group metadata'
             $ref: '#/shared/metadata_group'

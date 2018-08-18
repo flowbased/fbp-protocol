@@ -43,8 +43,7 @@ input:
             additionalProperties: false
             properties:
               port:
-                type: string
-                description: 'port name for the input or output port'
+                $ref: '#/shared/port_id'
               event:
                 type: string
                 enum:
@@ -192,8 +191,8 @@ output:
             additionalProperties: false
             properties:
               port:
-                type: string
                 description: 'port name for the input port'
+                $ref: '#/shared/port_id'
               event:
                 type: string
                 enum:
