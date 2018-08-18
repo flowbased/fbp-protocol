@@ -15,7 +15,7 @@ messages:
         required: ['graph']
         additionalProperties: false
         properties:
-          graph: { $ref: '/shared/graph_id' }
+          graph: { $ref: '#/shared/graph_id' }
           buffersize:
             description: 'Size of tracing buffer to keep. In bytes'
             type: integer
@@ -29,7 +29,7 @@ messages:
         required: ['graph']
         additionalProperties: false
         properties:
-          graph: { $ref: '/shared/graph_id' }
+          graph: { $ref: '#/shared/graph_id' }
   clear:
     properties:
       protocol:
@@ -40,31 +40,31 @@ messages:
         required: ['graph']
         additionalProperties: false
         properties:
-          graph: { $ref: '/shared/graph_id' }
+          graph: { $ref: '#/shared/graph_id' }
 
 output:
   start:
     id: 'output/start'
     description: 'Tracing was started'
     allOf:
-      - $ref: '/shared/output_message'
-      - $ref: '../messages/start'
+      - $ref: '#/shared/output_message'
+      - $ref: '#/trace/messages/start'
   stop:
     id: 'output/stop'
     description: 'Tracing was stopped'
     allOf:
-      - $ref: '/shared/output_message'
-      - $ref: '../messages/stop'
+      - $ref: '#/shared/output_message'
+      - $ref: '#/trace/messages/stop'
   clear:
     id: 'output/clear'
     description: 'Tracing buffer was cleared'
     allOf:
-      - $ref: '/shared/output_message'
-      - $ref: '../messages/clear'
+      - $ref: '#/shared/output_message'
+      - $ref: '#/trace/messages/clear'
   dump:
     id: 'output/dump'
     allOf:
-      - $ref: '/shared/output_message'
+      - $ref: '#/shared/output_message'
       - properties:
           protocol:
             enum: ['trace']
@@ -74,7 +74,7 @@ output:
             required: ['graph', 'type', 'flowtrace']
             additionalProperties: false
             properties:
-              graph: { $ref: '/shared/graph_id' }
+              graph: { $ref: '#/shared/graph_id' }
               type:
                 description: String describing type of trace.
                 type: string
@@ -86,7 +86,7 @@ output:
     id: 'output/error'
     description: 'Error response to a command on trace protocol'
     allOf:
-      - $ref: '/shared/output_message'
+      - $ref: '#/shared/output_message'
       - properties:
           protocol:
             enum: ['trace']
@@ -104,21 +104,21 @@ input:
     id: 'input/start'
     description: 'Enable/start tracing of a network.'
     allOf:
-      - $ref: '/shared/input_message'
-      - $ref: '../messages/start'
+      - $ref: '#/shared/input_message'
+      - $ref: '#/trace/messages/start'
 
   stop:
     description: 'Stop/disable tracing of a network.'
     id: 'input/stop'
     allOf:
-      - $ref: '/shared/input_message'
-      - $ref: '../messages/stop'
+      - $ref: '#/shared/input_message'
+      - $ref: '#/trace/messages/stop'
 
   dump:
     id: 'input/dump'
     description: 'Trigger dumping of the current tracing buffer, to return it back to server.'
     allOf:
-      - $ref: '/shared/input_message'
+      - $ref: '#/shared/input_message'
       - properties:
           protocol:
             enum: ['trace']
@@ -128,7 +128,7 @@ input:
             required: ['graph', 'type']
             additionalProperties: false
             properties:
-              graph: { $ref: '/shared/graph_id' }
+              graph: { $ref: '#/shared/graph_id' }
               type:
                 description: Type/format of trace to output
                 type: string
@@ -138,5 +138,5 @@ input:
     id: 'input/clear'
     description: Clear current tracing buffer.
     allOf:
-      - $ref: '/shared/input_message'
-      - $ref: '../messages/clear'
+      - $ref: '#/shared/input_message'
+      - $ref: '#/trace/messages/clear'

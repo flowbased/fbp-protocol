@@ -9,7 +9,7 @@ graph_id:
 
 input_message:
   id: 'message'
-  description: 'protocol message'
+  description: 'protocol message sent by a client'
   additionalProperties: false
   required: ['protocol', 'command', 'payload', 'requestId']
   properties:
@@ -33,7 +33,7 @@ input_message:
 
 output_message:
   id: 'message'
-  description: 'protocol message'
+  description: 'protocol message sent by a runtime'
   additionalProperties: false
   required: ['protocol', 'command', 'payload']
   properties:
@@ -171,10 +171,10 @@ network_event:
         a FBP language line
     src:
       description: 'source node for the edge'
-      $ref: '/shared/port'
+      $ref: '#/shared/port'
     tgt:
       description: 'target node for the edge'
-      $ref: '/shared/port'
+      $ref: '#/shared/port'
     graph:
       type: 'string'
       description: 'graph the action targets'

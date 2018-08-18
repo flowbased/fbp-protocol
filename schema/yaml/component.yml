@@ -6,7 +6,7 @@ output:
     id: 'output/error'
     description: 'Error response to a command on component protocol'
     allOf:
-      - $ref: '/shared/output_message'
+      - $ref: '#/shared/output_message'
       - properties:
           protocol:
             enum: ['component']
@@ -23,7 +23,7 @@ output:
     id: 'output/component'
     description: Transmit the metadata about a component instance.
     allOf:
-      - $ref: '/shared/output_message'
+      - $ref: '#/shared/output_message'
       - properties:
           protocol:
             enum: ['component']
@@ -50,28 +50,28 @@ output:
                 description: 'boolean telling whether the component is a subgraph'
               inPorts:
                 description: 'list of input ports of the component'
-                $ref: '/shared/port_definition'
+                $ref: '#/shared/port_definition'
               outPorts:
                 description: 'list of output ports of the component'
-                $ref: '/shared/port_definition'
+                $ref: '#/shared/port_definition'
   componentsready:
     id: 'output/componentsready'
     description: Indication that a component listing has finished
     allOf:
-      - $ref: '/shared/output_message'
+      - $ref: '#/shared/output_message'
       - properties:
-        protocol:
-          enum: ['component']
-          type: string
-          description: 'type of protocol'
-        command:
-          enum: ['componentsready']
-          description: 'command to be executed'
-          example: 'addnode'
-        payload:
-          type: 'integer'
-          description: 'number of components transmitted in this batch'
-          example: 42
+          protocol:
+            enum: ['component']
+            type: string
+            description: 'type of protocol'
+          command:
+            enum: ['componentsready']
+            description: 'command to be executed'
+            example: 'addnode'
+          payload:
+            type: 'integer'
+            description: 'number of components transmitted in this batch'
+            example: 42
 
   source:
     id: 'output/source'
@@ -80,7 +80,7 @@ output:
       message, it should do whatever operations are needed for making that
       component available for graphs, including possible compilation.
     allOf:
-      - $ref: '/shared/output_message'
+      - $ref: '#/shared/output_message'
       - properties:
           protocol:
             enum: ['component']
@@ -118,7 +118,7 @@ input:
       Request a list of currently available components. Will be responded with
       a set of `component` messages.
     allOf:
-      - $ref: '/shared/input_message'
+      - $ref: '#/shared/input_message'
       - properties:
           protocol:
             enum: ['component']
@@ -133,7 +133,7 @@ input:
       Request for the source code of a given component. Will be responded with
       a `source` message.
     allOf:
-      - $ref: '/shared/input_message'
+      - $ref: '#/shared/input_message'
       - properties:
           protocol:
             enum: ['component']
@@ -155,7 +155,7 @@ input:
       message, it should do whatever operations are needed for making that
       component available for graphs, including possible compilation.
     allOf:
-      - $ref: '/shared/input_message'
+      - $ref: '#/shared/input_message'
       - properties:
           protocol:
             enum: ['component']

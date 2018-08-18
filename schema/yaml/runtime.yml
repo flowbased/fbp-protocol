@@ -13,7 +13,7 @@ input:
       able to speak the full Runtime protocol, it should follow up
       with a ports message.
     allOf:
-      - $ref: '/shared/input_message'
+      - $ref: '#/shared/input_message'
       - properties:
           protocol:
             enum: ['runtime']
@@ -32,7 +32,7 @@ input:
       These packets can be send from the client to the runtimes input ports, or from
       runtimes output ports to the client.
     allOf:
-      - $ref: '/shared/input_message'
+      - $ref: '#/shared/input_message'
       - properties:
           protocol:
             enum: ['runtime']
@@ -76,7 +76,7 @@ output:
     id: 'output/error'
     description: 'Error response to a command on runtime protocol'
     allOf:
-      - $ref: '/shared/output_message'
+      - $ref: '#/shared/output_message'
       - properties:
           protocol:
             enum: ['runtime']
@@ -96,7 +96,7 @@ output:
       is responsible for sending the up-to-date list of available ports back to
       client whenever it changes.
     allOf:
-      - $ref: '/shared/output_message'
+      - $ref: '#/shared/output_message'
       - properties:
           protocol:
             enum: ['runtime']
@@ -113,16 +113,16 @@ output:
                   runtime
               inPorts:
                 description: 'list of input ports of the runtime'
-                $ref: '/shared/port_definition'
+                $ref: '#/shared/port_definition'
               outPorts:
                 description: 'list of output ports of the runtime'
-                $ref: '/shared/port_definition'
+                $ref: '#/shared/port_definition'
 
   runtime:
     id: 'output/runtime'
     description: 'Response from the runtime to the getruntime request.'
     allOf:
-      - $ref: '/shared/output_message'
+      - $ref: '#/shared/output_message'
       - properties:
           protocol:
             enum: ['runtime']
@@ -148,11 +148,11 @@ output:
                 description: >-
                   <a href='#capabilities'>capability strings</a> for things the runtime is able to do.
                   May include things not permitted for this client.
-                $ref: '/shared/capabilities'
+                $ref: '#/shared/capabilities'
               capabilities:
                 description: >-
                   <a href='#capabilities'>capability strings</a> for things the runtime is able to do for this client.
-                $ref: '/shared/capabilities'
+                $ref: '#/shared/capabilities'
               graph:
                 description: >-
                   ID of the currently configured main graph running
@@ -186,7 +186,7 @@ output:
     id: 'output/packetsent'
     description: Confirmation that a packet has been sent
     allOf:
-      - $ref: '/shared/output_message'
+      - $ref: '#/shared/output_message'
       - properties:
           protocol:
             enum: ['runtime']
@@ -234,4 +234,4 @@ output:
 
       These packets can be send from the client to the runtimes input ports, or from
       runtimes output ports to the client.
-    $ref: '../input/packet'
+    $ref: '#/runtime/input/packet'

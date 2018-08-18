@@ -6,6 +6,7 @@ description: >-
 
 messages:
   error:
+    id: 'messages/error'
     properties:
       protocol:
         enum: ['graph']
@@ -18,6 +19,7 @@ messages:
             type: 'string'
             description: 'Error message describing what went wrong'
   clear:
+    id: 'messages/clear'
     properties:
       protocol:
         enum: ['graph']
@@ -66,7 +68,7 @@ messages:
             description: 'component name used for the node'
           metadata:
             description: 'structure of key-value pairs for node metadata'
-            $ref: '/shared/metadata_node'
+            $ref: '#/shared/metadata_node'
           graph:
             type: string
             description: 'graph the action targets'
@@ -120,7 +122,7 @@ messages:
             description: 'identifier for the node'
           metadata:
             description: 'structure of key-value pairs for node metadata'
-            $ref: '/shared/metadata_node'
+            $ref: '#/shared/metadata_node'
           graph:
             type: string
             description: 'graph the action targets'
@@ -135,14 +137,14 @@ messages:
         additionalProperties: false
         properties:
           src:
-            $ref: '/shared/port'
+            $ref: '#/shared/port'
             description: 'source node for the edge'
           tgt:
-            $ref: '/shared/port'
+            $ref: '#/shared/port'
             description: 'target node for the edge'
           metadata:
             description: 'Structure of key-value pairs for edge metadata'
-            $ref: '/shared/metadata_edge'
+            $ref: '#/shared/metadata_edge'
           graph:
             type: string
             description: 'graph the action targets'
@@ -161,10 +163,10 @@ messages:
             description: 'graph the action targets'
           src:
             description: 'source node for the edge'
-            $ref: '/shared/port'
+            $ref: '#/shared/port'
           tgt:
             description: 'target node for the edge'
-            $ref: '/shared/port'
+            $ref: '#/shared/port'
   changeedge:
     properties:
       protocol:
@@ -180,13 +182,13 @@ messages:
             description: 'graph the action targets'
           metadata:
             description: 'struct of key-value pairs for edge metadata'
-            $ref: '/shared/metadata_edge'
+            $ref: '#/shared/metadata_edge'
           src:
             description: 'source node for the edge'
-            $ref: '/shared/port'
+            $ref: '#/shared/port'
           tgt:
             description: 'target node for the edge'
-            $ref: '/shared/port'
+            $ref: '#/shared/port'
   addinitial:
     properties:
       protocol:
@@ -203,13 +205,13 @@ messages:
           metadata:
             type: object
             description: 'structure of key-value pairs for IIP metadata'
-            $ref: '/shared/metadata_edge'
+            $ref: '#/shared/metadata_edge'
           src:
             description: 'source data for the edge'
-            $ref: '/shared/iip'
+            $ref: '#/shared/iip'
           tgt:
             description: 'target node/port for the edge'
-            $ref: '/shared/port'
+            $ref: '#/shared/port'
   removeinitial:
     properties:
       protocol:
@@ -222,9 +224,9 @@ messages:
         properties:
           src:
             description: 'IIP data'
-            $ref: '/shared/iip'
+            $ref: '#/shared/iip'
           tgt:
-            $ref: '/shared/port'
+            $ref: '#/shared/port'
             description: 'target node/port for the edge'
           graph:
             type: string
@@ -250,7 +252,7 @@ messages:
             description: 'internal port name'
           metadata:
             description: 'structure of key-value pairs for node metadata'
-            $ref: '/shared/metadata_node'
+            $ref: '#/shared/metadata_node'
           graph:
             type: string
             description: 'graph the action targets'
@@ -310,7 +312,7 @@ messages:
             description: 'internal port name'
           metadata:
             description: 'structure of key-value pairs for port metadata'
-            $ref: '/shared/metadata_node'
+            $ref: '#/shared/metadata_node'
           graph:
             type: string
             description: 'graph the action targets'
@@ -367,7 +369,7 @@ messages:
             description: 'an array of node ids part of the group'
           metadata:
             description: 'structure of key-value pairs for group metadata'
-            $ref: '/shared/metadata_group'
+            $ref: '#/shared/metadata_group'
           graph:
             type: string
             description: 'graph the action targets'
@@ -420,7 +422,7 @@ messages:
             description: 'the group name'
           metadata:
             description: 'structure of key-value pairs for group metadata'
-            $ref: '/shared/metadata_group'
+            $ref: '#/shared/metadata_group'
           graph:
             type: string
             description: 'graph the action targets'
@@ -430,148 +432,148 @@ output:
     id: 'output/error'
     description: 'Error response to a command on graph protocol'
     allOf:
-      - $ref: '/shared/output_message'
-      - $ref: '../messages/error'
+      - $ref: '#/shared/output_message'
+      - $ref: '#/graph/messages/error'
 
   clear:
     id: 'output/clear'
     description: 'An empty graph was initialized'
     allOf:
-      - $ref: '/shared/output_message'
-      - $ref: '../messages/clear'
+      - $ref: '#/shared/output_message'
+      - $ref: '#/graph/messages/clear'
 
   addnode:
     id: 'output/addnode'
     description: 'A node was added to a graph.'
     allOf:
-      - $ref: '/shared/output_message'
-      - $ref: '../messages/addnode'
+      - $ref: '#/shared/output_message'
+      - $ref: '#/graph/messages/addnode'
 
   removenode:
     id: 'output/removenode'
     description: 'A node was removed from a graph'
     allOf:
-      - $ref: '/shared/output_message'
-      - $ref: '../messages/removenode'
+      - $ref: '#/shared/output_message'
+      - $ref: '#/graph/messages/removenode'
 
   renamenode:
     id: 'output/renamenode'
     description: 'A node was renamed in a graph.'
     allOf:
-      - $ref: '/shared/output_message'
-      - $ref: '../messages/renamenode'
+      - $ref: '#/shared/output_message'
+      - $ref: '#/graph/messages/renamenode'
 
   changenode:
     id: 'output/changenode'
     description: 'Metadata of a node was changed in a graph'
     allOf:
-      - $ref: '/shared/output_message'
-      - $ref: '../messages/changenode'
+      - $ref: '#/shared/output_message'
+      - $ref: '#/graph/messages/changenode'
 
   addedge:
     id: 'output/addedge'
     description: 'An edge was added to a graph'
     allOf:
-      - $ref: '/shared/output_message'
-      - $ref: '../messages/addedge'
+      - $ref: '#/shared/output_message'
+      - $ref: '#/graph/messages/addedge'
 
   removeedge:
     id: 'output/removeedge'
     description: 'An edge was removed from a graph'
     allOf:
-      - $ref: '/shared/output_message'
-      - $ref: '../messages/removeedge'
+      - $ref: '#/shared/output_message'
+      - $ref: '#/graph/messages/removeedge'
 
   changeedge:
     id: 'output/changeedge'
     description: 'Metadata of an edge was changed in a graph'
     allOf:
-      - $ref: '/shared/output_message'
-      - $ref: '../messages/changeedge'
+      - $ref: '#/shared/output_message'
+      - $ref: '#/graph/messages/changeedge'
 
   addinitial:
     id: 'output/addinitial'
     description: 'An IIP was added to a graph'
     allOf:
-      - $ref: '/shared/output_message'
-      - $ref: '../messages/addinitial'
+      - $ref: '#/shared/output_message'
+      - $ref: '#/graph/messages/addinitial'
 
   removeinitial:
     id: 'output/removeinitial'
     description: 'An IIP was removed from a graph'
     allOf:
-      - $ref: '/shared/output_message'
-      - $ref: '../messages/removeinitial'
+      - $ref: '#/shared/output_message'
+      - $ref: '#/graph/messages/removeinitial'
 
   addinport:
     id: 'output/addinport'
     description: 'An exported inport was added to a graph'
     allOf:
-      - $ref: '/shared/output_message'
-      - $ref: '../messages/addinport'
+      - $ref: '#/shared/output_message'
+      - $ref: '#/graph/messages/addinport'
 
   removeinport:
     id: 'output/removeinport'
     description: 'An exported inport was removed from a graph'
     allOf:
-      - $ref: '/shared/output_message'
-      - $ref: '../messages/removeinport'
+      - $ref: '#/shared/output_message'
+      - $ref: '#/graph/messages/removeinport'
 
   renameinport:
     id: 'output/renameinport'
     description: 'An exported inport was renamed in a graph'
     allOf:
-      - $ref: '/shared/output_message'
-      - $ref: '../messages/renameinport'
+      - $ref: '#/shared/output_message'
+      - $ref: '#/graph/messages/renameinport'
 
   addoutport:
     id: 'output/addoutport'
     description: 'An exported outport was added to a graph'
     allOf:
-      - $ref: '/shared/output_message'
-      - $ref: '../messages/addoutport'
+      - $ref: '#/shared/output_message'
+      - $ref: '#/graph/messages/addoutport'
 
   removeoutport:
     id: 'output/removeoutport'
     description: 'An exported outport was removed from a graph'
     allOf:
-      - $ref: '/shared/output_message'
-      - $ref: '../messages/removeoutport'
+      - $ref: '#/shared/output_message'
+      - $ref: '#/graph/messages/removeoutport'
 
   renameoutport:
     id: 'output/renameoutport'
     description: 'An exported outport was renamed in a graph'
     allOf:
-      - $ref: '/shared/output_message'
-      - $ref: '../messages/renameoutport'
+      - $ref: '#/shared/output_message'
+      - $ref: '#/graph/messages/renameoutport'
 
   addgroup:
     id: 'output/addgroup'
     description: 'A group was added to a graph'
     allOf:
-      - $ref: '/shared/output_message'
-      - $ref: '../messages/addgroup'
+      - $ref: '#/shared/output_message'
+      - $ref: '#/graph/messages/addgroup'
 
   removegroup:
     id: 'output/removegroup'
     description: 'A group was removed from a graph'
     allOf:
-      - $ref: '/shared/output_message'
-      - $ref: '../messages/removegroup'
+      - $ref: '#/shared/output_message'
+      - $ref: '#/graph/messages/removegroup'
 
   renamegroup:
     id: 'output/renamegroup'
     description: 'A group was renamed in a graph'
     allOf:
-      - $ref: '/shared/output_message'
-      - $ref: '../messages/renamegroup'
+      - $ref: '#/shared/output_message'
+      - $ref: '#/graph/messages/renamegroup'
 
   changegroup:
     id: 'output/changegroup'
     description: 'Metadata of a group was changed in a graph'
     allOf:
-      - $ref: '/shared/output_message'
-      - $ref: '../messages/changegroup'
+      - $ref: '#/shared/output_message'
+      - $ref: '#/graph/messages/changegroup'
 
 input:
 
@@ -579,138 +581,138 @@ input:
     id: 'input/clear'
     description: 'Initialize an empty graph.'
     allOf:
-      - $ref: '/shared/input_message'
-      - $ref: '../messages/clear'
+      - $ref: '#/shared/input_message'
+      - $ref: '#/graph/messages/clear'
 
   addnode:
     id: 'input/addnode'
     description: 'Add node to a graph.'
     allOf:
-      - $ref: '/shared/input_message'
-      - $ref: '../messages/addnode'
+      - $ref: '#/shared/input_message'
+      - $ref: '#/graph/messages/addnode'
 
   removenode:
     id: 'input/removenode'
     description: 'Remove a node from a graph.'
     allOf:
-      - $ref: '/shared/input_message'
-      - $ref: '../messages/removenode'
+      - $ref: '#/shared/input_message'
+      - $ref: '#/graph/messages/removenode'
 
   renamenode:
     id: 'input/renamenode'
     description: 'Change the ID of a node in the graph'
     allOf:
-      - $ref: '/shared/input_message'
-      - $ref: '../messages/renamenode'
+      - $ref: '#/shared/input_message'
+      - $ref: '#/graph/messages/renamenode'
 
   changenode:
     id: 'input/changenode'
     description: 'Change the metadata associated to a node in the graph'
     allOf:
-      - $ref: '/shared/input_message'
-      - $ref: '../messages/changenode'
+      - $ref: '#/shared/input_message'
+      - $ref: '#/graph/messages/changenode'
 
   addedge:
     id: 'input/addedge'
     description: 'Add an edge to the graph'
     allOf:
-      - $ref: '/shared/input_message'
-      - $ref: '../messages/addedge'
+      - $ref: '#/shared/input_message'
+      - $ref: '#/graph/messages/addedge'
 
   removeedge:
     id: 'input/removeedge'
     description: 'Remove an edge from the graph'
     allOf:
-      - $ref: '/shared/input_message'
-      - $ref: '../messages/removeedge'
+      - $ref: '#/shared/input_message'
+      - $ref: '#/graph/messages/removeedge'
 
   changeedge:
     id: 'input/changeedge'
     description: 'Change an edge''s metadata'
     allOf:
-      - $ref: '/shared/input_message'
-      - $ref: '../messages/changeedge'
+      - $ref: '#/shared/input_message'
+      - $ref: '#/graph/messages/changeedge'
 
   addinitial:
     id: 'input/addinitial'
     description: 'Add an IIP to the graph'
     allOf:
-      - $ref: '/shared/input_message'
-      - $ref: '../messages/addinitial'
+      - $ref: '#/shared/input_message'
+      - $ref: '#/graph/messages/addinitial'
 
   removeinitial:
     id: 'input/removeinitial'
     description: 'Remove an IIP from the graph'
     allOf:
-      - $ref: '/shared/input_message'
-      - $ref: '../messages/removeinitial'
+      - $ref: '#/shared/input_message'
+      - $ref: '#/graph/messages/removeinitial'
 
   addinport:
     id: 'input/addinport'
     description: 'Add an exported inport to the graph.'
     allOf:
-      - $ref: '/shared/input_message'
-      - $ref: '../messages/addinport'
+      - $ref: '#/shared/input_message'
+      - $ref: '#/graph/messages/addinport'
 
   removeinport:
     id: 'input/removeinport'
     description: 'Remove an exported port from the graph'
     allOf:
-      - $ref: '/shared/input_message'
-      - $ref: '../messages/removeinport'
+      - $ref: '#/shared/input_message'
+      - $ref: '#/graph/messages/removeinport'
 
   renameinport:
     id: 'input/renameinport'
     description: 'Rename an exported port in the graph'
     allOf:
-      - $ref: '/shared/input_message'
-      - $ref: '../messages/renameinport'
+      - $ref: '#/shared/input_message'
+      - $ref: '#/graph/messages/renameinport'
 
   addoutport:
     id: 'input/addoutport'
     description: 'Add an exported outport to the graph.'
     allOf:
-      - $ref: '/shared/input_message'
-      - $ref: '../messages/addoutport'
+      - $ref: '#/shared/input_message'
+      - $ref: '#/graph/messages/addoutport'
 
   removeoutport:
     id: 'input/removeoutport'
     description: 'Remove an exported port from the graph'
     allOf:
-      - $ref: '/shared/input_message'
-      - $ref: '../messages/removeoutport'
+      - $ref: '#/shared/input_message'
+      - $ref: '#/graph/messages/removeoutport'
 
   renameoutport:
     id: 'input/renameoutport'
     description: 'Rename an exported port in the graph'
     allOf:
-      - $ref: '/shared/input_message'
-      - $ref: '../messages/renameoutport'
+      - $ref: '#/shared/input_message'
+      - $ref: '#/graph/messages/renameoutport'
 
   addgroup:
     id: 'input/addgroup'
     description: 'Add a group to the graph'
     allOf:
-      - $ref: '/shared/input_message'
-      - $ref: '../messages/addgroup'
+      - $ref: '#/shared/input_message'
+      - $ref: '#/graph/messages/addgroup'
 
   removegroup:
     id: 'input/removegroup'
     description: 'Remove a group from the graph'
     allOf:
-      - $ref: '/shared/input_message'
-      - $ref: '../messages/removegroup'
+      - $ref: '#/shared/input_message'
+      - $ref: '#/graph/messages/removegroup'
 
   renamegroup:
     id: 'input/renamegroup'
     description: 'Rename a group in the graph.'
     allOf:
-      - $ref: '/shared/input_message'
-      - $ref: '../messages/renamegroup'
+      - $ref: '#/shared/input_message'
+      - $ref: '#/graph/messages/renamegroup'
 
   changegroup:
     id: 'input/changegroup'
     description: 'Change a group''s metadata'
     allOf:
-      - $ref: '/shared/input_message'
-      - $ref: '../messages/changegroup'
+      - $ref: '#/shared/input_message'
+      - $ref: '#/graph/messages/changegroup'
