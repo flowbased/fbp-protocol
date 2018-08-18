@@ -349,9 +349,6 @@ input:
               graph:
                 type: "string"
                 description: 'graph the action targets'
-              secret:
-                type: string
-                description: access token to authorize user
 
   getstatus:
     id: 'input/getstatus'
@@ -372,9 +369,6 @@ input:
               graph:
                 type: "string"
                 description: 'graph the action targets'
-              secret:
-                type: string
-                description: access token to authorize user
 
   stop:
     id: 'input/stop'
@@ -393,9 +387,6 @@ input:
               graph:
                 type: "string"
                 description: 'graph the action targets'
-              secret:
-                type: string
-                description: access token to authorize user
 
   persist:
     id: 'input/persist'
@@ -414,9 +405,6 @@ input:
             required: []
             additionalProperties: false
             properties:
-              secret:
-                type: string
-                description: access token to authorize user
 
   debug:
     id: 'input/debug'
@@ -437,9 +425,6 @@ input:
                 type: boolean
               graph:
                 description: graph the action targets
-                type: string
-              secret:
-                description: access token to authorize the user
                 type: string
 
   edges:
@@ -475,7 +460,3 @@ input:
                     tgt:
                       description: 'target node for the edge'
                       $ref: '/shared/port'
-              secret:
-                type: string
-                description: access token to authorize user
-

@@ -21,10 +21,6 @@ input:
             enum: ['getruntime']
           payload:
             required: []
-            properties:
-              secret:
-                type: string
-                description: access token to authorize user
 
   packet:
     id: 'input/packet'
@@ -74,9 +70,6 @@ input:
                 description: >-
                   payload for the packet. Used only with begingroup
                   (for group names) and data packets
-              secret:
-                type: string
-                description: access token to authorize user
 
 output:
   error:

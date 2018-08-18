@@ -124,10 +124,6 @@ input:
             enum: ['list']
           payload:
             required: []
-            properties:
-              secret:
-                type: string
-                description: access token to authorize user
 
   getsource:
     id: 'input/getsource'
@@ -149,9 +145,6 @@ input:
                 type: string
                 description: 'Name of the component to for which to get source code. Should contain the library prefix'
                 example: 'my-project/SomeComponent'
-              secret:
-                type: string
-                description: access token to authorize user
 
   source:
     id: 'input/source'
@@ -189,5 +182,3 @@ input:
               tests:
                 type: string
                 description: 'Unit tests for the component'
-              secret:
-                type: string

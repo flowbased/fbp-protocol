@@ -8,26 +8,26 @@ validExamples =
     command: 'start'
     payload:
       graph: 'mygraph'
-      secret: 'verygood'
+    secret: 'verygood'
   'dump flowtrace.json':
     protocol: 'trace'
     command: 'dump'
     payload:
       graph: 'mygraph'
-      secret: 'verygood'
       type: 'flowtrace.json'
+    secret: 'verygood'
   'clear buffer':
     protocol: 'trace'
     command: 'clear'
     payload:
       graph: 'mygraph'
-      secret: 'verygood'
+    secret: 'verygood'
   'stop recording':
     protocol: 'trace'
     command: 'stop'
     payload:
       graph: 'mygraph'
-      secret: 'verygood'
+    secret: 'verygood'
 
 invalidExamples =
   'start with invalid graph id':
@@ -35,26 +35,26 @@ invalidExamples =
     command: 'start'
     payload:
       graph: 112.0
-      secret: 'nnice'
+    secret: 'nnice'
   'dump with invalid type':
     protocol: 'trace'
     command: 'dump'
     payload:
       graph: 'mygraph'
-      secret: 'verygood'
       type: 'not-a-valid-trace-type'
+    secret: 'verygood'
   'stop with missing secret':
     protocol: 'trace'
     command: 'start'
     payload:
       graph: 112.0
-      secret: undefined
+    secret: undefined
   'clear without graph':
     protocol: 'trace'
     command: 'start'
     payload:
       graph: undefined
-      secret: 'verygood'
+    secret: 'verygood'
 
 testValid = (name) -> 
   describe name, ->

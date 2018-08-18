@@ -33,6 +33,8 @@ The [fbp-protocol](https://github.com/flowbased/fbp-protocol) tool provides a se
 
 ## Changes
 
+* 2018-08-18: **Version 0.8**
+  - Moved `secret` from payload to message top-level
 * 2018-03-27:
   - Added schema for `network:edges` output message
   - Modified `subgraph` key of `network:data` and other network packet events to be an array as specified in the text

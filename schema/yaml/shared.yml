@@ -2,10 +2,6 @@ $schema: 'http://json-schema.org/draft-04/schema#'
 title: 'Shared'
 description: 'Shared schema fragments'
 
-secret:
-  id: secret
-  description: access token to authorize the client
-  type: string
 graph_id:
   id: graph_id
   description: Graph identifier the message targets
@@ -28,6 +24,9 @@ message:
     payload:
       type: object
       description: 'content of message'
+    secret:
+      type: string
+      description: access token to authorize the client
 
 metadata_node:
   id: 'metadata_node'

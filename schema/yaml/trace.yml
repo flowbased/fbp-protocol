@@ -70,10 +70,9 @@ input:
           command:
             enum: ['start']
           payload:
-            required: ['secret', 'graph']
+            required: ['graph']
             additionalProperties: false
             properties:
-              secret: { $ref: '/shared/secret' }
               graph: { $ref: '/shared/graph_id' }
               buffersize:
                 description: 'Size of tracing buffer to keep. In bytes'
@@ -90,10 +89,9 @@ input:
           command:
             enum: ['stop']
           payload:
-            required: ['secret', 'graph']
+            required: ['graph']
             additionalProperties: false
             properties:
-              secret: { $ref: '/shared/secret' }
               graph: { $ref: '/shared/graph_id' }
 
   dump:
@@ -107,10 +105,9 @@ input:
           command:
             enum: ['dump']
           payload:
-            required: ['secret', 'graph', 'type']
+            required: ['graph', 'type']
             additionalProperties: false
             properties:
-              secret: { $ref: '/shared/secret' }
               graph: { $ref: '/shared/graph_id' }
               type:
                 description: Type/format of trace to output
@@ -128,8 +125,7 @@ input:
           command:
             enum: ['clear']
           payload:
-            required: ['secret', 'graph']
+            required: ['graph']
             additionalProperties: false
             properties:
-              secret: { $ref: '/shared/secret' }
               graph: { $ref: '/shared/graph_id' }
