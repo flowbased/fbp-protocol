@@ -7,7 +7,7 @@ graph_id:
   description: Graph identifier the message targets
   type: string
 
-message:
+input_message:
   id: 'message'
   description: 'protocol message'
   additionalProperties: false
@@ -27,6 +27,24 @@ message:
     secret:
       type: string
       description: access token to authorize the client
+
+output_message:
+  id: 'message'
+  description: 'protocol message'
+  additionalProperties: false
+  required: ['protocol', 'command', 'payload']
+  properties:
+    protocol:
+      type: string
+      description: 'type of protocol'
+      example: 'graph'
+    command:
+      type: string
+      description: 'command to be executed'
+      example: 'addnode'
+    payload:
+      type: object
+      description: 'content of message'
 
 metadata_node:
   id: 'metadata_node'

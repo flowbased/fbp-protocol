@@ -9,7 +9,7 @@ output:
     id: 'output/stopped'
     description: 'Inform that a given network has stopped.'
     allOf:
-      - $ref: '/shared/message'
+      - $ref: '/shared/output_message'
       - properties:
           protocol:
             enum: ['network']
@@ -43,7 +43,7 @@ output:
     id: 'output/started'
     description: 'Inform that a given network has been started.'
     allOf:
-      - $ref: '/shared/message'
+      - $ref: '/shared/output_message'
       - properties:
           protocol:
             enum: ['network']
@@ -74,7 +74,7 @@ output:
     id: 'output/status'
     description: 'Response to a getstatus message.'
     allOf:
-      - $ref: '/shared/message'
+      - $ref: '/shared/output_message'
       - properties:
           protocol:
             enum: ['network']
@@ -107,7 +107,7 @@ output:
       of a Unix process, or a line of console.log in JavaScript. Output can also
       be used for passing images from the runtime to the UI.'
     allOf:
-      - $ref: '/shared/message'
+      - $ref: '/shared/output_message'
       - properties:
           protocol:
             enum: ['network']
@@ -135,7 +135,7 @@ output:
       An error from a running network, roughly similar to STDERR
       output of a Unix process, or a line of console.error in JavaScript.'
     allOf:
-      - $ref: '/shared/message'
+      - $ref: '/shared/output_message'
       - properties:
           protocol:
             enum: ['network']
@@ -160,7 +160,7 @@ output:
     description: >-
       When in debug mode, a network can signal an error happening inside a process.
     allOf:
-      - $ref: '/shared/message'
+      - $ref: '/shared/output_message'
       - properties:
           protocol:
             enum: ['network']
@@ -184,7 +184,7 @@ output:
     id: 'output/icon'
     description: 'Icon of a component instance has changed.'
     allOf:
-      - $ref: '/shared/message'
+      - $ref: '/shared/output_message'
       - properties:
           protocol:
             enum: ['network']
@@ -208,7 +208,7 @@ output:
     id: 'output/connect'
     description: 'Beginning of transmission on an edge.'
     allOf:
-      - $ref: '/shared/message'
+      - $ref: '/shared/output_message'
       - properties:
           protocol:
             enum: ['network']
@@ -222,7 +222,7 @@ output:
     id: 'output/begingroup'
     description: 'Beginning of a group (bracket IP) on an edge.'
     allOf:
-      - $ref: '/shared/message'
+      - $ref: '/shared/output_message'
       - properties:
           protocol:
             enum: ['network']
@@ -249,7 +249,7 @@ output:
     id: 'output/data'
     description: 'Data transmission on an edge.'
     allOf:
-      - $ref: '/shared/message'
+      - $ref: '/shared/output_message'
       - properties:
           protocol:
             enum: ['network']
@@ -286,7 +286,7 @@ output:
     id: 'output/endgroup'
     description: 'Ending of a group (bracket IP) on an edge.'
     allOf:
-      - $ref: '/shared/message'
+      - $ref: '/shared/output_message'
       - properties:
           protocol:
             enum: ['network']
@@ -313,7 +313,7 @@ output:
     id: 'output/disconnect'
     description: 'End of transmission on an edge.'
     allOf:
-      - $ref: '/shared/message'
+      - $ref: '/shared/output_message'
       - properties:
           protocol:
             enum: ['network']
@@ -336,7 +336,7 @@ input:
     id: 'input/start'
     description: 'Start execution of a FBP network based on a given graph.'
     allOf:
-      - $ref: '/shared/message'
+      - $ref: '/shared/input_message'
       - properties:
           protocol:
             enum: ['network']
@@ -356,7 +356,7 @@ input:
       Get the current status of the runtime. The runtime should
       respond with a status message.
     allOf:
-      - $ref: '/shared/message'
+      - $ref: '/shared/input_message'
       - properties:
           protocol:
             enum: ['network']
@@ -374,7 +374,7 @@ input:
     id: 'input/stop'
     description: 'Stop execution of a FBP network based on a given graph.'
     allOf:
-      - $ref: '/shared/message'
+      - $ref: '/shared/input_message'
       - properties:
           protocol:
             enum: ['network']
@@ -395,7 +395,7 @@ input:
       so that they are available between restarts. Requires the network:persist
       capability.
     allOf:
-      - $ref: '/shared/message'
+      - $ref: '/shared/input_message'
       - properties:
           protocol:
             enum: ['network']
@@ -410,7 +410,7 @@ input:
     id: 'input/debug'
     description: Set a network into debug mode
     allOf:
-      - $ref: '/shared/message'
+      - $ref: '/shared/input_message'
       - properties:
           protocol:
             enum: ['network']
@@ -433,7 +433,7 @@ input:
       List of edges user has selected for inspection in a user
       interface or debugger, sent from UI to a runtime.
     allOf:
-      - $ref: '/shared/message'
+      - $ref: '/shared/input_message'
       - properties:
           protocol:
             enum: ['network']

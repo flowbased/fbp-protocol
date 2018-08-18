@@ -13,7 +13,7 @@ input:
       able to speak the full Runtime protocol, it should follow up
       with a ports message.
     allOf:
-      - $ref: '/shared/message'
+      - $ref: '/shared/input_message'
       - properties:
           protocol:
             enum: ['runtime']
@@ -32,7 +32,7 @@ input:
       These packets can be send from the client to the runtimes input ports, or from
       runtimes output ports to the client.
     allOf:
-      - $ref: '/shared/message'
+      - $ref: '/shared/input_message'
       - properties:
           protocol:
             enum: ['runtime']
@@ -76,7 +76,7 @@ output:
     id: 'output/error'
     description: 'Error response to a command on runtime protocol'
     allOf:
-      - $ref: '/shared/message'
+      - $ref: '/shared/output_message'
       - properties:
           protocol:
             enum: ['runtime']
@@ -96,7 +96,7 @@ output:
       is responsible for sending the up-to-date list of available ports back to
       client whenever it changes.
     allOf:
-      - $ref: '/shared/message'
+      - $ref: '/shared/output_message'
       - properties:
           protocol:
             enum: ['runtime']
@@ -122,7 +122,7 @@ output:
     id: 'output/runtime'
     description: 'Response from the runtime to the getruntime request.'
     allOf:
-      - $ref: '/shared/message'
+      - $ref: '/shared/output_message'
       - properties:
           protocol:
             enum: ['runtime']
@@ -186,7 +186,7 @@ output:
     id: 'output/packetsent'
     description: Confirmation that a packet has been sent
     allOf:
-      - $ref: '/shared/message'
+      - $ref: '/shared/output_message'
       - properties:
           protocol:
             enum: ['runtime']
