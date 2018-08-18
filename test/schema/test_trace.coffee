@@ -1,6 +1,7 @@
 chai = require 'chai'
 schemas = require '../../schema/schemas.js'
 tv4 = require 'tv4'
+uuid = require 'uuid/v4'
 
 validExamples =
   'start recording':
@@ -9,6 +10,7 @@ validExamples =
     payload:
       graph: 'mygraph'
     secret: 'verygood'
+    requestId: uuid()
   'dump flowtrace.json':
     protocol: 'trace'
     command: 'dump'
@@ -16,18 +18,21 @@ validExamples =
       graph: 'mygraph'
       type: 'flowtrace.json'
     secret: 'verygood'
+    requestId: uuid()
   'clear buffer':
     protocol: 'trace'
     command: 'clear'
     payload:
       graph: 'mygraph'
     secret: 'verygood'
+    requestId: uuid()
   'stop recording':
     protocol: 'trace'
     command: 'stop'
     payload:
       graph: 'mygraph'
     secret: 'verygood'
+    requestId: uuid()
 
 invalidExamples =
   'start with invalid graph id':
@@ -36,6 +41,7 @@ invalidExamples =
     payload:
       graph: 112.0
     secret: 'nnice'
+    requestId: uuid()
   'dump with invalid type':
     protocol: 'trace'
     command: 'dump'
@@ -43,17 +49,26 @@ invalidExamples =
       graph: 'mygraph'
       type: 'not-a-valid-trace-type'
     secret: 'verygood'
+    requestId: uuid()
   'stop with missing secret':
     protocol: 'trace'
     command: 'start'
     payload:
       graph: 112.0
     secret: undefined
+    requestId: uuid()
   'clear without graph':
     protocol: 'trace'
     command: 'start'
     payload:
       graph: undefined
+    secret: 'verygood'
+    requestId: uuid()
+  'start without requestId':
+    protocol: 'trace'
+    command: 'start'
+    payload:
+      graph: 'mygraph'
     secret: 'verygood'
 
 testValid = (name) -> 

@@ -1,6 +1,7 @@
 chai = require 'chai'
 schemas = require '../../schema/schemas.js'
 tv4 = require 'tv4'
+uuid = require 'uuid/v4'
 
 describe 'Test runtime protocol schema on event', ->
   before ->
@@ -22,6 +23,7 @@ describe 'Test runtime protocol schema on event', ->
           protocol: 'runtime'
           command: 'getruntime'
           payload: {}
+          requestId: uuid()
 
         res = tv4.validate event, schema
         chai.expect(res).to.be.true
@@ -40,6 +42,7 @@ describe 'Test runtime protocol schema on event', ->
             port: 'IN'
             graph: 'mygraph'
             event: 'connect'
+          requestId: uuid()
 
         res = tv4.validate event, schema
         chai.expect(res).to.be.true
@@ -52,6 +55,7 @@ describe 'Test runtime protocol schema on event', ->
             port: 'IN'
             graph: 'mygraph'
             event: 'bad event'
+          requestId: uuid()
 
         res = tv4.validate event, schema
         chai.expect(res).to.be.false

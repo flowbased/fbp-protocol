@@ -41,7 +41,8 @@
     "http-server": "^0.11.1",
     "json-schema-ref-parser": "^5.1.2",
     "noflo-core": "^0.5.0",
-    "noflo-nodejs": "^0.10.0"
+    "noflo-nodejs": "^0.10.0",
+    "uuid": "^3.3.2"
   },
   "main": "./schema/index.js"
 }
