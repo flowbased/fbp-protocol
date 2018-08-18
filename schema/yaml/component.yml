@@ -57,6 +57,7 @@ output:
   componentsready:
     id: 'output/componentsready'
     description: Indication that a component listing has finished
+    allOf:
       - $ref: '/shared/output_message'
       - properties:
         protocol:

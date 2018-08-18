@@ -329,7 +329,7 @@ messages:
             description: 'the exported name of the port to remove'
           graph:
             type: string
-                description: 'graph the action targets'
+            description: 'graph the action targets'
   renameoutport:
     properties:
       protocol:
