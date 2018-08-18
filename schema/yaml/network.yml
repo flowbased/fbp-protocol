@@ -26,9 +26,7 @@ output:
               uptime:
                 type: number
                 description: 'time the network was running, in seconds'
-              graph:
-                type: "string"
-                description: 'graph the action targets'
+              graph: { $ref: '#/shared/graph_id' }
               running:
                 type: boolean
                 description: 'whether or not network is currently running'
@@ -57,9 +55,7 @@ output:
                 type: "string"
                 format: "date-time"
                 description: 'time when the network was started'
-              graph:
-                type: "string"
-                description: 'graph the action targets'
+              graph: { $ref: '#/shared/graph_id' }
               started:
                 type: "boolean"
                 description: 'whether or not network has started running'
@@ -84,9 +80,7 @@ output:
             required: ['running', 'graph']
             additionalProperties: false
             properties:
-              graph:
-                type: string
-                description: 'graph the action targets'
+              graph: { $ref: '#/shared/graph_id' }
               uptime:
                 type: number
                 description: 'time the network has been running, in seconds'
@@ -151,9 +145,7 @@ output:
               stack:
                 description: 'stack trace'
                 type: 'string'
-              graph:
-                type: string
-                description: graph the action targets
+              graph: { $ref: '#/shared/graph_id' }
 
   processerror:
     id: 'output/processerror'
@@ -176,9 +168,7 @@ output:
               error:
                 type: string
                 description: error from the component
-              graph:
-                type: string
-                description: graph the action targets
+              graph: { $ref: '#/shared/graph_id' }
 
   icon:
     id: 'output/icon'
@@ -200,9 +190,7 @@ output:
               icon:
                 type: "string"
                 description: 'new icon for the component instance'
-              graph:
-                type: "string"
-                description: 'graph the action targets'
+              graph: { $ref: '#/shared/graph_id' }
 
   connect:
     id: 'output/connect'
@@ -346,9 +334,7 @@ input:
             required: ['graph']
             additionalProperties: false
             properties:
-              graph:
-                type: "string"
-                description: 'graph the action targets'
+              graph: { $ref: '#/shared/graph_id' }
 
   getstatus:
     id: 'input/getstatus'
@@ -366,9 +352,7 @@ input:
             required: ['graph']
             additionalProperties: false
             properties:
-              graph:
-                type: "string"
-                description: 'graph the action targets'
+              graph: { $ref: '#/shared/graph_id' }
 
   stop:
     id: 'input/stop'
@@ -384,9 +368,7 @@ input:
             required: ['graph']
             additionalProperties: false
             properties:
-              graph:
-                type: "string"
-                description: 'graph the action targets'
+              graph: { $ref: '#/shared/graph_id' }
 
   persist:
     id: 'input/persist'
@@ -423,9 +405,7 @@ input:
               enable:
                 description: tells whether to put the network in debug mode
                 type: boolean
-              graph:
-                description: graph the action targets
-                type: string
+              graph: { $ref: '#/shared/graph_id' }
 
   edges:
     id: 'input/edges'
@@ -443,9 +423,6 @@ input:
             required: ['graph', 'edges']
             additionalProperties: false
             properties:
-              graph:
-                description: graph the action targets
-                type: string
               edges:
                 type: array
                 description: 'list of selected edges'
@@ -460,3 +437,4 @@ input:
                     tgt:
                       description: 'target node for the edge'
                       $ref: '#/shared/port'
+              graph: { $ref: '#/shared/graph_id' }

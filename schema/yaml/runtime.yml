@@ -63,13 +63,11 @@ input:
                 format: uri
                 description: 'Link to JSON schema describing the format of the data'
                 example: 'https://example.net/schemas/person.json'
-              graph:
-                type: string
-                description: 'graph the action targets'
               payload:
                 description: >-
                   payload for the packet. Used only with begingroup
                   (for group names) and data packets
+              graph: { $ref: '#/shared/graph_id' }
 
 output:
   error:
@@ -106,17 +104,13 @@ output:
             required: ['graph', 'inPorts', 'outPorts']
             additionalProperties: false
             properties:
-              graph:
-                type: string
-                description: >-
-                  ID of the currently configured main graph running on the
-                  runtime
               inPorts:
                 description: 'list of input ports of the runtime'
                 $ref: '#/shared/port_definition'
               outPorts:
                 description: 'list of output ports of the runtime'
                 $ref: '#/shared/port_definition'
+              graph: { $ref: '#/shared/graph_id' }
 
   runtime:
     id: 'output/runtime'
@@ -159,6 +153,7 @@ output:
                   on the runtime, if any
                 type: string
                 example: 'service-main'
+                $ref: '#/shared/graph_id'
               type:
                 description: 'type of the runtime'
                 type: string
@@ -217,13 +212,11 @@ output:
                 format: uri
                 description: 'Link to JSON schema describing the format of the data'
                 example: 'https://example.net/schemas/person.json'
-              graph:
-                type: string
-                description: 'graph the action targeted'
               payload:
                 description: >-
                   payload for the packet. Used only with begingroup
                   (for group names) and data packets
+              graph: { $ref: '#/shared/graph_id' }
 
   packet:
     id: 'output/packet'
