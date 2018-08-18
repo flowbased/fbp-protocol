@@ -91,6 +91,10 @@ renderProperty = (name, def, parent) ->
   classes += " optional" if isOptional
   name = "<label class='#{classes} name'>#{name}</label>"
   type = "<label class='#{classes} type'>#{def.type or 'any'}</label>"
+
+  if def.enum?.length
+    def.description += " (one of: #{def.enum.join(', ')})"
+
   description = "<label class='#{classes} description'>#{def.description}</label>"
   example = ""
   example = "<code class='#{classes} example'>#{JSON.stringify(def.example)}</code>" if def.example?
