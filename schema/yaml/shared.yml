@@ -36,6 +36,10 @@ input_message:
     payload:
       type: object
       description: 'content of message'
+      properties:
+        secret:
+          type: string
+          description: access token to authorize the client. Legacy location, use toplevel secret instead
     secret:
       type: string
       description: access token to authorize the client

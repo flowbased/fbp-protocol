@@ -59,6 +59,8 @@ exports.testRuntime = (runtimeType, startServer, stopServer, host='localhost', p
 
     send = (protocol, command, payload) ->
       payload = {} unless payload
+      # FIXME: Remove from payload once runtimes are on 0.8
+      payload.secret = process.env.FBP_PROTOCOL_SECRET
       connection.sendUTF JSON.stringify
         protocol: protocol
         command: command
@@ -79,6 +81,10 @@ exports.testRuntime = (runtimeType, startServer, stopServer, host='localhost', p
         data = JSON.parse message.utf8Data
         chai.expect(data.protocol).to.be.a 'string'
         chai.expect(data.command).to.be.a 'string'
+
+        # FIXME: Remove once runtimes are on 0.8
+        delete data.payload.secret
+
         # Validate all received packets against schema
         validateSchema data, getPacketSchema data
         # Don't ever expect payloads to return a secret
@@ -110,6 +116,8 @@ exports.testRuntime = (runtimeType, startServer, stopServer, host='localhost', p
           delete data.payload.stack
           delete expected.payload.stack
 
+        # FIXME: Remove once runtimes are on 0.8
+        delete expected.payload.secret
         # Don't ever expect payloads to return a secret
         delete expected.secret
 
