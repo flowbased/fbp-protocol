@@ -21,6 +21,10 @@ input:
             enum: ['getruntime']
           payload:
             required: []
+            properties:
+              secret:
+                type: string
+                description: access token to authorize the client. Provided also in payload for compatibility with older runtimes
 
   packet:
     id: 'input/packet'
