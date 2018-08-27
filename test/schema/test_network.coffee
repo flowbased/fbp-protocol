@@ -1,6 +1,7 @@
 chai = require 'chai'
 schemas = require '../../schema/schemas.js'
 tv4 = require 'tv4'
+uuid = require 'uuid/v4'
 format = require '../../schema/format'
 
 describe 'Test network protocol schema on events', ->
@@ -373,6 +374,7 @@ describe 'Test network protocol schema on events', ->
           command: 'start'
           payload:
             graph: 'start'
+          requestId: uuid()
 
         res = tv4.validateMultiple event, schema
         chai.expect(res.errors).to.eql []
@@ -391,6 +393,7 @@ describe 'Test network protocol schema on events', ->
           command: 'getstatus'
           payload:
             graph: 'mygraph'
+          requestId: uuid()
 
         res = tv4.validateMultiple event, schema
         chai.expect(res.errors).to.eql []
@@ -409,6 +412,7 @@ describe 'Test network protocol schema on events', ->
           command: 'getstatus'
           payload:
             graph: 'mygraph'
+          requestId: uuid()
 
         res = tv4.validateMultiple event, schema
         chai.expect(res.errors).to.eql []
@@ -427,6 +431,7 @@ describe 'Test network protocol schema on events', ->
           command: 'stop'
           payload:
             graph: 'mygraph'
+          requestId: uuid()
 
         res = tv4.validateMultiple event, schema
         chai.expect(res.errors).to.eql []
@@ -444,6 +449,7 @@ describe 'Test network protocol schema on events', ->
           protocol: 'network'
           command: 'persist'
           payload: {}
+          requestId: uuid()
 
         res = tv4.validateMultiple event, schema
         chai.expect(res.errors).to.eql []
@@ -463,6 +469,7 @@ describe 'Test network protocol schema on events', ->
           payload:
             enable: true
             graph: 'mygraph'
+          requestId: uuid()
 
         res = tv4.validateMultiple event, schema
         chai.expect(res.errors).to.eql []
@@ -490,6 +497,7 @@ describe 'Test network protocol schema on events', ->
                 port: 'IN'
                 index: 0
             ]
+          requestId: uuid()
 
         res = tv4.validateMultiple event, schema
         chai.expect(res.errors).to.eql []

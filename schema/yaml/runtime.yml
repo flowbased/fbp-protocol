@@ -13,7 +13,7 @@ input:
       able to speak the full Runtime protocol, it should follow up
       with a ports message.
     allOf:
-      - $ref: '/shared/message'
+      - $ref: '#/shared/input_message'
       - properties:
           protocol:
             enum: ['runtime']
@@ -24,7 +24,7 @@ input:
             properties:
               secret:
                 type: string
-                description: access token to authorize user
+                description: access token to authorize the client. Provided also in payload for compatibility with older runtimes
 
   packet:
     id: 'input/packet'
@@ -36,7 +36,7 @@ input:
       These packets can be send from the client to the runtimes input ports, or from
       runtimes output ports to the client.
     allOf:
-      - $ref: '/shared/message'
+      - $ref: '#/shared/input_message'
       - properties:
           protocol:
             enum: ['runtime']
@@ -47,8 +47,7 @@ input:
             additionalProperties: false
             properties:
               port:
-                type: string
-                description: 'port name for the input or output port'
+                $ref: '#/shared/port_id'
               event:
                 type: string
                 enum:
@@ -67,23 +66,18 @@ input:
                 format: uri
                 description: 'Link to JSON schema describing the format of the data'
                 example: 'https://example.net/schemas/person.json'
-              graph:
-                type: string
-                description: 'graph the action targets'
               payload:
                 description: >-
                   payload for the packet. Used only with begingroup
                   (for group names) and data packets
-              secret:
-                type: string
-                description: access token to authorize user
+              graph: { $ref: '#/shared/graph_id' }
 
 output:
   error:
     id: 'output/error'
     description: 'Error response to a command on runtime protocol'
     allOf:
-      - $ref: '/shared/message'
+      - $ref: '#/shared/output_message'
       - properties:
           protocol:
             enum: ['runtime']
@@ -103,7 +97,7 @@ output:
       is responsible for sending the up-to-date list of available ports back to
       client whenever it changes.
     allOf:
-      - $ref: '/shared/message'
+      - $ref: '#/shared/output_message'
       - properties:
           protocol:
             enum: ['runtime']
@@ -113,23 +107,19 @@ output:
             required: ['graph', 'inPorts', 'outPorts']
             additionalProperties: false
             properties:
-              graph:
-                type: string
-                description: >-
-                  ID of the currently configured main graph running on the
-                  runtime
               inPorts:
                 description: 'list of input ports of the runtime'
-                $ref: '/shared/port_definition'
+                $ref: '#/shared/port_definition'
               outPorts:
                 description: 'list of output ports of the runtime'
-                $ref: '/shared/port_definition'
+                $ref: '#/shared/port_definition'
+              graph: { $ref: '#/shared/graph_id' }
 
   runtime:
     id: 'output/runtime'
     description: 'Response from the runtime to the getruntime request.'
     allOf:
-      - $ref: '/shared/message'
+      - $ref: '#/shared/output_message'
       - properties:
           protocol:
             enum: ['runtime']
@@ -155,17 +145,18 @@ output:
                 description: >-
                   <a href='#capabilities'>capability strings</a> for things the runtime is able to do.
                   May include things not permitted for this client.
-                $ref: '/shared/capabilities'
+                $ref: '#/shared/capabilities'
               capabilities:
                 description: >-
                   <a href='#capabilities'>capability strings</a> for things the runtime is able to do for this client.
-                $ref: '/shared/capabilities'
+                $ref: '#/shared/capabilities'
               graph:
                 description: >-
                   ID of the currently configured main graph running
                   on the runtime, if any
                 type: string
                 example: 'service-main'
+                $ref: '#/shared/graph_id'
               type:
                 description: 'type of the runtime'
                 type: string
@@ -193,7 +184,7 @@ output:
     id: 'output/packetsent'
     description: Confirmation that a packet has been sent
     allOf:
-      - $ref: '/shared/message'
+      - $ref: '#/shared/output_message'
       - properties:
           protocol:
             enum: ['runtime']
@@ -204,8 +195,8 @@ output:
             additionalProperties: false
             properties:
               port:
-                type: string
                 description: 'port name for the input port'
+                $ref: '#/shared/port_id'
               event:
                 type: string
                 enum:
@@ -224,13 +215,11 @@ output:
                 format: uri
                 description: 'Link to JSON schema describing the format of the data'
                 example: 'https://example.net/schemas/person.json'
-              graph:
-                type: string
-                description: 'graph the action targeted'
               payload:
                 description: >-
                   payload for the packet. Used only with begingroup
                   (for group names) and data packets
+              graph: { $ref: '#/shared/graph_id' }
 
   packet:
     id: 'output/packet'
@@ -241,4 +230,4 @@ output:
 
       These packets can be send from the client to the runtimes input ports, or from
       runtimes output ports to the client.
-    $ref: '../input/packet'
+    $ref: '#/runtime/input/packet'

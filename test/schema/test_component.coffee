@@ -1,6 +1,7 @@
 chai = require 'chai'
 schemas = require '../../schema/schemas.js'
 tv4 = require 'tv4'
+uuid = require 'uuid/v4'
 
 describe 'Test component protocol schema on event', ->
   before ->
@@ -78,6 +79,7 @@ describe 'Test component protocol schema on event', ->
           protocol: 'component'
           command: 'list'
           payload: {}
+          requestId: uuid()
 
         res = tv4.validate event, schema
         chai.expect(res).to.be.true
@@ -94,6 +96,7 @@ describe 'Test component protocol schema on event', ->
           command: 'getsource'
           payload:
             name: 'component1'
+          requestId: uuid()
 
         res = tv4.validate event, schema
         chai.expect(res).to.be.true
@@ -112,7 +115,7 @@ describe 'Test component protocol schema on event', ->
             name: 'component1'
             language: 'coffeescript'
             code: '-> console.log Array.prototype.slice.call arguments'
+          requestId: uuid()
 
         res = tv4.validate event, schema
         chai.expect(res).to.be.true
-

@@ -59,11 +59,13 @@ exports.testRuntime = (runtimeType, startServer, stopServer, host='localhost', p
 
     send = (protocol, command, payload) ->
       payload = {} unless payload
-      payload.secret = process.env.FBP_PROTOCOL_SECRET if process.env.FBP_PROTOCOL_SECRET
+      # FIXME: Remove from payload once runtimes are on 0.8
+      payload.secret = process.env.FBP_PROTOCOL_SECRET
       connection.sendUTF JSON.stringify
         protocol: protocol
         command: command
         payload: payload
+        secret: process.env.FBP_PROTOCOL_SECRET
 
     messageMatches = (msg, expected) ->
       return false unless msg.protocol is expected.protocol
@@ -79,9 +81,14 @@ exports.testRuntime = (runtimeType, startServer, stopServer, host='localhost', p
         data = JSON.parse message.utf8Data
         chai.expect(data.protocol).to.be.a 'string'
         chai.expect(data.command).to.be.a 'string'
+
+        # FIXME: Remove once runtimes are on 0.8
+        delete data.payload.secret
+
         # Validate all received packets against schema
         validateSchema data, getPacketSchema data
         # Don't ever expect payloads to return a secret
+        chai.expect(data.secret, 'Message should not contain secret').to.be.a 'undefined'
         chai.expect(data.payload.secret, 'Payload should not contain secret').to.be.a 'undefined'
         if allowExtraPackets and not messageMatches data, expects[0]
           # Ignore messages we don't care about in context of the test
@@ -109,8 +116,10 @@ exports.testRuntime = (runtimeType, startServer, stopServer, host='localhost', p
           delete data.payload.stack
           delete expected.payload.stack
 
-        # Don't ever expect payloads to return a secret
+        # FIXME: Remove once runtimes are on 0.8
         delete expected.payload.secret
+        # Don't ever expect payloads to return a secret
+        delete expected.secret
 
         chai.expect(data.payload).to.eql expected.payload
         # Received all expected packets

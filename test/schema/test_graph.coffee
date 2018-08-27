@@ -1,6 +1,7 @@
 chai = require 'chai'
 schemas = require '../../schema/schemas.js'
 tv4 = require 'tv4'
+uuid = require 'uuid/v4'
 
 describe 'Test graph protocol schema on event', ->
   before ->
@@ -27,6 +28,7 @@ describe 'Test graph protocol schema on event', ->
           id: 'node1'
           component: 'core/Kick'
           graph: 'mygraph'
+        requestId: uuid()
 
       res = tv4.validate event, schema
       chai.expect(res).to.be.true
@@ -40,6 +42,7 @@ describe 'Test graph protocol schema on event', ->
           component: 'core/Kick'
           graph: 'mygraph'
           whatisthis: 'notallowed'
+        requestId: uuid()
 
       res = tv4.validate event, schema
       chai.expect(res).to.be.false
@@ -51,6 +54,7 @@ describe 'Test graph protocol schema on event', ->
           id: 'node1'
           component: 'core/Kick'
           graph: 'mygraph'
+        requestId: uuid()
 
 
       res = tv4.validate event, schema
@@ -63,6 +67,7 @@ describe 'Test graph protocol schema on event', ->
           id: 'node1'
           component: 'core/Kick'
           graph: 'mygraph'
+        requestId: uuid()
 
   describe 'removenode', ->
     schema = '/graph/input/removenode'
@@ -81,6 +86,7 @@ describe 'Test graph protocol schema on event', ->
         payload:
           id: 'node1'
           graph: 'mygraph'
+        requestId: uuid()
 
       chai.expect(tv4.validate event, schema).to.be.true
 
@@ -102,6 +108,7 @@ describe 'Test graph protocol schema on event', ->
           from: 'node1'
           to: 'node2'
           graph: 'mygraph'
+        requestId: uuid()
 
       chai.expect(tv4.validate event, schema).to.be.true
 
@@ -125,6 +132,7 @@ describe 'Test graph protocol schema on event', ->
           metadata:
             x: 5
             y: -1000
+        requestId: uuid()
 
       chai.expect(tv4.validate event, schema).to.be.true
 
@@ -135,6 +143,7 @@ describe 'Test graph protocol schema on event', ->
         payload:
           id: 'node1'
           graph: 'mygraph'
+        requestId: uuid()
 
       chai.expect(tv4.validate event, schema).to.be.false
 
@@ -160,6 +169,7 @@ describe 'Test graph protocol schema on event', ->
           tgt:
             node: 'node2'
             port: 'IN'
+        requestId: uuid()
 
       chai.expect(tv4.validate event, schema).to.be.true
 
@@ -173,6 +183,7 @@ describe 'Test graph protocol schema on event', ->
             port: 'OUT'
           tgt:
             port: 'IN'
+        requestId: uuid()
 
       chai.expect(tv4.validate event, schema).to.be.false
 
@@ -198,6 +209,7 @@ describe 'Test graph protocol schema on event', ->
           tgt:
             node: 'node2'
             port: 'IN'
+        requestId: uuid()
 
       chai.expect(tv4.validate event, schema).to.be.true
 
@@ -225,6 +237,7 @@ describe 'Test graph protocol schema on event', ->
             port: 'IN'
           metadata:
             route: 1
+        requestId: uuid()
 
       chai.expect(tv4.validate event, schema).to.be.true
 
@@ -249,6 +262,7 @@ describe 'Test graph protocol schema on event', ->
           tgt:
             node: 'node2'
             port: 'IN'
+        requestId: uuid()
 
       res = tv4.validateMultiple event, schema
       chai.expect(res.missing).to.eql []
@@ -265,6 +279,7 @@ describe 'Test graph protocol schema on event', ->
             tgt:
               port: 'IN'
               node: 'node2'
+          requestId: uuid()
 
         chai.expect(tv4.validate event, schema).to.be.false
 
@@ -287,6 +302,7 @@ describe 'Test graph protocol schema on event', ->
           tgt:
             node: 'node2'
             port: 'IN'
+        requestId: uuid()
 
       chai.expect(tv4.validate event, schema).to.be.true
 
@@ -301,6 +317,7 @@ describe 'Test graph protocol schema on event', ->
           tgt:
             node: 'node2'
             port: 'IN'
+        requestId: uuid()
 
       chai.expect(tv4.validate event, schema).to.be.false
 
@@ -323,6 +340,7 @@ describe 'Test graph protocol schema on event', ->
           public: 'IN'
           node: 'core/Kick'
           port: 'DATA'
+        requestId: uuid()
 
       chai.expect(tv4.validate event, schema).to.be.true
 
@@ -336,6 +354,7 @@ describe 'Test graph protocol schema on event', ->
           node: 'core/Kick'
           port: 'DATA'
           extra: 'doesntwork'
+        requestId: uuid()
 
       chai.expect(tv4.validate event, schema).to.be.false
 
@@ -356,6 +375,7 @@ describe 'Test graph protocol schema on event', ->
         payload:
           graph: 'mygraph'
           public: 'IN'
+        requestId: uuid()
 
       chai.expect(tv4.validate event, schema).to.be.true
 
@@ -368,6 +388,7 @@ describe 'Test graph protocol schema on event', ->
           public: 'IN'
           node: 'core/Kick'
           port: 'DATA'
+        requestId: uuid()
 
       chai.expect(tv4.validate event, schema).to.be.false
 
@@ -389,6 +410,7 @@ describe 'Test graph protocol schema on event', ->
           graph: 'mygraph'
           from: 'IN'
           to: 'MORE_IN'
+        requestId: uuid()
 
       chai.expect(tv4.validate event, schema).to.be.true
 
@@ -411,6 +433,7 @@ describe 'Test graph protocol schema on event', ->
           public: 'OUT'
           node: 'core/Repeat'
           port: 'OUT'
+        requestId: uuid()
 
       chai.expect(tv4.validate event, schema).to.be.true
 
@@ -424,6 +447,7 @@ describe 'Test graph protocol schema on event', ->
           node: 'core/Repeat'
           port: 'OUT'
           extra: 'doesntwork'
+        requestId: uuid()
 
       chai.expect(tv4.validate event, schema).to.be.false
 
@@ -444,6 +468,7 @@ describe 'Test graph protocol schema on event', ->
         payload:
           graph: 'mygraph'
           public: 'OUT'
+        requestId: uuid()
 
       chai.expect(tv4.validate event, schema).to.be.true
 
@@ -456,6 +481,7 @@ describe 'Test graph protocol schema on event', ->
           public: 'OUT'
           node: 'core/Kick'
           port: 'DATA'
+        requestId: uuid()
 
       chai.expect(tv4.validate event, schema).to.be.false
 
@@ -477,6 +503,7 @@ describe 'Test graph protocol schema on event', ->
           graph: 'mygraph'
           from: 'OUT'
           to: 'MORE_OUT'
+        requestId: uuid()
 
       chai.expect(tv4.validate event, schema).to.be.true
 
@@ -498,6 +525,7 @@ describe 'Test graph protocol schema on event', ->
           graph: 'mygraph'
           name: 'mygroup'
           nodes: ['Kick', 'Drop']
+        requestId: uuid()
 
       chai.expect(tv4.validate event, schema).to.be.true
 
@@ -510,6 +538,7 @@ describe 'Test graph protocol schema on event', ->
           name: 'mygroup'
           nodes: ['Kick', 'Drop']
           extra: 'nope'
+        requestId: uuid()
 
       chai.expect(tv4.validate event, schema).to.be.false
 
@@ -530,6 +559,7 @@ describe 'Test graph protocol schema on event', ->
         payload:
           graph: 'mygraph'
           name: 'mygroup'
+        requestId: uuid()
 
       chai.expect(tv4.validate event, schema).to.be.true
 
@@ -551,6 +581,7 @@ describe 'Test graph protocol schema on event', ->
           graph: 'mygraph'
           from: 'mygroup'
           to: 'yourgroup'
+        requestId: uuid()
 
       chai.expect(tv4.validate event, schema).to.be.true
 
@@ -572,5 +603,6 @@ describe 'Test graph protocol schema on event', ->
           graph: 'mygraph'
           name: 'mygroup'
           metadata: {}
+        requestId: uuid()
 
       chai.expect(tv4.validate event, schema).to.be.true
