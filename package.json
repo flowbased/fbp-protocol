@@ -34,7 +34,7 @@
     "grunt-contrib-coffee": "^2.0.0",
     "grunt-contrib-watch": "^1.0.0",
     "grunt-exec": "^3.0.0",
-    "grunt-gh-pages": "^2.0.0",
+    "grunt-gh-pages": "^3.0.0",
     "grunt-jekyll": "^0.4.4",
     "grunt-mocha-test": "^0.13.2",
     "grunt-yaml": "^0.4.2",
