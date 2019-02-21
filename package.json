@@ -39,7 +39,7 @@
     "grunt-mocha-test": "^0.13.2",
     "grunt-yaml": "^0.4.2",
     "http-server": "^0.11.1",
-    "json-schema-ref-parser": "^5.1.2",
+    "json-schema-ref-parser": "^6.1.0",
     "noflo-core": "^0.6.0",
     "noflo-nodejs": "^0.10.0",
     "uuid": "^3.3.2"
