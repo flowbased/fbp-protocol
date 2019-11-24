@@ -122,4 +122,20 @@ A few commands do not require any capabilities: the runtime info request/respons
 
 <%= messages %>
 
+### Runtime discovery
+
+FBP runtimes may advertise their services using [DNS Service Discovery](https://tools.ietf.org/html/rfc6763) via Multicast DNS (mDNS, also known as Bonjour). In this case the runtime must provide [Service (SRV) Records](https://en.wikipedia.org/wiki/SRV_record) and [Text (TXT) Records](https://en.wikipedia.org/wiki/TXT_record) describing the FBP protocol interfaces it provides. The service identifiers are:
+
+* `_fbp-ws._tcp` for FBP Protocol interfaces via WebSocket transport
+
+If the runtime is using DNS Service Discovery, it must also provide the following parameters in the TXT record:
+
+* `txtvers`: version of the DNS-SD record. Currently needs to be `1`
+* `id`: unique identifier (UUID) of the runtime instance
+* `type`: the type of the runtime, for example `noflo-nodejs`
+
+Additionally, the TXT record can contain:
+
+* `label`: human-readable label for the runtime instance
+
 <%= changelog %>

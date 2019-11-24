@@ -1,5 +1,7 @@
 ## Changes
 
+* 2019-10-09:
+  - Documented how runtimes can advertise themselves using mDNS
 * 2018-08-18: **Version 0.8**
   - Moved `secret` from payload to message top-level
   - Introduced `requestId` and `responseTo` top-level keys for identifying requests and the response packets to them
