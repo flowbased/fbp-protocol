@@ -42,7 +42,7 @@
     "json-schema-ref-parser": "^5.1.2",
     "noflo-core": "^0.6.0",
     "noflo-nodejs": "^0.11.0",
-    "uuid": "^3.3.2"
+    "uuid": "^7.0.0"
   },
   "main": "./schema/index.js"
 }
