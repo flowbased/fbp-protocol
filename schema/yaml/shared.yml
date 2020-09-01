@@ -23,7 +23,7 @@ input_message:
   id: 'message'
   description: 'protocol message sent by a client'
   additionalProperties: false
-  required: ['protocol', 'command', 'payload', 'requestId']
+  required: ['protocol', 'command', 'payload']
   properties:
     protocol:
       type: string
