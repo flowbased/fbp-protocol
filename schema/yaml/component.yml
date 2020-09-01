@@ -57,21 +57,24 @@ output:
   componentsready:
     id: 'output/componentsready'
     description: Indication that a component listing has finished
-    allOf:
-      - $ref: '#/shared/output_message'
-      - properties:
-          protocol:
-            enum: ['component']
-            type: string
-            description: 'type of protocol'
-          command:
-            enum: ['componentsready']
-            description: 'command to be executed'
-            example: 'addnode'
-          payload:
-            type: 'integer'
-            description: 'number of components transmitted in this batch'
-            example: 42
+    additionalProperties: false
+    required: ['protocol', 'command', 'payload']
+    properties:
+      protocol:
+        enum: ['component']
+        type: string
+        description: 'type of protocol'
+      command:
+        enum: ['componentsready']
+        description: 'command to be executed'
+        example: 'addnode'
+      payload:
+        type: 'integer'
+        description: 'number of components transmitted in this batch'
+        example: 42
+      responseTo:
+        type: string
+        description: unique identifier of the request message is response to
 
   source:
     id: 'output/source'
