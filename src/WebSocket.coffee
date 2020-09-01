@@ -90,6 +90,12 @@ exports.testRuntime = (runtimeType, startServer, stopServer, host='localhost', p
         # Don't ever expect payloads to return a secret
         chai.expect(data.secret, 'Message should not contain secret').to.be.a 'undefined'
         chai.expect(data.payload.secret, 'Payload should not contain secret').to.be.a 'undefined'
+
+        if expects[0].command isnt 'error' and data.command is 'error'
+          # We received an unexpected error, bail out
+          done new Error data.payload
+          return
+
         if allowExtraPackets and not messageMatches data, expects[0]
           # Ignore messages we don't care about in context of the test
           connection.once 'message', listener
