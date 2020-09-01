@@ -90,6 +90,12 @@ exports.testRuntime = (runtimeType, startServer, stopServer, host='localhost', p
         # Don't ever expect payloads to return a secret
         chai.expect(data.secret, 'Message should not contain secret').to.be.a 'undefined'
         chai.expect(data.payload.secret, 'Payload should not contain secret').to.be.a 'undefined'
+
+        if expects[0].command isnt 'error' and data.command is 'error'
+          # We received an unexpected error, bail out
+          done new Error data.payload
+          return
+
         if allowExtraPackets and not messageMatches data, expects[0]
           # Ignore messages we don't care about in context of the test
           connection.once 'message', listener
@@ -148,15 +154,14 @@ exports.testRuntime = (runtimeType, startServer, stopServer, host='localhost', p
         chai.expect(capabilities, 'Graph protocol should be allowed for user').to.contain 'protocol:graph'
       describe 'adding a graph and nodes', ->
         it 'should provide the nodes back', (done) ->
-          expects = [
+          expects1 = [
               protocol: 'graph'
               command: 'clear',
               payload:
-                baseDir: path.resolve __dirname, '../'
                 id: 'foo'
                 main: true
-                name: 'NoFlo runtime'
-            ,
+          ]
+          expects2 = [
               protocol: 'graph'
               command: 'addnode'
               payload:
@@ -174,28 +179,12 @@ exports.testRuntime = (runtimeType, startServer, stopServer, host='localhost', p
                 metadata: {}
                 graph: 'foo'
           ]
-          connection.once 'message', (message) ->
-            data = JSON.parse message.utf8Data
-            validateSchema data, '/graph/output/clear'
-
-            connection.once 'message', (message) ->
-              data = JSON.parse message.utf8Data
-
-              validateSchema data, '/graph/output/addnode'
-              chai.expect(data.payload.id).to.equal expects[1].payload.id
-
-              connection.once 'message', (message) ->
-                data = JSON.parse message.utf8Data
-
-                validateSchema data, '/graph/output/addnode'
-                chai.expect(data.payload.id).to.equal expects[2].payload.id
-
-                done()
-
-              send 'graph', 'addnode', expects[2].payload
-
-            send 'graph', 'addnode', expects[1].payload
-
+          receive expects1, (err) ->
+            return done err if err
+            receive expects2, done, true
+            send 'graph', 'addnode', expects2[0].payload
+            send 'graph', 'addnode', expects2[1].payload
+          , true
           send 'graph', 'clear',
             baseDir: path.resolve __dirname, '../'
             id: 'foo'

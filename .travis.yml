@@ -1,6 +1,6 @@
 language: node_js
 node_js:
-- 'lts/*'
+- lts/*
 dist: trusty
 sudo: false
 before_install:
@@ -15,9 +15,9 @@ env:
 deploy:
   provider: npm
   email: henri.bergius@iki.fi
-  skip_cleanup: true
   api_key:
-    secure: R1QwlQKZ3i6sJqhxV33vzasjw3h0OuDPZzTqfX1u16jGXVH3/xhKe0aOJo/OAoLrWzdDDEFBqJOpLsALnqe847RVKivpvTkF/AFFTazVMq8xNeqOjtLS2/5IA6ZZAalr+edDeWPGc+BasvCzHXm+tjxOIi+zgdoJ20Ln7QJGH9k=
+    secure: dwOEH5TP/e5Xypdhr9lZNAUyl+RVaIrEfbvjB3eBzrI8dMQ+qTVWwyWz8GUHprJm95iyB73aj/orMYlnDJ+bZwfSzViHRxuWNErq0HeSISYdiA1glTjScXx5tKgnKLQmGyNTy9JRdRsPSWXtmpJScq3vll6GthlgTgxwRnNRP9c=
   on:
     tags: true
     repo: flowbased/fbp-protocol
+  skip_cleanup: true
