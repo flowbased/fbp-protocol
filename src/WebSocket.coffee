@@ -160,6 +160,7 @@ exports.testRuntime = (runtimeType, startServer, stopServer, host='localhost', p
               payload:
                 id: 'foo'
                 main: true
+                name: 'Foo graph'
           ]
           expects2 = [
               protocol: 'graph'
@@ -189,6 +190,7 @@ exports.testRuntime = (runtimeType, startServer, stopServer, host='localhost', p
             baseDir: path.resolve __dirname, '../'
             id: 'foo'
             main: true
+            name: 'Foo graph'
 
       describe 'adding an edge', ->
         it 'should provide the edge back', (done) ->
