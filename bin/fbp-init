@@ -1,13 +1,15 @@
 #!/usr/bin/env node
 // vim: set filetype=javascript:
-var program = require('commander');
+var cmd = require('commander');
 var fs = require('fs');
 var lib = require('../src/Config');
 
 // commander.command is a function that we don't need. keep it from conflicting
-program.command = null;
+cmd.command = null;
 
-program
+cmd
+  .storeOptionsAsProperties(false)
+  .passCommandToAction(false)
   .option('--name <name>', 'name of the runtime as returned by getruntime.')
   .option('--command <command>', 'executable command to start the runtime server process. [none]')
   .option('--host <hostname>', 'hostname of server to connect to. [localhost]', String, 'localhost')
@@ -15,6 +17,8 @@ program
   .option('--collection <collection>', 'name of the collection in which to find the components required for testing. [core]', String, 'core')
   .option('--version <version>', 'protocol version to test against', String, '0.7')
   .parse(process.argv);
+
+program = cmd.opts()
 
 if (!program.name) {
   console.error('Error: You must specify a name');
