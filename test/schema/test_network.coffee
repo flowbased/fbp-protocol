@@ -1,7 +1,7 @@
 chai = require 'chai'
 schemas = require '../../schema/schemas.js'
 tv4 = require 'tv4'
-uuid = require 'uuid/v4'
+uuid = require('uuid').v4
 format = require '../../schema/format'
 
 describe 'Test network protocol schema on events', ->
