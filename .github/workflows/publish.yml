@@ -13,6 +13,8 @@ jobs:
       - uses: actions/setup-node@v2.1.1
         with:
           node-version: 12
+      - name: install Jekyll
+        run: sudo gem install jekyll
       - run: npm install
       - run: npm test
 
@@ -25,6 +27,8 @@ jobs:
         with:
           node-version: 12
           registry-url: https://registry.npmjs.org/
+      - name: install Jekyll
+        run: sudo gem install jekyll
       - run: npm install
       - run: npm run build
       - run: npm publish
@@ -40,6 +44,8 @@ jobs:
         with:
           node-version: 12
           registry-url: https://registry.npmjs.org/
+      - name: install Jekyll
+        run: sudo gem install jekyll
       - run: npm install
       - run: npm run build
       - uses: peaceiris/actions-gh-pages@v3

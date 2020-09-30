@@ -16,7 +16,7 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
     - name: install Jekyll
-      run: gem install jekyll
+      run: sudo gem install jekyll
     - name: npm install and test
       run: |
         npm install
