@@ -147,13 +147,12 @@ renderMessage = (messageType, message, protocolName) ->
 
   return lines
 
-renderCapabilities = () ->
+renderCapabilities = (callback) ->
   tv4 = require '../schema/index.js'
   schema = tv4.getSchema '/shared/capabilities'
 
   lines = []
   p = (line) -> lines.push line
-
   p "<section class='capabilities'>"
   for enumDescription in schema.items._enumDescriptions
     p "<h4 class='capability name'>#{enumDescription.name}</h4>"
@@ -175,7 +174,7 @@ renderCapabilities = () ->
 
   p "</section>"
 
-  return lines.join('\n')
+  callback null, lines.join('\n')
 
 renderMessages = (callback) ->
   getSchemas (err, schemas) ->
