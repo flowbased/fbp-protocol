@@ -99,27 +99,11 @@ module.exports = ->
           host: process.env.HOSTNAME or 'localhost'
           port: process.env.PORT or 4000
 
-    # Deploying
-    'gh-pages':
-      options:
-        base: 'dist/',
-        clone: 'gh-pages'
-        message: "Release #{pkg.name} #{process.env.TRAVIS_TAG}"
-        repo: 'https://' + process.env.GH_TOKEN + '@github.com/flowbased/fbp-protocol.git'
-        user:
-          name: 'fbp-protocol bot',
-          email: 'jononor+fbpprotocolbot@gmail.com'
-        silent: true
-      src: '**/*'
-
   # Grunt plugins used for testing
   @loadNpmTasks 'grunt-contrib-coffee'
   @loadNpmTasks 'grunt-contrib-watch'
   @loadNpmTasks 'grunt-exec'
   @loadNpmTasks 'grunt-mocha-test'
-
-  # For deploying
-  @loadNpmTasks 'grunt-gh-pages'
 
   # Create json schemas from yaml
   @loadNpmTasks 'grunt-yaml'
