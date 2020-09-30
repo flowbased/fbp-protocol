@@ -15,3 +15,4 @@ test/*.js
 src/*.js
 /dist/index.html
 Gemfile.lock
+.jekyll-cache
