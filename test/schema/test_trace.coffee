@@ -64,12 +64,6 @@ invalidExamples =
       graph: undefined
     secret: 'verygood'
     requestId: uuid()
-  'start without requestId':
-    protocol: 'trace'
-    command: 'start'
-    payload:
-      graph: 'mygraph'
-    secret: 'verygood'
 
 testValid = (name) -> 
   describe name, ->
