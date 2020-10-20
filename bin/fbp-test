@@ -2,7 +2,7 @@
 // vim: set filetype=javascript:
 
 // this is a simple wrapper around the mocha executable, with the test
-// files location (and coffeescript support) automatically provided.
+// files location automatically provided.
 
 var spawn = require('child_process').spawn,
      path = require('path');

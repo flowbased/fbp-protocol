@@ -18,7 +18,8 @@
   "scripts": {
     "serve": "http-server dist",
     "build": "grunt build",
-    "test": "grunt test"
+    "pretest": "eslint *.js src/*.js test/*.js test/**/*.js schema/format.js schema/index.js",
+    "test": "grunt test --stack"
   },
   "dependencies": {
     "chai": "^4.1.2",
@@ -31,9 +32,12 @@
   },
   "devDependencies": {
     "chai": "^4.2.0",
-    "coffeescript": "^2.5.1",
+    "eslint": "^7.11.0",
+    "eslint-config-airbnb-base": "^14.2.0",
+    "eslint-plugin-chai": "0.0.1",
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-mocha": "^8.0.0",
     "grunt": "^1.0.1",
-    "grunt-contrib-coffee": "^2.0.0",
     "grunt-contrib-watch": "^1.0.0",
     "grunt-exec": "^3.0.0",
     "grunt-jekyll": "^1.0.1",

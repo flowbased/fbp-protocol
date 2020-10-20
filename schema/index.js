@@ -1,6 +1,6 @@
-var tv4 = require('tv4');
-var schemas = require('./schemas');
-var format = require('./format');
+const tv4 = require('tv4');
+const schemas = require('./schemas');
+const format = require('./format');
 
 tv4.addSchema('/shared/', schemas.shared);
 tv4.addSchema('/graph/', schemas.graph);
