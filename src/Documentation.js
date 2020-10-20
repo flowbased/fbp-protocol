@@ -2,7 +2,6 @@ const fs = require('fs');
 const path = require('path');
 // eslint-disable-next-line import/no-extraneous-dependencies
 const refParser = require('json-schema-ref-parser');
-const tv4 = require('../schema/index.js');
 
 function getSchemas(callback) {
   let schemas;
@@ -192,6 +191,8 @@ function renderMessage(messageType, message, protocolName) {
 }
 
 function renderCapabilities(callback) {
+  // eslint-disable-next-line global-require
+  const tv4 = require('../schema/index.js');
   const schema = tv4.getSchema('/shared/capabilities');
 
   const lines = [];
