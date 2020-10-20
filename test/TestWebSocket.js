@@ -1,8 +1,6 @@
-var lib, opts, tests;
+const tests = require('../src/WebSocket');
 
-tests = require('../src/WebSocket');
-
-lib = require('../src/Config');
+const lib = require('../src/Config');
 
 // storedPath = lib.getStoredPath()
 // fs.exists storedPath, (exists) ->
@@ -19,6 +17,13 @@ lib = require('../src/Config');
 //       )
 //   else
 //     throw new Error('Run fpb-init first to configure');
-opts = lib.getStored();
+const opts = lib.getStored();
 
-tests.testRuntimeCommand(opts.name, opts.command, opts.host, opts.port, opts.collection, opts.version);
+tests.testRuntimeCommand(
+  opts.name,
+  opts.command,
+  opts.host,
+  opts.port,
+  opts.collection,
+  opts.version,
+);

@@ -1,0 +1,11 @@
+{
+  "extends": "airbnb-base",
+  "plugins": [
+    "chai",
+    "mocha"
+  ],
+  "env": {
+    "node": true,
+    "mocha": true
+  }
+}

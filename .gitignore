@@ -6,7 +6,6 @@ node_modules
 npm-debug.log
 package-lock.json
 .grunt/
-schema/format.js
 schema/schemas.js
 schema/json/*json
 spec/protocol.md

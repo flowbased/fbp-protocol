@@ -1,106 +1,100 @@
-/*
- * decaffeinate suggestions:
- * DS102: Remove unnecessary code created because of implicit returns
- * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
- */
 const chai = require('chai');
-const schemas = require('../../schema/schemas.js');
 const tv4 = require('tv4');
 const uuid = require('uuid').v4;
+const schemas = require('../../schema/schemas.js');
 
-describe('Test runtime protocol schema on event', function() {
-  before(function() {
+describe('Test runtime protocol schema on event', () => {
+  before(() => {
     const sharedSchema = schemas.shared;
     const runtimeSchema = schemas.runtime;
     tv4.addSchema('/shared/', sharedSchema);
-    return tv4.addSchema('/runtime/', runtimeSchema);
+    tv4.addSchema('/runtime/', runtimeSchema);
   });
 
-  describe('input', function() {
-
-    describe('getruntime', function() {
+  describe('input', () => {
+    describe('getruntime', () => {
       const schema = '/runtime/input/getruntime';
 
       it('should have schema', () => chai.expect(tv4.getSchema(schema)).to.exist);
 
-      return it('should validate event with required fields', function() {
+      it('should validate event with required fields', () => {
         const event = {
           protocol: 'runtime',
           command: 'getruntime',
           payload: {},
-          requestId: uuid()
+          requestId: uuid(),
         };
 
         const res = tv4.validate(event, schema);
-        return chai.expect(res).to.be.true;
+        chai.expect(res).to.equal(true);
       });
     });
 
-    return describe('packet', function() {
+    describe('packet', () => {
       const schema = '/runtime/input/packet';
 
       it('should have schema', () => chai.expect(tv4.getSchema(schema)).to.exist);
 
-      it('should validate event with required fields', function() {
+      it('should validate event with required fields', () => {
         const event = {
           protocol: 'runtime',
           command: 'packet',
           payload: {
             port: 'IN',
             graph: 'mygraph',
-            event: 'connect'
+            event: 'connect',
           },
-          requestId: uuid()
+          requestId: uuid(),
         };
 
         const res = tv4.validate(event, schema);
-        return chai.expect(res).to.be.true;
+        chai.expect(res).to.equal(true);
       });
 
-      return it('should invalidate event with invalid enum choice', function() {
+      it('should invalidate event with invalid enum choice', () => {
         const event = {
           protocol: 'runtime',
           command: 'packet',
           payload: {
             port: 'IN',
             graph: 'mygraph',
-            event: 'bad event'
+            event: 'bad event',
           },
-          requestId: uuid()
+          requestId: uuid(),
         };
 
         const res = tv4.validate(event, schema);
-        return chai.expect(res).to.be.false;
+        chai.expect(res).to.equal(false);
       });
     });
   });
 
-  return describe('output', function() {
-    describe('error', function() {
+  describe('output', () => {
+    describe('error', () => {
       const schema = '/runtime/output/error';
 
       it('should have schema', () => chai.expect(tv4.getSchema(schema)).to.exist);
 
-      return it('should validate event with required fields', function() {
+      it('should validate event with required fields', () => {
         const event = {
           protocol: 'runtime',
           command: 'error',
           payload: {
-            message: 'inport "foo" for runtime:packet does not exist'
-          }
+            message: 'inport "foo" for runtime:packet does not exist',
+          },
         };
 
         const res = tv4.validate(event, schema);
-        return chai.expect(res).to.be.true;
+        chai.expect(res).to.equal(true);
       });
     });
 
-    describe('ports', function() {
+    describe('ports', () => {
       const schema = '/runtime/output/ports';
 
       it('should have schema', () => chai.expect(tv4.getSchema(schema)).to.exist);
 
-      return it('should validate event with required fields', function() {
+      it('should validate event with required fields', () => {
         const event = {
           protocol: 'runtime',
           command: 'ports',
@@ -109,24 +103,24 @@ describe('Test runtime protocol schema on event', function() {
             inPorts: [{
               id: 'IN',
               addressable: true,
-              type: 'string'
-            }
+              type: 'string',
+            },
             ],
-            outPorts: []
-          }
+            outPorts: [],
+          },
         };
 
         const res = tv4.validate(event, schema);
-        return chai.expect(res).to.be.true;
+        chai.expect(res).to.equal(true);
       });
     });
 
-    return describe('runtime', function() {
+    describe('runtime', () => {
       const schema = '/runtime/output/runtime';
 
       it('should have schema', () => chai.expect(tv4.getSchema(schema)).to.exist);
 
-      return it('should validate event with required fields', function() {
+      it('should validate event with required fields', () => {
         const event = {
           protocol: 'runtime',
           command: 'runtime',
@@ -135,16 +129,15 @@ describe('Test runtime protocol schema on event', function() {
             capabilities: [
               'protocol:network',
               'protocol:runtime',
-              'network:persist'
+              'network:persist',
             ],
-            type: 'noflo'
-          }
+            type: 'noflo',
+          },
         };
 
         const res = tv4.validate(event, schema);
-        return chai.expect(res).to.be.true;
+        chai.expect(res).to.equal(true);
       });
     });
   });
 });
-
