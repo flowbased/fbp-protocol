@@ -1,8 +1,8 @@
 const fs = require('fs');
 const path = require('path');
-const tv4 = require('../schema/index.js');
-// eslint-disable-next-line
+// eslint-disable-next-line import/no-extraneous-dependencies
 const refParser = require('json-schema-ref-parser');
+const tv4 = require('../schema/index.js');
 
 function getSchemas(callback) {
   let schemas;

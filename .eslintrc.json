@@ -7,5 +7,8 @@
   "env": {
     "node": true,
     "mocha": true
+  },
+  "rules": {
+    "import/no-unresolved": 0
   }
 }
